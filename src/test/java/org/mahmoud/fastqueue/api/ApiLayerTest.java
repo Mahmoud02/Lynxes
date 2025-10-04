@@ -26,11 +26,9 @@ public class ApiLayerTest {
 
     @BeforeEach
     public void setUp() {
-        config = new QueueConfig.Builder()
-            .dataDirectory(tempDir)
-            .maxSegmentSize(1024) // 1KB for testing
-            .retentionPeriodMs(86400000) // 1 day
-            .build();
+        config = new QueueConfig();
+        // Note: In real usage, configuration would be loaded via ConfigLoader
+        // For testing, we use the default constructor with default values
     }
 
     @Test

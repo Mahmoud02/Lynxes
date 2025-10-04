@@ -5,6 +5,8 @@ import org.mahmoud.fastqueue.api.consumer.Consumer;
 import org.mahmoud.fastqueue.config.QueueConfig;
 import org.mahmoud.fastqueue.core.Record;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -25,6 +27,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Provides REST API endpoints for message publishing and consumption.
  */
 public class JettyHttpServer {
+    private static final Logger logger = LoggerFactory.getLogger(JettyHttpServer.class);
+    
     private final QueueConfig config;
     public final Producer producer;
     public final Consumer consumer;
@@ -76,7 +80,7 @@ public class JettyHttpServer {
         // Start server
         server.start();
         running = true;
-        System.out.println("FastQueue2 Jetty HTTP Server started on port " + config.getServerPort());
+        logger.info("FastQueue2 Jetty HTTP Server started on port {}", config.getServerPort());
     }
 
     /**
@@ -92,7 +96,7 @@ public class JettyHttpServer {
         server.stop();
         executor.shutdown();
         running = false;
-        System.out.println("FastQueue2 Jetty HTTP Server stopped");
+        logger.info("FastQueue2 Jetty HTTP Server stopped");
     }
 
     /**
@@ -120,6 +124,8 @@ public class JettyHttpServer {
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) 
                 throws ServletException, IOException {
+            logger.debug("Health check requested from {}", request.getRemoteAddr());
+            
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
             
@@ -129,6 +135,8 @@ public class JettyHttpServer {
             try (PrintWriter out = response.getWriter()) {
                 out.print(json);
             }
+            
+            logger.debug("Health check completed successfully");
         }
     }
 
@@ -172,6 +180,7 @@ public class JettyHttpServer {
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) 
                 throws ServletException, IOException {
+            String topicName = null;
             try {
                 String path = request.getPathInfo();
                 if (path == null || path.length() < 2) {
@@ -179,7 +188,7 @@ public class JettyHttpServer {
                     return;
                 }
                 
-                String topicName = path.substring(1); // Remove leading slash
+                topicName = path.substring(1); // Remove leading slash
                 
                 // Read request body
                 String requestBody = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
@@ -188,6 +197,7 @@ public class JettyHttpServer {
                 PublishRequest publishRequest = objectMapper.readValue(requestBody, PublishRequest.class);
                 
                 // Publish message
+                logger.info("Publishing message to topic: {}", topicName);
                 Record record = producer.publish(topicName, publishRequest.message.getBytes(StandardCharsets.UTF_8));
                 
                 // Send response
@@ -201,7 +211,10 @@ public class JettyHttpServer {
                     out.print(json);
                 }
                 
+                logger.info("Message published successfully to topic: {} with offset: {}", topicName, record.getOffset());
+                
             } catch (Exception e) {
+                logger.error("Error processing publish request for topic: {}", topicName, e);
                 sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid request: " + e.getMessage());
             }
         }
@@ -209,6 +222,8 @@ public class JettyHttpServer {
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) 
                 throws ServletException, IOException {
+            String topicName = null;
+            long offset = 0;
             try {
                 String path = request.getPathInfo();
                 if (path == null || path.length() < 2) {
@@ -216,20 +231,21 @@ public class JettyHttpServer {
                     return;
                 }
                 
-                String topicName = path.substring(1); // Remove leading slash
+                topicName = path.substring(1); // Remove leading slash
                 
                 // Get offset parameter
                 String offsetParam = request.getParameter("offset");
-                long offset = 0;
                 
                 if (offsetParam != null) {
                     offset = Long.parseLong(offsetParam);
                 }
                 
                 // Consume message
+                logger.debug("Consuming message from topic: {} at offset: {}", topicName, offset);
                 Record record = consumer.consume(topicName, offset);
                 
                 if (record == null) {
+                    logger.debug("No message found at offset {} for topic: {}", offset, topicName);
                     sendError(response, HttpServletResponse.SC_NOT_FOUND, "No message found at offset " + offset);
                     return;
                 }
@@ -249,7 +265,10 @@ public class JettyHttpServer {
                     out.print(json);
                 }
                 
+                logger.debug("Message consumed successfully from topic: {} at offset: {}", topicName, record.getOffset());
+                
             } catch (Exception e) {
+                logger.error("Error processing consume request for topic: {} at offset: {}", topicName, offset, e);
                 sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid request: " + e.getMessage());
             }
         }

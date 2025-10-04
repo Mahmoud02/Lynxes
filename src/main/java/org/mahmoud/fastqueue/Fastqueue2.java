@@ -1,7 +1,10 @@
 package org.mahmoud.fastqueue;
 
 import org.mahmoud.fastqueue.config.QueueConfig;
+import org.mahmoud.fastqueue.config.ConfigLoader;
 import org.mahmoud.fastqueue.server.http.JettyHttpServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 
 /**
@@ -10,34 +13,43 @@ import java.nio.file.Path;
  * @author mahmoudreda
  */
 public class Fastqueue2 {
+    private static final Logger logger = LoggerFactory.getLogger(Fastqueue2.class);
 
     public static void main(String[] args) {
-        System.out.println("FastQueue2 - High-Performance Message Queue Server");
-        System.out.println("==================================================");
+        logger.info("FastQueue2 - High-Performance Message Queue Server");
+        logger.info("==================================================");
         
         try {
-            // Start the HTTP server
-            startHttpServer();
+            // Parse command line arguments
+            String environment = parseEnvironment(args);
+            
+            // Start the HTTP server with configuration
+            startHttpServer(environment);
             
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Failed to start FastQueue2 server", e);
             System.exit(1);
         }
     }
     
     /**
-     * Starts the HTTP server for production use.
+     * Parses command line arguments to determine environment.
      */
-    private static void startHttpServer() throws Exception {
-        // Create configuration
-        QueueConfig config = new QueueConfig.Builder()
-            .dataDirectory(Path.of("./data"))
-            .maxSegmentSize(1024 * 1024) // 1MB segments
-            .retentionPeriodMs(7 * 24 * 60 * 60 * 1000L) // 7 days
-            .serverPort(8080)
-            .threadPoolSize(10)
-            .build();
+    private static String parseEnvironment(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("--env") && i + 1 < args.length) {
+                return args[i + 1];
+            }
+        }
+        return "default"; // Default environment
+    }
+    
+    /**
+     * Starts the HTTP server with Typesafe Config configuration.
+     */
+    private static void startHttpServer(String environment) throws Exception {
+        // Load configuration using Typesafe Config
+        QueueConfig config = ConfigLoader.loadConfig(environment);
         
         // Create and start HTTP server
         JettyHttpServer httpServer = new JettyHttpServer(config);
@@ -45,23 +57,24 @@ public class Fastqueue2 {
         
         // Add shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Shutting down FastQueue2 Server...");
+            logger.info("Shutting down FastQueue2 Server...");
             try {
                 httpServer.stop();
+                logger.info("FastQueue2 Server shutdown completed");
             } catch (Exception e) {
-                System.err.println("Error during shutdown: " + e.getMessage());
+                logger.error("Error during shutdown", e);
             }
         }));
         
-        System.out.println("FastQueue2 HTTP Server started on port " + httpServer.getPort());
-        System.out.println("API Endpoints:");
-        System.out.println("  GET  /health - Health check");
-        System.out.println("  GET  /topics - List topics");
-        System.out.println("  POST /topics - Create topic");
-        System.out.println("  POST /topics/{name} - Publish message");
-        System.out.println("  GET  /topics/{name}?offset={n} - Consume message");
-        System.out.println("  GET  /metrics - Server metrics");
-        System.out.println("\nPress Ctrl+C to stop the server");
+        logger.info("FastQueue2 HTTP Server started on port {}", httpServer.getPort());
+        logger.info("API Endpoints:");
+        logger.info("  GET  /health - Health check");
+        logger.info("  GET  /topics - List topics");
+        logger.info("  POST /topics - Create topic");
+        logger.info("  POST /topics/{name} - Publish message");
+        logger.info("  GET  /topics/{name}?offset={n} - Consume message");
+        logger.info("  GET  /metrics - Server metrics");
+        logger.info("Press Ctrl+C to stop the server");
         
         // Keep server running
         while (httpServer.isRunning()) {

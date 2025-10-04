@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="org.mahmoud.fastqueue.HttpApiTest" time="6.633" tests="5" errors="0" skipped="0" failures="1">
+  <properties>
+    <property name="java.specification.version" value="24"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/mahmoudreda/projects/fastqueue2/target/test-classes:/Users/mahmoudreda/projects/fastqueue2/target/classes:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-server/11.0.17/jetty-server-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/toolchain/jetty-jakarta-servlet-api/5.0.2/jetty-jakarta-servlet-api-5.0.2.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-http/11.0.17/jetty-http-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-util/11.0.17/jetty-util-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-io/11.0.17/jetty-io-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-servlet/11.0.17/jetty-servlet-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-security/11.0.17/jetty-security-11.0.17.jar:/Users/mahmoudreda/.m2/repository/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0.jar:/Users/mahmoudreda/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.16.1/jackson-databind-2.16.1.jar:/Users/mahmoudreda/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.16.1/jackson-annotations-2.16.1.jar:/Users/mahmoudreda/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.16.1/jackson-core-2.16.1.jar:/Users/mahmoudreda/.m2/repository/com/typesafe/config/1.4.2/config-1.4.2.jar:/Users/mahmoudreda/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar:/Users/mahmoudreda/.m2/repository/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar:/Users/mahmoudreda/.m2/repository/ch/qos/logback/logback-core/1.4.14/logback-core-1.4.14.jar:/Users/mahmoudreda/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.1/junit-jupiter-5.10.1.jar:/Users/mahmoudreda/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.1/junit-jupiter-api-5.10.1.jar:/Users/mahmoudreda/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/mahmoudreda/.m2/repository/org/junit/platform/junit-platform-commons/1.10.1/junit-platform-commons-1.10.1.jar:/Users/mahmoudreda/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/mahmoudreda/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.1/junit-jupiter-params-5.10.1.jar:/Users/mahmoudreda/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.1/junit-jupiter-engine-5.10.1.jar:/Users/mahmoudreda/.m2/repository/org/junit/platform/junit-platform-engine/1.10.1/junit-platform-engine-1.10.1.jar:"/>
+    <property name="java.vm.vendor" value="Homebrew"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://github.com/Homebrew/homebrew-core/issues"/>
+    <property name="user.timezone" value="Africa/Cairo"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="24"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="EG"/>
+    <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk/24.0.1/libexec/openjdk.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/mahmoudreda/projects/fastqueue2/target/surefire/surefirebooter-20251005022701479_3.jar /Users/mahmoudreda/projects/fastqueue2/target/surefire 2025-10-05T02-27-01_436-jvmRun1 surefire-20251005022701479_1tmp surefire_0-20251005022701479_2tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/mahmoudreda/projects/fastqueue2/target/test-classes:/Users/mahmoudreda/projects/fastqueue2/target/classes:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-server/11.0.17/jetty-server-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/toolchain/jetty-jakarta-servlet-api/5.0.2/jetty-jakarta-servlet-api-5.0.2.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-http/11.0.17/jetty-http-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-util/11.0.17/jetty-util-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-io/11.0.17/jetty-io-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-servlet/11.0.17/jetty-servlet-11.0.17.jar:/Users/mahmoudreda/.m2/repository/org/eclipse/jetty/jetty-security/11.0.17/jetty-security-11.0.17.jar:/Users/mahmoudreda/.m2/repository/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0.jar:/Users/mahmoudreda/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.16.1/jackson-databind-2.16.1.jar:/Users/mahmoudreda/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.16.1/jackson-annotations-2.16.1.jar:/Users/mahmoudreda/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.16.1/jackson-core-2.16.1.jar:/Users/mahmoudreda/.m2/repository/com/typesafe/config/1.4.2/config-1.4.2.jar:/Users/mahmoudreda/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar:/Users/mahmoudreda/.m2/repository/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar:/Users/mahmoudreda/.m2/repository/ch/qos/logback/logback-core/1.4.14/logback-core-1.4.14.jar:/Users/mahmoudreda/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.1/junit-jupiter-5.10.1.jar:/Users/mahmoudreda/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.1/junit-jupiter-api-5.10.1.jar:/Users/mahmoudreda/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/mahmoudreda/.m2/repository/org/junit/platform/junit-platform-commons/1.10.1/junit-platform-commons-1.10.1.jar:/Users/mahmoudreda/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/mahmoudreda/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.1/junit-jupiter-params-5.10.1.jar:/Users/mahmoudreda/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.1/junit-jupiter-engine-5.10.1.jar:/Users/mahmoudreda/.m2/repository/org/junit/platform/junit-platform-engine/1.10.1/junit-platform-engine-1.10.1.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/mahmoudreda"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2025-04-15"/>
+    <property name="java.home" value="/opt/homebrew/Cellar/openjdk/24.0.1/libexec/openjdk.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/mahmoudreda/projects/fastqueue2"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/mahmoudreda/projects/fastqueue2/target/surefire/surefirebooter-20251005022701479_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="24.0.1"/>
+    <property name="user.name" value="mahmoudreda"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="26.0.1"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Homebrew"/>
+    <property name="localRepository" value="/Users/mahmoudreda/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/Homebrew/homebrew-core/issues"/>
+    <property name="jetty.git.hash" value="48e7716b9462bebea6732b885dbebb4300787a5c"/>
+    <property name="java.io.tmpdir" value="/var/folders/12/d8p522257s5497m284jr1tw00000gn/T/"/>
+    <property name="java.version" value="24.0.1"/>
+    <property name="user.dir" value="/Users/mahmoudreda/projects/fastqueue2"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/mahmoudreda/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Homebrew"/>
+    <property name="java.vm.version" value="24.0.1"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.class.version" value="68.0"/>
+  </properties>
+  <testcase name="testHealthEndpoint" classname="org.mahmoud.fastqueue.HttpApiTest" time="1.387">
+    <system-out><![CDATA[2025-10-05 02:27:01.917 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:03.138 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+]]></system-out>
+  </testcase>
+  <testcase name="testPublishAndConsumeMessage" classname="org.mahmoud.fastqueue.HttpApiTest" time="1.044">
+    <system-out><![CDATA[2025-10-05 02:27:03.142 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:04.174 [qtp1869247587-58] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:27:04.179 [qtp1869247587-58] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:27:04.184 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+]]></system-out>
+  </testcase>
+  <testcase name="testMultipleMessages" classname="org.mahmoud.fastqueue.HttpApiTest" time="2.167">
+    <failure message="Message 1 not found after retries ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: Message 1 not found after retries ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at org.mahmoud.fastqueue.HttpApiTest.testMultipleMessages(HttpApiTest.java:198)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+]]></failure>
+    <system-out><![CDATA[2025-10-05 02:27:04.191 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:05.198 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.202 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:27:05.204 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.205 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:27:05.206 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.207 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:27:05.208 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.209 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:27:05.210 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.210 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:27:06.350 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+]]></system-out>
+  </testcase>
+  <testcase name="testMetricsEndpoint" classname="org.mahmoud.fastqueue.HttpApiTest" time="1.012">
+    <system-out><![CDATA[2025-10-05 02:27:06.356 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:07.365 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+]]></system-out>
+  </testcase>
+  <testcase name="testTopicsEndpoint" classname="org.mahmoud.fastqueue.HttpApiTest" time="1.017">
+    <system-out><![CDATA[2025-10-05 02:27:07.367 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:08.382 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+]]></system-out>
+  </testcase>
+</testsuite>
