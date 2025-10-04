@@ -3,7 +3,6 @@ org/mahmoud/fastqueue/server/http/JettyHttpServer$MetricsServlet.class
 org/mahmoud/fastqueue/server/http/JettyHttpServer$MetricsResponse.class
 org/mahmoud/fastqueue/server/http/JettyHttpServer$TopicsServlet.class
 org/mahmoud/fastqueue/config/QueueConfig.class
-org/mahmoud/fastqueue/config/QueueConfig$Builder.class
 org/mahmoud/fastqueue/server/http/JettyHttpServer$TopicsResponse.class
 org/mahmoud/fastqueue/core/Index$IndexEntry.class
 org/mahmoud/fastqueue/server/http/JettyHttpServer$HealthServlet.class

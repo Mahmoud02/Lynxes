@@ -1,0 +1,439 @@
+2025-10-05 01:39:30.809 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 01:39:30.810 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 01:39:30.888 [org.mahmoud.fastqueue.Fastqueue2.main()] ERROR org.mahmoud.fastqueue.Fastqueue2 - Failed to start FastQueue2 server
+java.io.IOException: Failed to bind to 0.0.0.0/0.0.0.0:8080
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:344)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:304)
+	at org.eclipse.jetty.server.Server.lambda$doStart$0(Server.java:402)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:215)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:398)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.mahmoud.fastqueue.server.http.JettyHttpServer.start(JettyHttpServer.java:81)
+	at org.mahmoud.fastqueue.Fastqueue2.startHttpServer(Fastqueue2.java:50)
+	at org.mahmoud.fastqueue.Fastqueue2.main(Fastqueue2.java:27)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:371)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:289)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:339)
+	... 20 common frames omitted
+2025-10-05 01:39:47.045 [org.mahmoud.fastqueue.examples.LoggingExamples.main()] INFO  o.m.f.examples.LoggingExamples - This is an INFO message with default configuration
+2025-10-05 01:39:47.047 [org.mahmoud.fastqueue.examples.LoggingExamples.main()] DEBUG o.m.f.examples.LoggingExamples - This DEBUG message will now show!
+2025-10-05 01:39:47.048 [org.mahmoud.fastqueue.examples.LoggingExamples.main()] WARN  o.m.f.examples.LoggingExamples - This WARN message will show!
+2025-10-05 01:39:47.048 [org.mahmoud.fastqueue.examples.LoggingExamples.main()] ERROR o.m.f.examples.LoggingExamples - This ERROR message will show!
+2025-10-05 01:49:01.239 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 01:49:01.240 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 01:49:01.312 [org.mahmoud.fastqueue.Fastqueue2.main()] ERROR org.mahmoud.fastqueue.Fastqueue2 - Failed to start FastQueue2 server
+java.io.IOException: Failed to bind to 0.0.0.0/0.0.0.0:8080
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:344)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:304)
+	at org.eclipse.jetty.server.Server.lambda$doStart$0(Server.java:402)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:215)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:398)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.mahmoud.fastqueue.server.http.JettyHttpServer.start(JettyHttpServer.java:81)
+	at org.mahmoud.fastqueue.Fastqueue2.startHttpServer(Fastqueue2.java:46)
+	at org.mahmoud.fastqueue.Fastqueue2.main(Fastqueue2.java:23)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:371)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:289)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:339)
+	... 20 common frames omitted
+2025-10-05 01:49:18.798 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 01:49:18.798 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 01:49:18.888 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 HTTP Server started on port 8080
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 01:49:18.889 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 01:51:27.726 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 01:51:27.727 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 01:51:27.800 [org.mahmoud.fastqueue.Fastqueue2.main()] WARN  org.mahmoud.fastqueue.Fastqueue2 - Failed to load YAML configuration, using defaults: argument "src" is null
+2025-10-05 01:51:27.840 [org.mahmoud.fastqueue.Fastqueue2.main()] ERROR org.mahmoud.fastqueue.Fastqueue2 - Failed to start FastQueue2 server
+java.io.IOException: Failed to bind to 0.0.0.0/0.0.0.0:8080
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:344)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:304)
+	at org.eclipse.jetty.server.Server.lambda$doStart$0(Server.java:402)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:215)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:398)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.mahmoud.fastqueue.server.http.JettyHttpServer.start(JettyHttpServer.java:81)
+	at org.mahmoud.fastqueue.Fastqueue2.startHttpServer(Fastqueue2.java:66)
+	at org.mahmoud.fastqueue.Fastqueue2.main(Fastqueue2.java:27)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:371)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:289)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:339)
+	... 20 common frames omitted
+2025-10-05 01:51:41.524 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 01:51:41.534 [Thread-10] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 01:51:41.534 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 01:51:46.089 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 01:51:46.089 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 01:51:46.158 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Loaded configuration for environment: dev
+2025-10-05 01:51:46.158 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Configuration: QueueConfig{dataDir=./data, maxSegmentSize=1048576, retentionPeriodMs=604800000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=10, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=INFO, logFile=logs/fastqueue2.log}
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 HTTP Server started on port 8080
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 01:51:46.212 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 01:52:38.298 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 01:52:38.299 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 01:52:38.370 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Loaded configuration for environment: dev
+2025-10-05 01:52:38.370 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Configuration: QueueConfig{dataDir=./data, maxSegmentSize=1048576, retentionPeriodMs=604800000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=10, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=INFO, logFile=logs/fastqueue2.log}
+2025-10-05 01:52:38.412 [org.mahmoud.fastqueue.Fastqueue2.main()] ERROR org.mahmoud.fastqueue.Fastqueue2 - Failed to start FastQueue2 server
+java.io.IOException: Failed to bind to 0.0.0.0/0.0.0.0:8080
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:344)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:304)
+	at org.eclipse.jetty.server.Server.lambda$doStart$0(Server.java:402)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:215)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:398)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.mahmoud.fastqueue.server.http.JettyHttpServer.start(JettyHttpServer.java:81)
+	at org.mahmoud.fastqueue.Fastqueue2.startHttpServer(Fastqueue2.java:66)
+	at org.mahmoud.fastqueue.Fastqueue2.main(Fastqueue2.java:27)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:371)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:289)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:339)
+	... 20 common frames omitted
+2025-10-05 01:53:10.051 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 01:53:10.058 [Thread-10] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 01:53:10.058 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 01:53:16.189 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 01:53:16.189 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 01:53:16.254 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Loaded configuration for environment: dev
+2025-10-05 01:53:16.254 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Configuration: QueueConfig{dataDir=./data, maxSegmentSize=1048576, retentionPeriodMs=604800000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=10, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=INFO, logFile=logs/fastqueue2.log}
+2025-10-05 01:53:16.303 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 HTTP Server started on port 8080
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 01:53:16.304 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 02:18:36.618 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 02:18:36.618 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 02:18:36.633 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: dev
+2025-10-05 02:18:36.636 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data-dev, maxSegmentSize=524288, retentionPeriodMs=3600000, indexInterval=1024, maxMessageSize=1048576, serverPort=8081, threadPoolSize=5, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=DEBUG, logFile=logs/fastqueue2-dev.log}
+2025-10-05 02:18:36.747 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8081
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 HTTP Server started on port 8081
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 02:18:36.748 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 02:19:02.779 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 02:19:02.780 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 02:19:02.796 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: prod
+2025-10-05 02:19:02.798 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=/var/lib/fastqueue2/data, maxSegmentSize=1073741824, retentionPeriodMs=2592000000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=50, compression=true, metrics=true, flushIntervalMs=1000, maxConnections=5000, batching=true, batchSize=100, logLevel=WARN, logFile=/var/log/fastqueue2/fastqueue2.log}
+2025-10-05 02:19:02.896 [org.mahmoud.fastqueue.Fastqueue2.main()] ERROR org.mahmoud.fastqueue.Fastqueue2 - Failed to start FastQueue2 server
+java.io.IOException: Failed to bind to 0.0.0.0/0.0.0.0:8080
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:344)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:304)
+	at org.eclipse.jetty.server.Server.lambda$doStart$0(Server.java:402)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:215)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:398)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.mahmoud.fastqueue.server.http.JettyHttpServer.start(JettyHttpServer.java:81)
+	at org.mahmoud.fastqueue.Fastqueue2.startHttpServer(Fastqueue2.java:56)
+	at org.mahmoud.fastqueue.Fastqueue2.main(Fastqueue2.java:27)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:371)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:289)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:339)
+	... 20 common frames omitted
+2025-10-05 02:19:10.975 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 02:19:10.977 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 02:19:10.983 [Thread-10] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:19:10.983 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 02:19:10.994 [Thread-10] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:19:10.995 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 02:19:16.324 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 02:19:16.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 02:19:16.349 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: prod
+2025-10-05 02:19:16.352 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=/var/lib/fastqueue2/data, maxSegmentSize=1073741824, retentionPeriodMs=2592000000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=50, compression=true, metrics=true, flushIntervalMs=1000, maxConnections=5000, batching=true, batchSize=100, logLevel=WARN, logFile=/var/log/fastqueue2/fastqueue2.log}
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 HTTP Server started on port 8080
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 02:19:16.472 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 02:19:32.385 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 02:19:32.426 [Thread-10] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:19:32.426 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 02:19:37.581 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 02:19:37.582 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 02:19:37.600 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: default
+2025-10-05 02:19:37.602 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data, maxSegmentSize=1048576, retentionPeriodMs=604800000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=10, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=INFO, logFile=logs/fastqueue2.log}
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 HTTP Server started on port 8080
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 02:19:37.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 02:19:56.835 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 02:19:56.844 [Thread-10] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:19:56.844 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 02:20:21.264 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:20:22.468 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:20:22.472 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:20:23.505 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:20:23.511 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:20:23.519 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:20:23.529 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:20:24.540 [qtp2063786038-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:20:24.542 [qtp2063786038-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:20:24.546 [qtp2063786038-65] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:20:24.547 [qtp2063786038-65] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:20:24.549 [qtp2063786038-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:20:24.550 [qtp2063786038-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:20:24.552 [qtp2063786038-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:20:24.553 [qtp2063786038-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:20:24.554 [qtp2063786038-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:20:24.555 [qtp2063786038-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:20:25.084 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:20:25.090 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:20:26.104 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:20:26.110 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:20:27.123 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:23:29.966 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:23:31.119 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:23:31.123 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:23:32.153 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:23:32.158 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:23:32.165 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:23:32.176 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:23:33.186 [qtp505968231-69] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:23:33.190 [qtp505968231-69] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:23:33.192 [qtp505968231-64] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:23:33.193 [qtp505968231-64] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:23:33.195 [qtp505968231-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:23:33.195 [qtp505968231-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:23:33.196 [qtp505968231-69] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:23:33.197 [qtp505968231-69] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:23:33.198 [qtp505968231-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:23:33.199 [qtp505968231-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:23:33.309 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:23:33.312 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:23:34.322 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:23:34.327 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:23:35.340 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:24:04.328 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:24:05.480 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:24:05.499 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:24:05.517 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:24:15.088 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:24:16.261 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:24:16.278 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:24:16.294 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:24:35.254 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:24:36.489 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:24:36.514 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:24:36.531 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:24:45.028 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:24:46.167 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:24:46.171 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:24:47.206 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:24:47.210 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:24:47.215 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:24:47.218 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:24:48.227 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:24:48.232 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:24:48.234 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:24:48.235 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:24:48.237 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:24:48.238 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:24:48.239 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:24:48.239 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:24:48.240 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:24:48.241 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:24:48.358 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:24:48.364 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:24:49.374 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:24:49.378 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:24:50.391 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:07.349 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:08.516 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:08.534 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:25:08.541 [qtp972865270-37] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:08.541 [qtp972865270-37] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:25:08.542 [qtp972865270-43] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:08.543 [qtp972865270-43] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:25:08.543 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:08.544 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:25:08.546 [qtp972865270-43] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:08.546 [qtp972865270-43] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:25:09.091 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:24.029 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:25.177 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:25.181 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:26.215 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:25:26.221 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:25:26.226 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:26.233 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:27.243 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:27.246 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:25:27.248 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:27.249 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:25:27.250 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:27.251 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:25:27.252 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:27.252 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:25:27.254 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:27.254 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:25:27.369 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:27.376 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:28.385 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:28.390 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:29.402 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:45.574 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:46.846 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:46.849 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:47.882 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:25:47.888 [qtp1869247587-57] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:25:47.894 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:47.900 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:48.910 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:48.913 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:25:48.916 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:48.917 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:25:48.918 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:48.919 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:25:48.920 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:48.920 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:25:48.922 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:25:48.922 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:25:49.545 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:49.552 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:50.562 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:25:50.567 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:25:51.577 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:26:38.784 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:26:39.956 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:26:48.033 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:26:49.182 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:26:49.199 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:26:49.207 [qtp972865270-37] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:26:49.208 [qtp972865270-37] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:26:49.210 [qtp972865270-43] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:26:49.210 [qtp972865270-43] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:26:49.211 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:26:49.212 [qtp972865270-42] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:26:49.214 [qtp972865270-43] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:26:49.214 [qtp972865270-43] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:26:49.735 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:27:01.917 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:03.138 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:27:03.142 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:04.174 [qtp1869247587-58] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: test-topic
+2025-10-05 02:27:04.179 [qtp1869247587-58] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: test-topic with offset: 0
+2025-10-05 02:27:04.184 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:27:04.191 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:05.198 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.202 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 0
+2025-10-05 02:27:05.204 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.205 [qtp2111247080-65] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 1
+2025-10-05 02:27:05.206 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.207 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 2
+2025-10-05 02:27:05.208 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.209 [qtp2111247080-70] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 3
+2025-10-05 02:27:05.210 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Publishing message to topic: multi-topic
+2025-10-05 02:27:05.210 [qtp2111247080-71] INFO  o.m.f.server.http.JettyHttpServer - Message published successfully to topic: multi-topic with offset: 4
+2025-10-05 02:27:06.350 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:27:06.356 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:07.365 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:27:07.367 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 02:27:08.382 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
