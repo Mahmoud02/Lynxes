@@ -95,11 +95,11 @@ public class Topic {
             // Try to append the record first
             Record record = log.append(offset, data);
             
-            // Force immediate flush to ensure data is persisted
-            log.flush();
-            
-            // Only increment nextOffset after successful append and flush
+            // Only increment nextOffset after successful append
             nextOffset.incrementAndGet();
+            
+            // Note: We don't force immediate flush here - let the flush strategy handle it
+            // This maintains page cache benefits while ensuring data consistency
             
             return record;
         } finally {
@@ -133,6 +133,53 @@ public class Topic {
         lock.writeLock().lock();
         try {
             return log.append(offset, data);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Publishes a message with configurable durability guarantees.
+     * 
+     * @param data The message data
+     * @param requireDurability If true, forces immediate flush to disk (slower but more durable)
+     * @return The published record
+     * @throws IOException if publishing fails
+     * @throws IllegalStateException if the topic is closed
+     */
+    public Record publish(byte[] data, boolean requireDurability) throws IOException {
+        if (closed) {
+            throw new IllegalStateException("Topic is closed");
+        }
+        
+        if (data == null || data.length == 0) {
+            throw new IllegalArgumentException("Message data cannot be null or empty");
+        }
+        
+        if (data.length > config.getMaxMessageSize()) {
+            throw new IllegalArgumentException("Message size exceeds maximum allowed size: " + 
+                                             config.getMaxMessageSize());
+        }
+        
+        lock.writeLock().lock();
+        try {
+            // Get the next offset but don't increment yet
+            long offset = nextOffset.get();
+            
+            // Try to append the record first
+            Record record = log.append(offset, data);
+            
+            // Only increment nextOffset after successful append
+            nextOffset.incrementAndGet();
+            
+            // Apply durability requirements
+            if (requireDurability) {
+                // Force immediate flush for high-durability requirements
+                log.flush();
+            }
+            // Otherwise, rely on the configured flush strategy for performance
+            
+            return record;
         } finally {
             lock.writeLock().unlock();
         }
