@@ -278,7 +278,7 @@ public class AsyncProcessor {
             // Note: TopicService is not injected in AsyncProcessor, so we'll use a simple response
             // In a real implementation, you'd inject TopicService into AsyncProcessor
             String responseBody = String.format("{\"message\":\"Topic '%s' deletion requested\"}", topicName);
-            sendSuccessResponse(request, "application/json", responseBody);
+            sendResponse(request, 200, "application/json", responseBody);
             logger.info("Delete topic request processed for: {}", topicName);
         } catch (Exception e) {
             logger.error("Error handling delete topic request for: {}", topicName, e);
