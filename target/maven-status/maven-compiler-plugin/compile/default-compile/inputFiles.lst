@@ -16,6 +16,10 @@
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/Store.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/di/FastQueueModule.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/di/ServiceContainer.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/examples/ByteBufferDemo.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/examples/FlushStrategyDemo.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/examples/PageCacheDemo.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/examples/PageCacheVisibleDemo.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/AsyncHttpServer.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/AsyncProcessor.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/AsyncRequest.java
@@ -24,6 +28,15 @@
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/ResponseChannel.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/ResponseProcessor.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/http/JettyHttpServer.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/FastQueueUIServlet.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/components/MetricCard.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/components/StatusIndicator.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/layout/MainLayout.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/views/DashboardView.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/views/HealthView.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/views/MessagesView.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/views/MetricsView.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/ui/views/TopicsView.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/service/ExecutorServiceProvider.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/service/HealthService.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/service/MessageService.java
