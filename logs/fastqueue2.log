@@ -437,3 +437,137 @@ Caused by: java.net.BindException: Address already in use
 2025-10-05 02:27:07.365 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
 2025-10-05 02:27:07.367 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
 2025-10-05 02:27:08.382 [main] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 02:53:22.915 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 02:53:22.916 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 02:53:22.931 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: dev
+2025-10-05 02:53:22.933 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data-dev, maxSegmentSize=524288, retentionPeriodMs=3600000, indexInterval=1024, maxMessageSize=1048576, serverPort=8081, threadPoolSize=5, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=DEBUG, logFile=logs/fastqueue2-dev.log}
+2025-10-05 02:53:22.934 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.RequestChannel - RequestChannel initialized with max queue size: 1000
+2025-10-05 02:53:22.935 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor initialized with 5 I/O threads
+2025-10-05 02:53:22.978 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer initialized on port 8081
+2025-10-05 02:53:22.979 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - Starting AsyncHttpServer...
+2025-10-05 02:53:22.979 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - Starting AsyncProcessor...
+2025-10-05 02:53:22.979 [org.mahmoud.fastqueue.Fastqueue2.main()] ERROR org.mahmoud.fastqueue.Fastqueue2 - Failed to start FastQueue2 server
+java.lang.ArrayIndexOutOfBoundsException: Index 2 out of bounds for length 1
+	at org.mahmoud.fastqueue.server.async.AsyncProcessor.start(AsyncProcessor.java:56)
+	at org.mahmoud.fastqueue.server.async.AsyncHttpServer.start(AsyncHttpServer.java:71)
+	at org.mahmoud.fastqueue.Fastqueue2.startHttpServer(Fastqueue2.java:56)
+	at org.mahmoud.fastqueue.Fastqueue2.main(Fastqueue2.java:27)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:371)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:289)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+2025-10-05 02:54:23.952 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 02:54:23.952 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 02:54:23.966 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: dev
+2025-10-05 02:54:23.968 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data-dev, maxSegmentSize=524288, retentionPeriodMs=3600000, indexInterval=1024, maxMessageSize=1048576, serverPort=8081, threadPoolSize=5, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=DEBUG, logFile=logs/fastqueue2-dev.log}
+2025-10-05 02:54:23.969 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.RequestChannel - RequestChannel initialized with max queue size: 1000
+2025-10-05 02:54:23.969 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor initialized with 5 I/O threads
+2025-10-05 02:54:24.012 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer initialized on port 8081
+2025-10-05 02:54:24.012 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - Starting AsyncHttpServer...
+2025-10-05 02:54:24.012 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - Starting AsyncProcessor...
+2025-10-05 02:54:24.013 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:54:24.013 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:54:24.013 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:54:24.013 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:54:24.013 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor started successfully
+2025-10-05 02:54:24.013 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:54:24.040 [org.mahmoud.fastqueue.Fastqueue2.main()] ERROR org.mahmoud.fastqueue.Fastqueue2 - Failed to start FastQueue2 server
+java.lang.IllegalStateException: Multiple servlets map to path /topics/*: org.mahmoud.fastqueue.server.async.AsyncHttpServer$PublishServlet-3c3a9314[mapped:EMBEDDED:null],org.mahmoud.fastqueue.server.async.AsyncHttpServer$ConsumeServlet-7e0abcc3[mapped:EMBEDDED:null]
+	at org.eclipse.jetty.servlet.ServletHandler.updateMappings(ServletHandler.java:1383)
+	at org.eclipse.jetty.servlet.ServletHandler.doStart(ServletHandler.java:181)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:171)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:114)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:89)
+	at org.eclipse.jetty.server.handler.ScopedHandler.doStart(ScopedHandler.java:112)
+	at org.eclipse.jetty.server.handler.ContextHandler.startContext(ContextHandler.java:961)
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:388)
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:902)
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:306)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:171)
+	at org.eclipse.jetty.server.Server.start(Server.java:470)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:114)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:89)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:415)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.mahmoud.fastqueue.server.async.AsyncHttpServer.start(AsyncHttpServer.java:74)
+	at org.mahmoud.fastqueue.Fastqueue2.startHttpServer(Fastqueue2.java:56)
+	at org.mahmoud.fastqueue.Fastqueue2.main(Fastqueue2.java:27)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:371)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:289)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+2025-10-05 02:55:54.430 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 02:55:54.431 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 02:55:54.452 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: dev
+2025-10-05 02:55:54.454 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data-dev, maxSegmentSize=524288, retentionPeriodMs=3600000, indexInterval=1024, maxMessageSize=1048576, serverPort=8081, threadPoolSize=5, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=DEBUG, logFile=logs/fastqueue2-dev.log}
+2025-10-05 02:55:54.456 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.RequestChannel - RequestChannel initialized with max queue size: 1000
+2025-10-05 02:55:54.458 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor initialized with 5 I/O threads
+2025-10-05 02:55:54.502 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer initialized on port 8081
+2025-10-05 02:55:54.502 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - Starting AsyncHttpServer...
+2025-10-05 02:55:54.502 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - Starting AsyncProcessor...
+2025-10-05 02:55:54.503 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:55:54.503 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:55:54.503 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:55:54.503 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor started successfully
+2025-10-05 02:55:54.503 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:55:54.503 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 02:55:54.547 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer started successfully on port 8081
+2025-10-05 02:55:54.547 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - RequestChannel metrics: RequestChannel{queueSize=0/1000, requests=0, completed=0, rejected=0, utilization=0.00%}
+2025-10-05 02:55:54.547 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 HTTP Server started on port 8081
+2025-10-05 02:55:54.548 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 02:55:54.548 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 02:55:54.548 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 02:55:54.548 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 02:55:54.548 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 02:55:54.548 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 02:55:54.548 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 02:55:54.548 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 03:04:28.636 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 03:04:28.639 [Thread-10] INFO  o.m.f.server.async.AsyncHttpServer - Stopping AsyncHttpServer...
+2025-10-05 03:04:28.663 [Thread-10] INFO  o.m.f.server.async.AsyncProcessor - Shutting down AsyncProcessor...
+2025-10-05 03:04:28.664 [Thread-10] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor shutdown completed
+2025-10-05 03:04:28.664 [Thread-10] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer stopped successfully
+2025-10-05 03:04:28.664 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 03:04:36.688 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 03:04:36.689 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 03:04:36.702 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: default
+2025-10-05 03:04:36.704 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data, maxSegmentSize=1048576, retentionPeriodMs=604800000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=10, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=INFO, logFile=logs/fastqueue2.log}
+2025-10-05 03:04:36.816 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server started on port 8080
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 JettyHttpServer started on port 8080
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 03:04:36.817 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 03:05:08.935 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 03:05:08.940 [Thread-10] INFO  o.m.f.server.http.JettyHttpServer - FastQueue2 Jetty HTTP Server stopped
+2025-10-05 03:05:08.941 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 03:05:14.234 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 03:05:14.235 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 03:05:14.247 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: dev
+2025-10-05 03:05:14.249 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data-dev, maxSegmentSize=524288, retentionPeriodMs=3600000, indexInterval=1024, maxMessageSize=1048576, serverPort=8081, threadPoolSize=5, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, logLevel=DEBUG, logFile=logs/fastqueue2-dev.log}
+2025-10-05 03:05:14.250 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.RequestChannel - RequestChannel initialized with max queue size: 1000
+2025-10-05 03:05:14.250 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor initialized with 5 I/O threads
+2025-10-05 03:05:14.284 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer initialized on port 8081
+2025-10-05 03:05:14.284 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - Starting AsyncHttpServer...
+2025-10-05 03:05:14.284 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - Starting AsyncProcessor...
+2025-10-05 03:05:14.285 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 03:05:14.285 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor started successfully
+2025-10-05 03:05:14.285 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 03:05:14.285 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 03:05:14.285 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 03:05:14.285 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 03:05:14.324 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer started successfully on port 8081
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - RequestChannel metrics: RequestChannel{queueSize=0/1000, requests=0, completed=0, rejected=0, utilization=0.00%}
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 AsyncHttpServer started on port 8081
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 03:05:14.325 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server

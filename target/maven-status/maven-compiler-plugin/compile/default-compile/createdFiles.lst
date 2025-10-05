@@ -22,5 +22,6 @@ org/mahmoud/fastqueue/server/http/JettyHttpServer$PublishResponse.class
 org/mahmoud/fastqueue/api/consumer/Consumer.class
 org/mahmoud/fastqueue/api/topic/Topic.class
 org/mahmoud/fastqueue/core/Record.class
+org/mahmoud/fastqueue/server/async/AsyncProcessor$1.class
 org/mahmoud/fastqueue/Fastqueue2.class
 org/mahmoud/fastqueue/api/producer/Producer.class
