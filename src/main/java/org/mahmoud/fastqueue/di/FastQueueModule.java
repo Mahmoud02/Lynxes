@@ -18,7 +18,6 @@ import org.mahmoud.fastqueue.server.async.ResponseChannel;
 import org.mahmoud.fastqueue.server.async.AsyncProcessor;
 import org.mahmoud.fastqueue.server.async.ResponseProcessor;
 import org.mahmoud.fastqueue.server.async.AsyncHttpServer;
-import org.mahmoud.fastqueue.server.http.JettyHttpServer;
 
 /**
  * Guice module for FastQueue2 dependency injection configuration.
@@ -112,13 +111,4 @@ public class FastQueueModule extends AbstractModule {
         return new AsyncHttpServer(config, requestChannel, responseChannel, messageService, healthService, topicService, objectMapperService, asyncProcessor, responseProcessor, executorService);
     }
     
-    /**
-     * Provides JettyHttpServer with all dependencies injected.
-     */
-    @Provides
-    @Singleton
-    public JettyHttpServer provideJettyHttpServer(QueueConfig config, MessageService messageService, 
-                                                 TopicService topicService, ObjectMapperService objectMapperService) {
-        return new JettyHttpServer(config, messageService, topicService, objectMapperService);
-    }
 }

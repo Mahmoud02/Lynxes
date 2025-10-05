@@ -3,7 +3,6 @@ package org.mahmoud.fastqueue;
 import org.mahmoud.fastqueue.config.QueueConfig;
 import org.mahmoud.fastqueue.di.ServiceContainer;
 import org.mahmoud.fastqueue.server.async.AsyncHttpServer;
-import org.mahmoud.fastqueue.server.http.JettyHttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
@@ -52,55 +51,29 @@ public class Fastqueue2 {
         // Initialize dependency injection container
         ServiceContainer container = ServiceContainer.getInstance(environment);
         
-        // Choose server type based on configuration or command line
-        String serverType = getServerType(environment);
-        
-        if ("async".equalsIgnoreCase(serverType)) {
-            // Get async HTTP server from DI container
-            AsyncHttpServer httpServer = container.getService(AsyncHttpServer.class);
-            httpServer.start();
-            startServerLoop(httpServer, "AsyncHttpServer");
-        } else {
-            // Get synchronous Jetty HTTP server from DI container
-            JettyHttpServer httpServer = container.getService(JettyHttpServer.class);
-            httpServer.start();
-            startServerLoop(httpServer, "JettyHttpServer");
-        }
+        // Get AsyncHttpServer from DI container
+        AsyncHttpServer httpServer = container.getService(AsyncHttpServer.class);
+        httpServer.start();
+        startServerLoop(httpServer, "AsyncHttpServer");
     }
     
-    /**
-     * Gets the server type to use (async or sync).
-     */
-    private static String getServerType(String environment) {
-        // Default to async server for better performance
-        return "async";
-    }
     
     /**
      * Starts the server loop and handles shutdown.
      */
-    private static void startServerLoop(Object httpServer, String serverType) throws Exception {
+    private static void startServerLoop(AsyncHttpServer httpServer, String serverType) throws Exception {
         // Add shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Shutting down FastQueue2 Server...");
             try {
-                if (httpServer instanceof AsyncHttpServer) {
-                    ((AsyncHttpServer) httpServer).stop();
-                } else if (httpServer instanceof JettyHttpServer) {
-                    ((JettyHttpServer) httpServer).stop();
-                }
+                httpServer.stop();
                 logger.info("FastQueue2 Server shutdown completed");
             } catch (Exception e) {
                 logger.error("Error during shutdown", e);
             }
         }));
         
-        int port = 0;
-        if (httpServer instanceof AsyncHttpServer) {
-            port = ((AsyncHttpServer) httpServer).getPort();
-        } else if (httpServer instanceof JettyHttpServer) {
-            port = ((JettyHttpServer) httpServer).getPort();
-        }
+        int port = httpServer.getPort();
         
         logger.info("FastQueue2 {} started on port {}", serverType, port);
         logger.info("API Endpoints:");
@@ -113,21 +86,8 @@ public class Fastqueue2 {
         logger.info("Press Ctrl+C to stop the server");
         
         // Keep server running
-        boolean isRunning = false;
-        if (httpServer instanceof AsyncHttpServer) {
-            isRunning = ((AsyncHttpServer) httpServer).isRunning();
-        } else if (httpServer instanceof JettyHttpServer) {
-            isRunning = ((JettyHttpServer) httpServer).isRunning();
-        }
-        
-        while (isRunning) {
+        while (httpServer.isRunning()) {
             Thread.sleep(1000);
-            // Check if still running
-            if (httpServer instanceof AsyncHttpServer) {
-                isRunning = ((AsyncHttpServer) httpServer).isRunning();
-            } else if (httpServer instanceof JettyHttpServer) {
-                isRunning = ((JettyHttpServer) httpServer).isRunning();
-            }
         }
     }
     
