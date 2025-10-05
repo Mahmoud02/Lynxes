@@ -4,6 +4,7 @@ import org.mahmoud.fastqueue.api.topic.Topic;
 import org.mahmoud.fastqueue.api.topic.TopicRegistry;
 import org.mahmoud.fastqueue.core.Record;
 import org.mahmoud.fastqueue.config.QueueConfig;
+import com.google.inject.Inject;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +25,7 @@ public class Producer {
      * 
      * @param config The queue configuration
      */
+    @Inject
     public Producer(QueueConfig config) {
         this.config = config;
         this.topics = new ConcurrentHashMap<>();

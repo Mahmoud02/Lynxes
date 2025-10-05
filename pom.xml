@@ -46,6 +46,13 @@
             <version>1.4.2</version>
         </dependency>
         
+        <!-- Google Guice Dependency Injection -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>7.0.0</version>
+        </dependency>
+        
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
