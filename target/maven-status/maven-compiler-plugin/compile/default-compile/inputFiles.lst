@@ -6,8 +6,11 @@
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/config/ConfigLoader.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/config/ConfigProperty.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/config/QueueConfig.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/FlushConfiguration.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/FlushStrategy.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/Index.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/Log.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/OptimizedStore.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/Record.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/Segment.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/core/Store.java

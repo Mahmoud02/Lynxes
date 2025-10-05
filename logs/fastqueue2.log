@@ -1275,3 +1275,176 @@ java.lang.IllegalStateException: COMPLETED
 2025-10-05 03:51:02.215 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
 2025-10-05 03:51:02.215 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
 2025-10-05 03:51:02.215 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 05:09:20.505 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo - === FastQueue2 Configurable Flush Strategies Demo ===
+
+2025-10-05 05:10:17.312 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo - === FastQueue2 Configurable Flush Strategies Demo ===
+
+2025-10-05 05:10:17.312 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo - 1. IMMEDIATE FLUSH STRATEGY (Highest Durability)
+2025-10-05 05:10:17.312 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Flushes after every single message
+2025-10-05 05:10:17.313 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Maximum durability, minimum performance
+2025-10-05 05:10:17.313 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Use case: Critical financial transactions
+
+2025-10-05 05:10:17.320 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 0: position=35, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.324 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 1: position=70, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.328 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 2: position=105, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.332 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 3: position=140, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.336 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 4: position=175, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.340 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 5: position=210, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.344 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 6: position=245, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.348 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 7: position=280, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.351 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 8: position=315, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.355 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 9: position=350, messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:17.355 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Completed 10 messages in 40ms (immediate flush after each)
+
+2025-10-05 05:10:17.359 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo - 2. KAFKA-STYLE HYBRID STRATEGY (Balanced)
+2025-10-05 05:10:17.359 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Flushes every 10,000 messages OR 3 seconds
+2025-10-05 05:10:17.359 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Good balance of durability and performance
+2025-10-05 05:10:17.359 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Use case: Production message queues
+
+2025-10-05 05:10:17.360 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 0: messagesSinceFlush=1, timeSinceFlush=1ms
+2025-10-05 05:10:17.465 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 1: messagesSinceFlush=2, timeSinceFlush=106ms
+2025-10-05 05:10:17.569 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 2: messagesSinceFlush=3, timeSinceFlush=210ms
+2025-10-05 05:10:17.670 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 3: messagesSinceFlush=4, timeSinceFlush=311ms
+2025-10-05 05:10:17.775 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 4: messagesSinceFlush=5, timeSinceFlush=416ms
+2025-10-05 05:10:17.876 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 5: messagesSinceFlush=6, timeSinceFlush=517ms
+2025-10-05 05:10:17.978 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 6: messagesSinceFlush=7, timeSinceFlush=619ms
+2025-10-05 05:10:18.082 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 7: messagesSinceFlush=8, timeSinceFlush=723ms
+2025-10-05 05:10:18.186 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 8: messagesSinceFlush=9, timeSinceFlush=827ms
+2025-10-05 05:10:18.286 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 9: messagesSinceFlush=10, timeSinceFlush=927ms
+2025-10-05 05:10:18.392 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 10: messagesSinceFlush=11, timeSinceFlush=1033ms
+2025-10-05 05:10:18.493 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 11: messagesSinceFlush=12, timeSinceFlush=1134ms
+2025-10-05 05:10:18.597 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 12: messagesSinceFlush=13, timeSinceFlush=1238ms
+2025-10-05 05:10:18.702 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 13: messagesSinceFlush=14, timeSinceFlush=1343ms
+2025-10-05 05:10:18.803 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 14: messagesSinceFlush=15, timeSinceFlush=1444ms
+2025-10-05 05:10:18.906 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Completed 15 messages in 1546ms (Kafka-style batching)
+
+2025-10-05 05:10:18.908 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo - 3. HIGH PERFORMANCE STRATEGY (OS-Controlled)
+2025-10-05 05:10:18.908 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Lets OS decide when to flush
+2025-10-05 05:10:18.908 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Maximum performance, minimum durability
+2025-10-05 05:10:18.908 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Use case: High-throughput, non-critical data
+
+2025-10-05 05:10:18.910 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Completed 100 messages in 2ms (OS-controlled flushing)
+2025-10-05 05:10:18.910 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Messages since flush: 100, Time since flush: 2ms
+
+2025-10-05 05:10:18.913 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo - 4. CUSTOM CONFIGURATION
+2025-10-05 05:10:18.913 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Flush every 5 messages OR 500ms
+2025-10-05 05:10:18.914 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Customized for specific use case
+2025-10-05 05:10:18.914 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Use case: Development/testing
+
+2025-10-05 05:10:18.914 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 0: messagesSinceFlush=1, timeSinceFlush=0ms
+2025-10-05 05:10:19.120 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 1: messagesSinceFlush=2, timeSinceFlush=206ms
+2025-10-05 05:10:19.324 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 2: messagesSinceFlush=3, timeSinceFlush=410ms
+2025-10-05 05:10:19.530 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 3: messagesSinceFlush=1, timeSinceFlush=98ms
+2025-10-05 05:10:19.732 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 4: messagesSinceFlush=2, timeSinceFlush=300ms
+2025-10-05 05:10:19.941 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 5: messagesSinceFlush=0, timeSinceFlush=0ms
+2025-10-05 05:10:20.145 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 6: messagesSinceFlush=1, timeSinceFlush=204ms
+2025-10-05 05:10:20.349 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Message 7: messagesSinceFlush=2, timeSinceFlush=408ms
+2025-10-05 05:10:20.554 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Completed 8 messages in 1640ms (custom hybrid strategy)
+
+2025-10-05 05:10:20.558 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo - 5. PERFORMANCE COMPARISON
+2025-10-05 05:10:20.558 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Comparing different strategies with 1000 messages
+
+2025-10-05 05:10:24.294 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    Performance Results (1000 messages):
+2025-10-05 05:10:24.294 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Immediate Flush:    3722ms
+2025-10-05 05:10:24.294 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Balanced Flush:     6ms
+2025-10-05 05:10:24.295 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - High Performance:   7ms
+2025-10-05 05:10:24.295 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Performance Ratio:  620.3333333333334x faster (balanced vs immediate)
+2025-10-05 05:10:24.295 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo -    - Performance Ratio:  531.7142857142857x faster (high-perf vs immediate)
+2025-10-05 05:10:24.295 [org.mahmoud.fastqueue.examples.FlushStrategyDemo.main()] INFO  o.m.f.examples.FlushStrategyDemo - 
+=== Demo completed successfully! ===
+2025-10-05 05:12:58.701 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - === Page Cache Effects Demo ===
+
+2025-10-05 05:12:58.701 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - Testing WITH page cache:
+2025-10-05 05:12:58.739 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Messages written: 10000
+2025-10-05 05:12:58.740 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Write time: 31ms (to page cache)
+2025-10-05 05:12:58.740 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Flush time: 6ms (to disk)
+2025-10-05 05:12:58.740 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Total time: 37ms
+2025-10-05 05:12:58.740 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Messages/sec: 270270
+2025-10-05 05:12:58.740 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Store size: 438890 bytes
+2025-10-05 05:12:58.740 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - 
+2025-10-05 05:12:58.743 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - Testing WITHOUT page cache:
+2025-10-05 05:12:58.764 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Messages written: 10000
+2025-10-05 05:12:58.765 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Write time: 17ms (to page cache)
+2025-10-05 05:12:58.765 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Flush time: 3ms (to disk)
+2025-10-05 05:12:58.765 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Total time: 20ms
+2025-10-05 05:12:58.765 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Messages/sec: 500000
+2025-10-05 05:12:58.765 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Store size: 438890 bytes
+2025-10-05 05:12:58.765 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - 
+2025-10-05 05:12:58.769 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - === Demo completed! ===
+2025-10-05 05:15:17.587 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - === Page Cache Effects Demo ===
+
+2025-10-05 05:15:17.588 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - Testing WITH page cache:
+2025-10-05 05:15:17.637 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Messages written: 10000
+2025-10-05 05:15:17.638 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Write time: 42ms (to page cache)
+2025-10-05 05:15:17.638 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Flush time: 5ms (to disk)
+2025-10-05 05:15:17.638 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Total time: 47ms
+2025-10-05 05:15:17.638 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Messages/sec: 212765
+2025-10-05 05:15:17.638 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Store size: 877780 bytes
+2025-10-05 05:15:17.638 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - 
+2025-10-05 05:15:17.642 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - Testing WITHOUT page cache:
+2025-10-05 05:15:57.035 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Messages written: 10000
+2025-10-05 05:15:57.036 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Write time: 39392ms (to page cache)
+2025-10-05 05:15:57.036 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Flush time: 0ms (to disk)
+2025-10-05 05:15:57.036 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Total time: 39392ms
+2025-10-05 05:15:57.036 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Messages/sec: 253
+2025-10-05 05:15:57.036 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo -    Store size: 877780 bytes
+2025-10-05 05:15:57.036 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - 
+2025-10-05 05:15:57.036 [org.mahmoud.fastqueue.examples.PageCacheDemo.main()] INFO  o.m.fastqueue.examples.PageCacheDemo - === Demo completed! ===
+2025-10-05 05:19:03.107 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo - === ByteBuffer Performance Demo ===
+
+2025-10-05 05:19:03.108 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo - 1. TRADITIONAL I/O (FileOutputStream)
+2025-10-05 05:19:03.122 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Time: 14ms
+2025-10-05 05:19:03.123 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Size: 128890 bytes
+2025-10-05 05:19:03.123 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Messages/sec: 714285
+2025-10-05 05:19:03.123 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo - 
+2025-10-05 05:19:03.123 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo - 2. BYTEBUFFER I/O (FileChannel)
+2025-10-05 05:19:03.149 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Time: 26ms
+2025-10-05 05:19:03.149 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Size: 128890 bytes
+2025-10-05 05:19:03.149 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Messages/sec: 384615
+2025-10-05 05:19:03.149 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo - 
+2025-10-05 05:19:03.149 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo - 3. MEMORY-MAPPED I/O (MappedByteBuffer)
+2025-10-05 05:19:03.157 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Time: 8ms
+2025-10-05 05:19:03.157 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Size: 200000 bytes
+2025-10-05 05:19:03.157 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo -    Messages/sec: 1250000
+2025-10-05 05:19:03.157 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo - 
+2025-10-05 05:19:03.157 [org.mahmoud.fastqueue.examples.ByteBufferDemo.main()] INFO  o.m.f.examples.ByteBufferDemo - === Demo completed! ===
+2025-10-05 05:20:10.024 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - === Page Cache Visibility Demo ===
+
+2025-10-05 05:20:10.025 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - 1. WRITE TO PAGE CACHE (no force)
+2025-10-05 05:20:10.025 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Data goes to OS page cache, NOT disk yet
+
+2025-10-05 05:20:10.025 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Data written: 'This data goes to page cache first!'
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    FileChannel.write() completed
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Data is in OS page cache (RAM)
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Data is NOT on disk yet!
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    File size on disk: 35 bytes
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - 
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - 2. WRITE AND FORCE IMMEDIATELY
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Data goes to page cache, then forced to disk
+
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Data written: 'This data goes to page cache then disk!'
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    FileChannel.write() completed
+2025-10-05 05:20:10.026 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Data is in OS page cache (RAM)
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    FileChannel.force() completed
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Data is now on disk!
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    File size on disk: 39 bytes
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - 
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - 3. PAGE CACHE vs DISK COMPARISON
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    Shows the difference between page cache and disk
+
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    File 1 (page cache only):
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      Data: 'Page cache only - not on disk!'
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      FileChannel.write() completed
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      FileChannel.force() NOT called
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      Data in page cache: YES
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      Data on disk: NO (until OS flushes)
+2025-10-05 05:20:10.030 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      File size: 30 bytes
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -    File 2 (page cache + disk):
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      Data: 'Page cache and disk - forced!'
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      FileChannel.write() completed
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      FileChannel.force() called
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      Data in page cache: YES
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      Data on disk: YES
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      File size: 29 bytes
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - 
+2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - === Demo completed! ===

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.mahmoud.fastqueue.server.http.JettyHttpServer;
 import org.mahmoud.fastqueue.config.QueueConfig;
+import org.mahmoud.fastqueue.di.ServiceContainer;
 
 import java.io.IOException;
 import java.net.URI;
@@ -35,8 +36,9 @@ public class HttpApiTest {
         // Note: This is a workaround since we removed the Builder pattern
         // In a real scenario, we would use ConfigLoader with test-specific config
         
-        // Create and start server
-        server = new JettyHttpServer(config);
+        // Create and start server using ServiceContainer
+        ServiceContainer container = new ServiceContainer(config);
+        server = container.getInstance(JettyHttpServer.class);
         server.start();
         
         // Create HTTP client

@@ -61,6 +61,7 @@ data/
 data-dev/
 data-prod/
 logs/
+demo/
 *.log
 
 # Temporary files
