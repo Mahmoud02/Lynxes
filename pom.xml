@@ -74,12 +74,6 @@
             <version>1.4.14</version>
         </dependency>
         
-        <!-- Vaadin Flow -->
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-core</artifactId>
-            <version>24.3.10</version>
-        </dependency>
         
         <!-- Testing -->
         <dependency>

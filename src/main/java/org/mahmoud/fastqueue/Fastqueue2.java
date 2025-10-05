@@ -72,11 +72,8 @@ public class Fastqueue2 {
      * Gets the server type to use (async or sync).
      */
     private static String getServerType(String environment) {
-        // For now, default to async for dev/prod, sync for default
-        if ("dev".equalsIgnoreCase(environment) || "prod".equalsIgnoreCase(environment)) {
-            return "async";
-        }
-        return "sync"; // Default to synchronous for backward compatibility
+        // Default to async server for better performance
+        return "async";
     }
     
     /**

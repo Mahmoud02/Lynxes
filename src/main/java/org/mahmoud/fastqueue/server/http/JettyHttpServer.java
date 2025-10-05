@@ -2,8 +2,9 @@ package org.mahmoud.fastqueue.server.http;
 
 import org.mahmoud.fastqueue.service.MessageService;
 import org.mahmoud.fastqueue.service.ObjectMapperService;
+import org.mahmoud.fastqueue.service.TopicService;
 import org.mahmoud.fastqueue.config.QueueConfig;
-import org.mahmoud.fastqueue.server.ui.FastQueueUIServlet;
+import org.mahmoud.fastqueue.server.ui.DashboardServlet;
 import com.google.inject.Inject;
 import org.mahmoud.fastqueue.core.Record;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,7 @@ public class JettyHttpServer {
     
     private final QueueConfig config;
     private final MessageService messageService;
+    private final TopicService topicService;
     private final ObjectMapper objectMapper;
     private Server server;
     private volatile boolean running;
@@ -45,9 +47,10 @@ public class JettyHttpServer {
      * @param objectMapperService The object mapper service
      */
     @Inject
-    public JettyHttpServer(QueueConfig config, MessageService messageService, ObjectMapperService objectMapperService) {
+    public JettyHttpServer(QueueConfig config, MessageService messageService, TopicService topicService, ObjectMapperService objectMapperService) {
         this.config = config;
         this.messageService = messageService;
+        this.topicService = topicService;
         this.objectMapper = objectMapperService.getObjectMapper();
         this.running = false;
     }
@@ -75,8 +78,8 @@ public class JettyHttpServer {
         context.addServlet(new ServletHolder(new MessageServlet()), "/topics/*");
         context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
         
-        // Add Vaadin UI servlet
-        context.addServlet(new ServletHolder(new FastQueueUIServlet()), "/ui/*");
+        // Add dashboard servlet
+        context.addServlet(new ServletHolder(new org.mahmoud.fastqueue.server.ui.DashboardServlet()), "/ui/*");
         
         // Set the servlet context
         server.setHandler(context);
@@ -153,11 +156,34 @@ public class JettyHttpServer {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
             
-            TopicsResponse topicsResponse = new TopicsResponse(new String[0]); // TODO: Implement topic listing
-            String json = objectMapper.writeValueAsString(topicsResponse);
-            
-            try (PrintWriter out = response.getWriter()) {
-                out.print(json);
+            try {
+                // Get real topics from TopicService
+                java.util.List<TopicService.TopicInfo> topics = topicService.listTopics();
+                
+                // Convert to response format
+                String[] topicNames = topics.stream()
+                    .map(TopicService.TopicInfo::getName)
+                    .toArray(String[]::new);
+                
+                TopicsResponse topicsResponse = new TopicsResponse(topicNames);
+                String json = objectMapper.writeValueAsString(topicsResponse);
+                
+                try (PrintWriter out = response.getWriter()) {
+                    out.print(json);
+                }
+                
+                logger.debug("Listed {} topics", topics.size());
+                
+            } catch (Exception e) {
+                logger.error("Error listing topics", e);
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                
+                MessageResponse errorResponse = new MessageResponse("Error listing topics: " + e.getMessage());
+                String json = objectMapper.writeValueAsString(errorResponse);
+                
+                try (PrintWriter out = response.getWriter()) {
+                    out.print(json);
+                }
             }
         }
         
@@ -273,6 +299,47 @@ public class JettyHttpServer {
             } catch (Exception e) {
                 logger.error("Error processing consume request for topic: {} at offset: {}", topicName, offset, e);
                 sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid request: " + e.getMessage());
+            }
+        }
+        
+        @Override
+        protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+                throws ServletException, IOException {
+            String topicName = null;
+            try {
+                String path = request.getPathInfo();
+                if (path == null || path.length() < 2) {
+                    sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid topic name");
+                    return;
+                }
+                
+                topicName = path.substring(1); // Remove leading slash
+                
+                // Delete the topic
+                boolean deleted = topicService.deleteTopic(topicName);
+                
+                if (deleted) {
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    MessageResponse successResponse = new MessageResponse("Topic '" + topicName + "' deleted successfully");
+                    String json = objectMapper.writeValueAsString(successResponse);
+                    try (PrintWriter out = response.getWriter()) {
+                        out.print(json);
+                    }
+                    logger.info("Topic '{}' deleted successfully", topicName);
+                } else {
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    MessageResponse notFoundResponse = new MessageResponse("Topic '" + topicName + "' not found");
+                    String json = objectMapper.writeValueAsString(notFoundResponse);
+                    try (PrintWriter out = response.getWriter()) {
+                        out.print(json);
+                    }
+                }
+                
+            } catch (Exception e) {
+                logger.error("Error deleting topic: {}", topicName, e);
+                sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error deleting topic: " + e.getMessage());
             }
         }
     }

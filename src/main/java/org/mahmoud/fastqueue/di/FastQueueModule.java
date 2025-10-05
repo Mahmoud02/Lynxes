@@ -10,6 +10,7 @@ import org.mahmoud.fastqueue.api.producer.Producer;
 import org.mahmoud.fastqueue.api.consumer.Consumer;
 import org.mahmoud.fastqueue.service.MessageService;
 import org.mahmoud.fastqueue.service.HealthService;
+import org.mahmoud.fastqueue.service.TopicService;
 import org.mahmoud.fastqueue.service.ObjectMapperService;
 import org.mahmoud.fastqueue.service.ExecutorServiceProvider;
 import org.mahmoud.fastqueue.server.async.RequestChannel;
@@ -40,10 +41,11 @@ public class FastQueueModule extends AbstractModule {
         // Bind service layer
         bind(MessageService.class).in(Singleton.class);
         bind(HealthService.class).in(Singleton.class);
+        bind(TopicService.class).in(Singleton.class);
         bind(ObjectMapperService.class).in(Singleton.class);
         
         // Bind infrastructure services
-        bind(ExecutorService.class).toProvider(ExecutorServiceProvider.class).in(Singleton.class);
+        bind(ExecutorService.class).toProvider(ExecutorServiceProvider.class);
         
         // HTTP servers are provided by @Provides methods below
         
@@ -84,8 +86,9 @@ public class FastQueueModule extends AbstractModule {
     @Singleton
     public AsyncHttpServer provideAsyncHttpServer(QueueConfig config, RequestChannel requestChannel, 
                                                  ResponseChannel responseChannel, MessageService messageService, 
-                                                 HealthService healthService, ExecutorService executorService) {
-        return new AsyncHttpServer(config, requestChannel, responseChannel, messageService, healthService, executorService);
+                                                 HealthService healthService, TopicService topicService,
+                                                 ObjectMapperService objectMapperService, ExecutorService executorService) {
+        return new AsyncHttpServer(config, requestChannel, responseChannel, messageService, healthService, topicService, objectMapperService, executorService);
     }
     
     /**
@@ -94,7 +97,7 @@ public class FastQueueModule extends AbstractModule {
     @Provides
     @Singleton
     public JettyHttpServer provideJettyHttpServer(QueueConfig config, MessageService messageService, 
-                                                 ObjectMapperService objectMapperService) {
-        return new JettyHttpServer(config, messageService, objectMapperService);
+                                                 TopicService topicService, ObjectMapperService objectMapperService) {
+        return new JettyHttpServer(config, messageService, topicService, objectMapperService);
     }
 }

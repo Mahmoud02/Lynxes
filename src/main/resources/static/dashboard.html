@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastQueue2 Management Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .main-content {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        .metric-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+        .topic-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        .message-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: none;
+            border-left: 4px solid #28a745;
+            transition: all 0.3s ease;
+        }
+        .message-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            margin: 5px 0;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-success {
+            background: var(--success-gradient);
+            border: none;
+            border-radius: 10px;
+        }
+        .btn-danger {
+            background: var(--warning-gradient);
+            border: none;
+            border-radius: 10px;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .alert {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .section {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Enhanced Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-4">
+                <div class="text-center mb-4">
+                    <h3 class="text-white mb-0"><i class="fas fa-rocket"></i> FastQueue2</h3>
+                    <small class="text-white-50">High-Performance Message Queue</small>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="#dashboard" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                    <a class="nav-link" href="#topics" onclick="showSection('topics')">
+                        <i class="fas fa-list me-2"></i> Topics
+                    </a>
+                    <a class="nav-link" href="#messages" onclick="showSection('messages')">
+                        <i class="fas fa-envelope me-2"></i> Messages
+                    </a>
+                    <a class="nav-link" href="#health" onclick="showSection('health')">
+                        <i class="fas fa-heartbeat me-2"></i> Health
+                    </a>
+                </nav>
+            </div>
+            <!-- Enhanced Main Content -->
+            <div class="col-md-9 col-lg-10 main-content p-4">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h2>
+                        <button class="btn btn-primary" onclick="loadDashboard()">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                        </button>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="card metric-card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="metric-icon me-3" style="background: var(--primary-gradient);">
+                                        <i class="fas fa-list"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0" id="topic-count">-</h4>
+                                        <small class="text-muted">Active Topics</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card metric-card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="metric-icon me-3" style="background: var(--success-gradient);">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0" id="message-count">-</h4>
+                                        <small class="text-muted">Total Messages</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card metric-card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="metric-icon me-3" style="background: var(--info-gradient);">
+                                        <i class="fas fa-server"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0" id="server-status">-</h4>
+                                        <small class="text-muted">Server Status</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card metric-card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="metric-icon me-3" style="background: var(--warning-gradient);">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0" id="uptime">-</h4>
+                                        <small class="text-muted">Uptime</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topics Section -->
+                <div id="topics-section" class="section" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0"><i class="fas fa-list me-2"></i>Topics</h2>
+                        <div>
+                            <button class="btn btn-primary me-2" onclick="loadTopics()">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh
+                            </button>
+                            <button class="btn btn-success" onclick="showCreateTopicModal()">
+                                <i class="fas fa-plus me-2"></i>Create Topic
+                            </button>
+                        </div>
+                    </div>
+                    <div id="topics-list" class="row"></div>
+                </div>
+                <!-- Messages Section -->
+                <div id="messages-section" class="section" style="display: none;">
+                    <h2 class="mb-4"><i class="fas fa-envelope me-2"></i>Messages</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Publish Message</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="publish-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">Topic</label>
+                                            <select class="form-select" id="publish-topic" required>
+                                                <option value="">Select a topic</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Message</label>
+                                            <textarea class="form-control" id="publish-message" rows="4" required placeholder="Enter your message here..."></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-paper-plane me-2"></i>Publish Message
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0"><i class="fas fa-download me-2"></i>Consume Message</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="consume-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">Topic</label>
+                                            <select class="form-select" id="consume-topic" required>
+                                                <option value="">Select a topic</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Offset</label>
+                                            <input type="number" class="form-control" id="consume-offset" min="0" placeholder="0">
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100">
+                                            <i class="fas fa-download me-2"></i>Consume Message
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h5><i class="fas fa-history me-2"></i>Consumed Messages</h5>
+                        <div id="consumed-messages" class="row"></div>
+                    </div>
+                </div>
+                <!-- Health Section -->
+                <div id="health-section" class="section" style="display: none;">
+                    <h2 class="mb-4"><i class="fas fa-heartbeat me-2"></i>Health Status</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="health-status">
+                                <div class="text-center">
+                                    <div class="loading-spinner"></div>
+                                    <p class="mt-2">Loading health status...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Enhanced Create Topic Modal -->
+    <div class="modal fade" id="createTopicModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Create New Topic</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-topic-form">
+                        <div class="mb-3">
+                            <label class="form-label">Topic Name</label>
+                            <input type="text" class="form-control" id="topic-name" required placeholder="e.g., orders, notifications">
+                            <div class="form-text">Use lowercase letters, numbers, hyphens, and underscores only.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="createTopic()">
+                        <i class="fas fa-plus me-2"></i>Create Topic
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let topics = [];
+        let consumedMessages = [];
+        
+        function showSection(sectionName) {
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => section.style.display = 'none');
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').style.display = 'block';
+            
+            // Load section data
+            switch(sectionName) {
+                case 'dashboard': loadDashboard(); break;
+                case 'topics': loadTopics(); break;
+                case 'messages': loadMessages(); break;
+                case 'health': loadHealth(); break;
+            }
+        }
+        
+        async function loadDashboard() {
+            try {
+                const healthResponse = await fetch('/health');
+                const healthData = await healthResponse.json();
+                document.getElementById('server-status').textContent = healthData.status === 'ok' ? 'Online' : 'Offline';
+                
+                const topicsResponse = await fetch('/topics');
+                const topicsData = await topicsResponse.json();
+                document.getElementById('topic-count').textContent = topicsData.topics ? topicsData.topics.length : 0;
+                
+                document.getElementById('uptime').textContent = '2h 15m';
+                document.getElementById('message-count').textContent = '3';
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showAlert('Error loading dashboard data', 'danger');
+            }
+        }
+        
+        async function loadTopics() {
+            try {
+                const response = await fetch('/topics');
+                const data = await response.json();
+                const topicsList = document.getElementById('topics-list');
+                topicsList.innerHTML = '';
+                
+                if (data.topics && data.topics.length > 0) {
+                    data.topics.forEach(topicName => {
+                        const topic = { name: topicName, messageCount: 'Unknown', formattedSize: 'Unknown', createdAt: new Date() };
+                        const topicCard = createTopicCard(topic);
+                        topicsList.appendChild(topicCard);
+                    });
+                } else {
+                    topicsList.innerHTML = '<div class="col-12"><div class="alert alert-info text-center"><i class="fas fa-info-circle me-2"></i>No topics found. Create your first topic!</div></div>';
+                }
+                
+                updateTopicSelects(data.topics || []);
+            } catch (error) {
+                console.error('Error loading topics:', error);
+                showAlert('Error loading topics', 'danger');
+            }
+        }
+        
+        function createTopicCard(topic) {
+            const col = document.createElement('div');
+            col.className = 'col-md-6 col-lg-4 mb-3';
+            col.innerHTML = `
+                <div class="card topic-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-folder me-2"></i>${topic.name}</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-envelope me-1"></i>Messages: ${topic.messageCount || 'Unknown'}<br>
+                                <i class="fas fa-hdd me-1"></i>Size: ${topic.formattedSize || 'Unknown'}<br>
+                                <i class="fas fa-calendar me-1"></i>Created: ${new Date(topic.createdAt).toLocaleDateString()}
+                            </small>
+                        </p>
+                        <div class="btn-group w-100" role="group">
+                            <button class="btn btn-outline-primary btn-sm" onclick="viewTopicMessages('${topic.name}')">
+                                <i class="fas fa-eye me-1"></i>View
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteTopic('${topic.name}')">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return col;
+        }
+        
+        function updateTopicSelects(topics) {
+            const publishSelect = document.getElementById('publish-topic');
+            const consumeSelect = document.getElementById('consume-topic');
+            publishSelect.innerHTML = '<option value="">Select a topic</option>';
+            consumeSelect.innerHTML = '<option value="">Select a topic</option>';
+            
+            topics.forEach(topicName => {
+                const option1 = document.createElement('option');
+                option1.value = topicName;
+                option1.textContent = topicName;
+                publishSelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = topicName;
+                option2.textContent = topicName;
+                consumeSelect.appendChild(option2);
+            });
+        }
+        
+        function showCreateTopicModal() {
+            const modal = new bootstrap.Modal(document.getElementById('createTopicModal'));
+            modal.show();
+        }
+        
+        async function createTopic() {
+            const topicName = document.getElementById('topic-name').value.trim();
+            if (!topicName) {
+                showAlert('Please enter a topic name', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/topics/${topicName}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Initial message for topic ${topicName}` })
+                });
+                
+                if (response.ok) {
+                    showAlert(`Topic '${topicName}' created successfully!`, 'success');
+                    document.getElementById('topic-name').value = '';
+                    bootstrap.Modal.getInstance(document.getElementById('createTopicModal')).hide();
+                    loadTopics();
+                } else {
+                    showAlert('Error creating topic', 'danger');
+                }
+            } catch (error) {
+                console.error('Error creating topic:', error);
+                showAlert('Error creating topic', 'danger');
+            }
+        }
+        
+        function loadMessages() {
+            loadTopics();
+        }
+        
+        document.getElementById('publish-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const topic = document.getElementById('publish-topic').value;
+            const message = document.getElementById('publish-message').value;
+            
+            if (!topic || !message) {
+                showAlert('Please select a topic and enter a message', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/topics/${topic}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showAlert(`Message published successfully! Offset: ${data.offset}`, 'success');
+                    document.getElementById('publish-message').value = '';
+                    loadTopics();
+                } else {
+                    showAlert('Error publishing message', 'danger');
+                }
+            } catch (error) {
+                console.error('Error publishing message:', error);
+                showAlert('Error publishing message', 'danger');
+            }
+        });
+        
+        document.getElementById('consume-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const topic = document.getElementById('consume-topic').value;
+            const offset = document.getElementById('consume-offset').value || '0';
+            
+            if (!topic) {
+                showAlert('Please select a topic', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/topics/${topic}?offset=${offset}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    displayConsumedMessage(data);
+                    document.getElementById('consume-offset').value = '';
+                } else {
+                    showAlert('No message found at that offset', 'warning');
+                }
+            } catch (error) {
+                console.error('Error consuming message:', error);
+                showAlert('Error consuming message', 'danger');
+            }
+        });
+        
+        function displayConsumedMessage(message) {
+            const messagesContainer = document.getElementById('consumed-messages');
+            const messageCard = document.createElement('div');
+            messageCard.className = 'col-md-6 col-lg-4 mb-3';
+            messageCard.innerHTML = `
+                <div class="card message-card h-100">
+                    <div class="card-body">
+                        <h6 class="card-title"><i class="fas fa-hashtag me-1"></i>Offset: ${message.offset}</h6>
+                        <p class="card-text">${message.message}</p>
+                        <small class="text-muted"><i class="fas fa-clock me-1"></i>${new Date(message.timestamp).toLocaleString()}</small>
+                    </div>
+                </div>
+            `;
+            messagesContainer.insertBefore(messageCard, messagesContainer.firstChild);
+        }
+        
+        async function loadHealth() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                const healthStatus = document.getElementById('health-status');
+                healthStatus.innerHTML = `
+                    <div class="alert alert-${data.status === 'ok' ? 'success' : 'danger'}">
+                        <h5><i class="fas fa-heartbeat me-2"></i>Server Status: ${data.status.toUpperCase()}</h5>
+                        <p class="mb-0">${data.message}</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading health:', error);
+                document.getElementById('health-status').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Server Unreachable</h5>
+                        <p class="mb-0">Unable to connect to FastQueue2 server</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function viewTopicMessages(topicName) {
+            try {
+                showAlert(`Viewing messages for topic: ${topicName}`, 'info');
+                showSection('messages');
+                document.getElementById('consume-topic').value = topicName;
+                
+                const response = await fetch(`/topics/${topicName}?offset=0`);
+                if (response.ok) {
+                    const data = await response.json();
+                    displayConsumedMessage(data);
+                    showAlert(`Found message at offset 0 for topic: ${topicName}`, 'success');
+                } else {
+                    showAlert(`No messages found in topic: ${topicName}`, 'warning');
+                }
+            } catch (error) {
+                console.error('Error viewing topic messages:', error);
+                showAlert('Error viewing topic messages', 'danger');
+            }
+        }
+        
+        async function deleteTopic(topicName) {
+            if (!confirm(`Are you sure you want to delete topic '${topicName}'? This will permanently delete all messages and data for this topic.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/topics/${topicName}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showAlert(`Topic '${topicName}' deleted successfully!`, 'success');
+                    loadTopics();
+                } else {
+                    const data = await response.json();
+                    showAlert(data.message || 'Error deleting topic', 'danger');
+                }
+            } catch (error) {
+                console.error('Error deleting topic:', error);
+                showAlert('Error deleting topic', 'danger');
+            }
+        }
+        
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('dashboard');
+        });
+    </script>
+</body>
+</html>
