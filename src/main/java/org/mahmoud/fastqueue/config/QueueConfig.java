@@ -1,5 +1,8 @@
 package org.mahmoud.fastqueue.config;
 
+import org.mahmoud.fastqueue.core.FlushConfiguration;
+import org.mahmoud.fastqueue.core.FlushStrategy;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -62,6 +65,22 @@ public class QueueConfig {
     @ConfigProperty("fastqueue.performance.batchSize")
     private int batchSize;
     
+    // Flush strategy settings
+    @ConfigProperty("fastqueue.flush.strategy")
+    private String flushStrategy;
+    
+    @ConfigProperty("fastqueue.flush.messageInterval")
+    private int flushMessageInterval;
+    
+    @ConfigProperty("fastqueue.flush.timeIntervalMs")
+    private int flushTimeIntervalMs;
+    
+    @ConfigProperty("fastqueue.flush.forceMetadata")
+    private boolean flushForceMetadata;
+    
+    @ConfigProperty("fastqueue.flush.enablePageCache")
+    private boolean flushEnablePageCache;
+    
     // Logging settings
     @ConfigProperty("fastqueue.logging.level")
     private String logLevel;
@@ -88,6 +107,11 @@ public class QueueConfig {
         this.maxConcurrentConnections = 1000;
         this.enableBatching = true;
         this.batchSize = 100;
+        this.flushStrategy = "hybrid";
+        this.flushMessageInterval = 1000;
+        this.flushTimeIntervalMs = 1000;
+        this.flushForceMetadata = true;
+        this.flushEnablePageCache = true;
         this.logLevel = DEFAULT_LOG_LEVEL;
         this.logFile = DEFAULT_LOG_FILE;
     }
@@ -153,15 +177,56 @@ public class QueueConfig {
         return logFile;
     }
     
+    // Flush strategy getters
+    public String getFlushStrategy() {
+        return flushStrategy;
+    }
+    
+    public int getFlushMessageInterval() {
+        return flushMessageInterval;
+    }
+    
+    public int getFlushTimeIntervalMs() {
+        return flushTimeIntervalMs;
+    }
+    
+    public boolean isFlushForceMetadata() {
+        return flushForceMetadata;
+    }
+    
+    public boolean isFlushEnablePageCache() {
+        return flushEnablePageCache;
+    }
+    
+    /**
+     * Creates a FlushConfiguration from the current settings.
+     * 
+     * @return FlushConfiguration instance
+     */
+    public FlushConfiguration getFlushConfiguration() {
+        FlushStrategy strategy = FlushStrategy.fromName(flushStrategy);
+        return new FlushConfiguration(
+            strategy,
+            flushMessageInterval,
+            flushTimeIntervalMs,
+            flushForceMetadata,
+            flushEnablePageCache
+        );
+    }
+    
     @Override
     public String toString() {
         return String.format("QueueConfig{dataDir=%s, maxSegmentSize=%d, retentionPeriodMs=%d, " +
                            "indexInterval=%d, maxMessageSize=%d, serverPort=%d, threadPoolSize=%d, " +
                            "compression=%s, metrics=%s, flushIntervalMs=%d, maxConnections=%d, " +
-                           "batching=%s, batchSize=%d, logLevel=%s, logFile=%s}",
+                           "batching=%s, batchSize=%d, flushStrategy=%s, flushMessageInterval=%d, " +
+                           "flushTimeIntervalMs=%d, flushForceMetadata=%s, flushEnablePageCache=%s, " +
+                           "logLevel=%s, logFile=%s}",
                            dataDirectory, maxSegmentSize, retentionPeriodMs, indexInterval,
                            maxMessageSize, serverPort, threadPoolSize, enableCompression,
                            enableMetrics, flushIntervalMs, maxConcurrentConnections,
-                           enableBatching, batchSize, logLevel, logFile);
+                           enableBatching, batchSize, flushStrategy, flushMessageInterval,
+                           flushTimeIntervalMs, flushForceMetadata, flushEnablePageCache,
+                           logLevel, logFile);
     }
 }
