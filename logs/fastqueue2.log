@@ -2013,3 +2013,47 @@ Caused by: java.lang.Error: Unresolved compilation problem:
 2025-10-05 23:44:34.268 [Thread-10] INFO  o.m.f.server.async.ResponseProcessor - ResponseProcessor stopped.
 2025-10-05 23:44:34.273 [Thread-10] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer stopped successfully
 2025-10-05 23:44:34.276 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 23:44:49.173 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - Shutting down FastQueue2 Server...
+2025-10-05 23:44:49.173 [Thread-10] INFO  o.m.f.server.async.AsyncHttpServer - Stopping AsyncHttpServer...
+2025-10-05 23:44:49.177 [Thread-10] INFO  o.m.f.server.async.AsyncProcessor - Shutting down AsyncProcessor...
+2025-10-05 23:44:49.177 [Thread-10] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor shutdown completed
+2025-10-05 23:44:49.177 [Thread-10] INFO  o.m.f.server.async.ResponseProcessor - Stopping ResponseProcessor...
+2025-10-05 23:44:52.980 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 23:44:52.981 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 23:44:52.981 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.di.ServiceContainer - Initializing ServiceContainer for environment: default
+2025-10-05 23:44:53.038 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.di.ServiceContainer - ServiceContainer initialized successfully
+2025-10-05 23:44:53.053 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: default
+2025-10-05 23:44:53.055 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data, maxSegmentSize=1048576, retentionPeriodMs=604800000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=10, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, flushStrategy=hybrid, flushMessageInterval=1000, flushTimeIntervalMs=1000, flushForceMetadata=true, flushEnablePageCache=true, logLevel=INFO, logFile=logs/fastqueue2.log}
+2025-10-05 23:44:53.055 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.RequestChannel - RequestChannel initialized with max queue size: 1000
+2025-10-05 23:44:53.055 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.ResponseChannel - ResponseChannel initialized with max queue size: 1000
+2025-10-05 23:44:53.088 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor initialized with injected dependencies
+2025-10-05 23:44:53.089 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.ResponseProcessor - ResponseProcessor initialized
+2025-10-05 23:44:53.112 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer initialized on port 8080
+2025-10-05 23:44:53.113 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - Starting AsyncHttpServer...
+2025-10-05 23:44:53.113 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - Starting AsyncProcessor...
+2025-10-05 23:44:53.113 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncProcessor - AsyncProcessor started successfully
+2025-10-05 23:44:53.113 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.ResponseProcessor - Starting ResponseProcessor...
+2025-10-05 23:44:53.113 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread started: FastQueue2-IO-Thread
+2025-10-05 23:44:53.113 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.ResponseProcessor - Network worker thread started: FastQueue2-IO-Thread
+2025-10-05 23:44:53.113 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.ResponseProcessor - ResponseProcessor started successfully
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer started successfully on port 8080
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - RequestChannel metrics: org.mahmoud.fastqueue.server.async.RequestChannel@14256020
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.f.server.async.AsyncHttpServer - ResponseChannel metrics: ResponseChannel{queueSize=0/1000, responses=0, sent=0, rejected=0, utilization=0.00%}
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 AsyncHttpServer started on port 8080
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - API Endpoints:
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /health - Health check
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics - List topics
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics - Create topic
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   POST /topics/{name} - Publish message
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /topics/{name}?offset={n} - Consume message
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 -   GET  /metrics - Server metrics
+2025-10-05 23:44:53.140 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - Press Ctrl+C to stop the server
+2025-10-05 23:44:54.178 [Thread-10] WARN  o.m.f.server.async.ResponseProcessor - Network thread pool did not terminate in time, forcing shutdown.
+2025-10-05 23:44:54.179 [Thread-10] INFO  o.m.f.server.async.ResponseProcessor - ResponseProcessor stopped.
+2025-10-05 23:44:54.179 [FastQueue2-IO-Thread] WARN  o.m.f.server.async.ResponseProcessor - Network worker thread interrupted: FastQueue2-IO-Thread
+2025-10-05 23:44:54.179 [Thread-10] INFO  o.m.f.server.async.AsyncHttpServer - AsyncHttpServer stopped successfully
+2025-10-05 23:44:54.179 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread interrupted: FastQueue2-IO-Thread
+2025-10-05 23:44:54.179 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.ResponseProcessor - Network worker thread stopped: FastQueue2-IO-Thread
+2025-10-05 23:44:54.179 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - I/O worker thread stopped: FastQueue2-IO-Thread
+2025-10-05 23:44:54.179 [Thread-10] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 Server shutdown completed
+2025-10-05 23:44:54.521 [FastQueue2-IO-Thread] INFO  o.m.f.server.async.AsyncProcessor - Delete topic request processed for: test-topic
