@@ -191,6 +191,25 @@ public class Segment implements AutoCloseable {
     }
 
     /**
+     * Gets the highest offset in this segment.
+     * 
+     * @return The highest offset, or -1 if the segment is empty
+     */
+    public long getHighestOffset() {
+        return index.getHighestOffset();
+    }
+
+    /**
+     * Updates the next offset for this segment.
+     * This is used during recovery to set the correct next offset.
+     * 
+     * @param newNextOffset The new next offset value
+     */
+    public void updateNextOffset(long newNextOffset) {
+        nextOffset.set(newNextOffset);
+    }
+
+    /**
      * Gets the segment ID.
      * 
      * @return Segment ID
