@@ -1,7 +1,9 @@
 package org.mahmoud.fastqueue.server.async;
 
 import org.mahmoud.fastqueue.config.QueueConfig;
-import org.mahmoud.fastqueue.di.ServiceContainer;
+import org.mahmoud.fastqueue.service.MessageService;
+import org.mahmoud.fastqueue.service.HealthService;
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -28,19 +31,23 @@ public class AsyncHttpServer {
     private final QueueConfig config;
     private final RequestChannel requestChannel;
     private final AsyncProcessor asyncProcessor;
+    private final MessageService messageService;
+    private final HealthService healthService;
     private final Server server;
     private final AtomicLong requestIdCounter;
     private volatile boolean running;
     
-    public AsyncHttpServer(QueueConfig config) {
+    @Inject
+    public AsyncHttpServer(QueueConfig config, RequestChannel requestChannel, 
+                          MessageService messageService, HealthService healthService,
+                          ExecutorService executorService) {
         this.config = config;
+        this.requestChannel = requestChannel;
+        this.messageService = messageService;
+        this.healthService = healthService;
         
-        // Get dependencies from DI container
-        ServiceContainer container = ServiceContainer.getInstance();
-        this.requestChannel = container.getService(RequestChannel.class);
-        
-        // Create AsyncProcessor manually to avoid circular dependency
-        this.asyncProcessor = new AsyncProcessor(requestChannel, config, config.getThreadPoolSize());
+        // Create AsyncProcessor with injected dependencies
+        this.asyncProcessor = new AsyncProcessor(requestChannel, messageService, healthService, executorService);
         
         this.server = new Server(config.getServerPort());
         this.requestIdCounter = new AtomicLong(0);

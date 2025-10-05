@@ -1,16 +1,16 @@
 package org.mahmoud.fastqueue.server.async;
 
-import org.mahmoud.fastqueue.api.producer.Producer;
-import org.mahmoud.fastqueue.api.consumer.Consumer;
+import org.mahmoud.fastqueue.service.MessageService;
+import org.mahmoud.fastqueue.service.HealthService;
 import org.mahmoud.fastqueue.core.Record;
-import org.mahmoud.fastqueue.config.QueueConfig;
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -23,28 +23,25 @@ public class AsyncProcessor {
     
     private final RequestChannel requestChannel;
     private final ExecutorService ioThreadPool;
-    private final Producer producer;
-    private final Consumer consumer;
+    private final MessageService messageService;
+    private final HealthService healthService;
     private final AtomicBoolean running;
     private final AtomicLong processedCount;
     private final AtomicLong errorCount;
-    private final int numThreads;
     
-    public AsyncProcessor(RequestChannel requestChannel, QueueConfig config, int numIoThreads) {
+    @Inject
+    public AsyncProcessor(RequestChannel requestChannel, MessageService messageService, 
+                         HealthService healthService, ExecutorService executorService) {
         this.requestChannel = requestChannel;
-        this.numThreads = numIoThreads;
-        this.ioThreadPool = Executors.newFixedThreadPool(numIoThreads, r -> {
-            Thread t = new Thread(r, "FastQueue2-IO-Thread");
-            t.setDaemon(true);
-            return t;
-        });
-        this.producer = new Producer(config);
-        this.consumer = new Consumer(config);
+        this.messageService = messageService;
+        this.healthService = healthService;
+        this.ioThreadPool = executorService;
+        
         this.running = new AtomicBoolean(false);
         this.processedCount = new AtomicLong(0);
         this.errorCount = new AtomicLong(0);
         
-        logger.info("AsyncProcessor initialized with {} I/O threads", numIoThreads);
+        logger.info("AsyncProcessor initialized with injected dependencies");
     }
     
     /**
@@ -54,10 +51,8 @@ public class AsyncProcessor {
         if (running.compareAndSet(false, true)) {
             logger.info("Starting AsyncProcessor...");
             
-            // Start I/O threads
-            for (int i = 0; i < numThreads; i++) {
-                ioThreadPool.submit(new IoWorker());
-            }
+            // Start I/O worker
+            ioThreadPool.submit(new IoWorker());
             
             logger.info("AsyncProcessor started successfully");
         } else {
@@ -155,7 +150,7 @@ public class AsyncProcessor {
         }
         
         logger.debug("Publishing message to topic: {}", topicName);
-        Record record = producer.publish(topicName, message.getBytes(StandardCharsets.UTF_8));
+        Record record = messageService.publishMessage(topicName, message.getBytes(StandardCharsets.UTF_8));
         
         // Send success response
         String response = String.format("{\"offset\":%d,\"timestamp\":%d,\"message\":\"Message published successfully\"}", 
@@ -176,7 +171,7 @@ public class AsyncProcessor {
         }
         
         logger.debug("Consuming message from topic: {} at offset: {}", topicName, offset);
-        Record record = consumer.consume(topicName, offset);
+        Record record = messageService.consumeMessage(topicName, offset);
         
         if (record == null) {
             sendErrorResponse(request, 404, "No message found at offset " + offset);
@@ -194,7 +189,9 @@ public class AsyncProcessor {
      * Handles health check requests.
      */
     private void handleHealthRequest(AsyncRequest request) throws IOException {
-        String response = "{\"status\":\"ok\",\"message\":\"FastQueue2 is running\"}";
+        HealthService.HealthStatus health = healthService.checkHealth();
+        String response = String.format("{\"status\":\"%s\",\"message\":\"%s\"}", 
+                                      health.getStatus(), health.getMessage());
         sendResponse(request, 200, "application/json", response);
     }
     
@@ -212,9 +209,9 @@ public class AsyncProcessor {
      * Handles metrics requests.
      */
     private void handleMetricsRequest(AsyncRequest request) throws IOException {
-        String response = String.format("{\"producerTopics\":%d,\"producerMessages\":%d,\"consumerTopics\":%d,\"consumerMessages\":%d,\"processedRequests\":%d,\"errorCount\":%d}",
-                                      producer.getTopicCount(), producer.getMessageCount(),
-                                      consumer.getTopicCount(), consumer.getMessageCount(),
+        String response = String.format("{\"producerMessages\":%d,\"consumerMessages\":%d,\"processedRequests\":%d,\"errorCount\":%d}",
+                                      messageService.getProducerMessageCount(),
+                                      messageService.getConsumerMessageCount(),
                                       processedCount.get(), errorCount.get());
         sendResponse(request, 200, "application/json", response);
     }

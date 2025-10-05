@@ -1,8 +1,9 @@
 package org.mahmoud.fastqueue.server.http;
 
-import org.mahmoud.fastqueue.api.producer.Producer;
-import org.mahmoud.fastqueue.api.consumer.Consumer;
+import org.mahmoud.fastqueue.service.MessageService;
+import org.mahmoud.fastqueue.service.ObjectMapperService;
 import org.mahmoud.fastqueue.config.QueueConfig;
+import com.google.inject.Inject;
 import org.mahmoud.fastqueue.core.Record;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -30,24 +31,23 @@ public class JettyHttpServer {
     private static final Logger logger = LoggerFactory.getLogger(JettyHttpServer.class);
     
     private final QueueConfig config;
-    public final Producer producer;
-    public final Consumer consumer;
+    private final MessageService messageService;
     private final ObjectMapper objectMapper;
-    private final ThreadPoolExecutor executor;
     private Server server;
     private volatile boolean running;
 
     /**
-     * Creates a new Jetty HTTP server with the specified configuration.
+     * Creates a new Jetty HTTP server with injected dependencies.
      * 
      * @param config The queue configuration
+     * @param messageService The message service for handling operations
+     * @param objectMapperService The object mapper service
      */
-    public JettyHttpServer(QueueConfig config) {
+    @Inject
+    public JettyHttpServer(QueueConfig config, MessageService messageService, ObjectMapperService objectMapperService) {
         this.config = config;
-        this.producer = new Producer(config);
-        this.consumer = new Consumer(config);
-        this.objectMapper = new ObjectMapper();
-        this.executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(config.getThreadPoolSize());
+        this.messageService = messageService;
+        this.objectMapper = objectMapperService.getObjectMapper();
         this.running = false;
     }
 
@@ -94,7 +94,6 @@ public class JettyHttpServer {
         }
         
         server.stop();
-        executor.shutdown();
         running = false;
         logger.info("FastQueue2 Jetty HTTP Server stopped");
     }
@@ -150,7 +149,7 @@ public class JettyHttpServer {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
             
-            TopicsResponse topicsResponse = new TopicsResponse(producer.getTopicNames());
+            TopicsResponse topicsResponse = new TopicsResponse(new String[0]); // TODO: Implement topic listing
             String json = objectMapper.writeValueAsString(topicsResponse);
             
             try (PrintWriter out = response.getWriter()) {
@@ -198,7 +197,7 @@ public class JettyHttpServer {
                 
                 // Publish message
                 logger.info("Publishing message to topic: {}", topicName);
-                Record record = producer.publish(topicName, publishRequest.message.getBytes(StandardCharsets.UTF_8));
+                Record record = messageService.publishMessage(topicName, publishRequest.message.getBytes(StandardCharsets.UTF_8));
                 
                 // Send response
                 response.setContentType("application/json");
@@ -242,7 +241,7 @@ public class JettyHttpServer {
                 
                 // Consume message
                 logger.debug("Consuming message from topic: {} at offset: {}", topicName, offset);
-                Record record = consumer.consume(topicName, offset);
+                Record record = messageService.consumeMessage(topicName, offset);
                 
                 if (record == null) {
                     logger.debug("No message found at offset {} for topic: {}", offset, topicName);
@@ -285,10 +284,10 @@ public class JettyHttpServer {
             response.setStatus(HttpServletResponse.SC_OK);
             
             MetricsResponse metricsResponse = new MetricsResponse(
-                producer.getTopicCount(),
-                producer.getMessageCount(),
-                consumer.getTopicCount(),
-                consumer.getMessageCount()
+                0, // TODO: Implement topic count
+                messageService.getProducerMessageCount(),
+                0, // TODO: Implement consumer topic count
+                messageService.getConsumerMessageCount()
             );
             String json = objectMapper.writeValueAsString(metricsResponse);
             

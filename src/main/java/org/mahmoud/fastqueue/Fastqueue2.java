@@ -56,13 +56,13 @@ public class Fastqueue2 {
         String serverType = getServerType(environment);
         
         if ("async".equalsIgnoreCase(serverType)) {
-            // Create async HTTP server manually
-            AsyncHttpServer httpServer = new AsyncHttpServer(container.getService(QueueConfig.class));
+            // Get async HTTP server from DI container
+            AsyncHttpServer httpServer = container.getService(AsyncHttpServer.class);
             httpServer.start();
             startServerLoop(httpServer, "AsyncHttpServer");
         } else {
-            // Create synchronous Jetty HTTP server manually
-            JettyHttpServer httpServer = new JettyHttpServer(container.getService(QueueConfig.class));
+            // Get synchronous Jetty HTTP server from DI container
+            JettyHttpServer httpServer = container.getService(JettyHttpServer.class);
             httpServer.start();
             startServerLoop(httpServer, "JettyHttpServer");
         }
