@@ -74,3 +74,5 @@ demo/
 # Application specific
 application-local.conf
 application-test.conf
+
+.fake
