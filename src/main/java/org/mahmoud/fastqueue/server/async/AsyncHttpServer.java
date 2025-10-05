@@ -170,6 +170,12 @@ public class AsyncHttpServer {
             handleRequest(request, response, AsyncRequest.RequestType.PUBLISH);
         }
         
+        @Override
+        protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+                throws ServletException, IOException {
+            handleRequest(request, response, AsyncRequest.RequestType.DELETE_TOPIC);
+        }
+        
         protected abstract void handleRequest(HttpServletRequest request, HttpServletResponse response, 
                                             AsyncRequest.RequestType defaultType) throws ServletException, IOException;
         
