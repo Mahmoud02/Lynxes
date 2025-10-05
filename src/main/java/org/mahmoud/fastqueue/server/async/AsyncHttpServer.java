@@ -49,7 +49,8 @@ public class AsyncHttpServer {
     @Inject
     public AsyncHttpServer(QueueConfig config, RequestChannel requestChannel, ResponseChannel responseChannel,
                           MessageService messageService, HealthService healthService, TopicService topicService,
-                          ObjectMapperService objectMapperService, ExecutorService executorService) {
+                          ObjectMapperService objectMapperService, AsyncProcessor asyncProcessor, 
+                          ResponseProcessor responseProcessor, ExecutorService executorService) {
         this.config = config;
         this.requestChannel = requestChannel;
         this.responseChannel = responseChannel;
@@ -58,9 +59,9 @@ public class AsyncHttpServer {
         this.topicService = topicService;
         this.objectMapper = objectMapperService.getObjectMapper();
         
-        // Create processors with injected dependencies
-        this.asyncProcessor = new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, executorService);
-        this.responseProcessor = new ResponseProcessor(responseChannel, executorService);
+        // Use injected processors
+        this.asyncProcessor = asyncProcessor;
+        this.responseProcessor = responseProcessor;
         
         this.server = new Server(config.getServerPort());
         this.requestIdCounter = new AtomicLong(0);
@@ -291,8 +292,21 @@ public class AsyncHttpServer {
                 }
             } else if ("POST".equals(method)) {
                 // Publish request
-                String message = new String(request.getInputStream().readAllBytes());
-                processAsyncRequest(request, response, AsyncRequest.RequestType.PUBLISH, topicName, null, message);
+                try {
+                    String requestBody = new String(request.getInputStream().readAllBytes());
+                    com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(requestBody);
+                    String message = jsonNode.get("message").asText();
+                    
+                    if (message == null || message.trim().isEmpty()) {
+                        sendErrorResponse(response, 400, "Message content required");
+                        return;
+                    }
+                    
+                    processAsyncRequest(request, response, AsyncRequest.RequestType.PUBLISH, topicName, null, message);
+                } catch (Exception e) {
+                    logger.error("Error parsing publish request for topic: {}", topicName, e);
+                    sendErrorResponse(response, 400, "Invalid JSON request body");
+                }
             } else if ("DELETE".equals(method)) {
                 // Delete topic request
                 processAsyncRequest(request, response, AsyncRequest.RequestType.DELETE_TOPIC, topicName, null, null);

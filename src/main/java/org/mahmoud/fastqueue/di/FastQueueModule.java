@@ -80,6 +80,26 @@ public class FastQueueModule extends AbstractModule {
     }
     
     /**
+     * Provides AsyncProcessor with all dependencies injected.
+     */
+    @Provides
+    @Singleton
+    public AsyncProcessor provideAsyncProcessor(RequestChannel requestChannel, ResponseChannel responseChannel,
+                                               MessageService messageService, HealthService healthService,
+                                               ObjectMapperService objectMapperService, ExecutorService executorService) {
+        return new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, objectMapperService, executorService);
+    }
+    
+    /**
+     * Provides ResponseProcessor with all dependencies injected.
+     */
+    @Provides
+    @Singleton
+    public ResponseProcessor provideResponseProcessor(ResponseChannel responseChannel, ExecutorService executorService) {
+        return new ResponseProcessor(responseChannel, executorService);
+    }
+    
+    /**
      * Provides AsyncHttpServer with all dependencies injected.
      */
     @Provides
@@ -87,8 +107,9 @@ public class FastQueueModule extends AbstractModule {
     public AsyncHttpServer provideAsyncHttpServer(QueueConfig config, RequestChannel requestChannel, 
                                                  ResponseChannel responseChannel, MessageService messageService, 
                                                  HealthService healthService, TopicService topicService,
-                                                 ObjectMapperService objectMapperService, ExecutorService executorService) {
-        return new AsyncHttpServer(config, requestChannel, responseChannel, messageService, healthService, topicService, objectMapperService, executorService);
+                                                 ObjectMapperService objectMapperService, AsyncProcessor asyncProcessor,
+                                                 ResponseProcessor responseProcessor, ExecutorService executorService) {
+        return new AsyncHttpServer(config, requestChannel, responseChannel, messageService, healthService, topicService, objectMapperService, asyncProcessor, responseProcessor, executorService);
     }
     
     /**

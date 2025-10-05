@@ -53,8 +53,11 @@ public class AsyncResponse {
             response.setStatus(statusCode);
             response.setContentType(contentType);
             response.setContentLength(responseBody.length);
-            response.getOutputStream().write(responseBody);
-            response.getOutputStream().flush();
+            
+            // Use getWriter() for text content (JSON) instead of getOutputStream()
+            String responseText = new String(responseBody, StandardCharsets.UTF_8);
+            response.getWriter().print(responseText);
+            response.getWriter().flush();
             logger.debug("Response sent for request: {} ({} bytes)", requestId, responseBody.length);
         } catch (IOException e) {
             logger.error("Failed to send response for request: {}", requestId, e);
