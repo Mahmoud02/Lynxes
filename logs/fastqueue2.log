@@ -1448,3 +1448,39 @@ java.lang.IllegalStateException: COMPLETED
 2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo -      File size: 29 bytes
 2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - 
 2025-10-05 05:20:10.034 [org.mahmoud.fastqueue.examples.PageCacheVisibleDemo.main()] INFO  o.m.f.examples.PageCacheVisibleDemo - === Demo completed! ===
+2025-10-05 23:01:14.653 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - FastQueue2 - High-Performance Message Queue Server
+2025-10-05 23:01:14.654 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  org.mahmoud.fastqueue.Fastqueue2 - ==================================================
+2025-10-05 23:01:14.654 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.di.ServiceContainer - Initializing ServiceContainer for environment: default
+2025-10-05 23:01:14.708 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.di.ServiceContainer - ServiceContainer initialized successfully
+2025-10-05 23:01:14.723 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Loading configuration for environment: default
+2025-10-05 23:01:14.724 [org.mahmoud.fastqueue.Fastqueue2.main()] INFO  o.m.fastqueue.config.ConfigLoader - Configuration loaded: QueueConfig{dataDir=./data, maxSegmentSize=1048576, retentionPeriodMs=604800000, indexInterval=1024, maxMessageSize=1048576, serverPort=8080, threadPoolSize=10, compression=false, metrics=true, flushIntervalMs=1000, maxConnections=1000, batching=true, batchSize=100, flushStrategy=hybrid, flushMessageInterval=1000, flushTimeIntervalMs=1000, flushForceMetadata=true, flushEnablePageCache=true, logLevel=INFO, logFile=logs/fastqueue2.log}
+2025-10-05 23:01:14.798 [org.mahmoud.fastqueue.Fastqueue2.main()] ERROR org.mahmoud.fastqueue.Fastqueue2 - Failed to start FastQueue2 server
+java.io.IOException: Failed to bind to 0.0.0.0/0.0.0.0:8080
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:344)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:304)
+	at org.eclipse.jetty.server.Server.lambda$doStart$0(Server.java:402)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:215)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:398)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.mahmoud.fastqueue.server.http.JettyHttpServer.start(JettyHttpServer.java:85)
+	at org.mahmoud.fastqueue.Fastqueue2.startHttpServer(Fastqueue2.java:66)
+	at org.mahmoud.fastqueue.Fastqueue2.main(Fastqueue2.java:28)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:371)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:289)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at org.eclipse.jetty.server.ServerConnector.openAcceptChannel(ServerConnector.java:339)
+	... 20 common frames omitted

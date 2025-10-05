@@ -3,6 +3,7 @@ package org.mahmoud.fastqueue.server.http;
 import org.mahmoud.fastqueue.service.MessageService;
 import org.mahmoud.fastqueue.service.ObjectMapperService;
 import org.mahmoud.fastqueue.config.QueueConfig;
+import org.mahmoud.fastqueue.server.ui.FastQueueUIServlet;
 import com.google.inject.Inject;
 import org.mahmoud.fastqueue.core.Record;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,6 +74,9 @@ public class JettyHttpServer {
         context.addServlet(new ServletHolder(new TopicsServlet()), "/topics");
         context.addServlet(new ServletHolder(new MessageServlet()), "/topics/*");
         context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
+        
+        // Add Vaadin UI servlet
+        context.addServlet(new ServletHolder(new FastQueueUIServlet()), "/ui/*");
         
         // Set the servlet context
         server.setHandler(context);
