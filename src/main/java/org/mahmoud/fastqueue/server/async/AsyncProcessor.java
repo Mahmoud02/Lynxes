@@ -224,7 +224,7 @@ public class AsyncProcessor {
      */
     private void sendResponse(AsyncRequest request, int statusCode, String contentType, String body) {
         AsyncResponse response = new AsyncResponse(request.getRequestId(), request.getResponse(), 
-                                                 statusCode, contentType, body);
+                                                 request.getAsyncContext(), statusCode, contentType, body);
         if (responseChannel.addResponse(response)) {
             logger.debug("Response queued for request: {}", request.getRequestId());
         } else {
@@ -240,7 +240,7 @@ public class AsyncProcessor {
     private void sendErrorResponse(AsyncRequest request, int statusCode, String message) {
         String errorBody = String.format("{\"error\":\"%s\",\"code\":%d}", message, statusCode);
         AsyncResponse response = new AsyncResponse(request.getRequestId(), request.getResponse(), 
-                                                 statusCode, "application/json", errorBody);
+                                                 request.getAsyncContext(), statusCode, "application/json", errorBody);
         if (responseChannel.addResponse(response)) {
             logger.debug("Error response queued for request: {}", request.getRequestId());
         } else {
