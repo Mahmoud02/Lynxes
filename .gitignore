@@ -62,6 +62,7 @@ data-dev/
 data-prod/
 logs/
 demo/
+FEATURES.md
 *.log
 
 # Temporary files

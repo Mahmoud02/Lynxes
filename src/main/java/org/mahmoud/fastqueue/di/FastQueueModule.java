@@ -18,6 +18,8 @@ import org.mahmoud.fastqueue.server.async.AsyncProcessor;
 import org.mahmoud.fastqueue.server.async.ResponseProcessor;
 import org.mahmoud.fastqueue.server.async.AsyncHttpServer;
 import org.mahmoud.fastqueue.server.http.JettyHttpServer;
+import org.mahmoud.fastqueue.server.swagger.AutoSwaggerServlet;
+import org.mahmoud.fastqueue.server.ui.WebUIServlet;
 
 /**
  * Guice module for FastQueue2 dependency injection configuration.
@@ -41,6 +43,8 @@ public class FastQueueModule extends AbstractModule {
         bind(MessageService.class).in(Singleton.class);
         bind(HealthService.class).in(Singleton.class);
         bind(ObjectMapperService.class).in(Singleton.class);
+        
+        // API documentation is provided by @Provides methods below
         
         // Bind infrastructure services
         bind(ExecutorService.class).toProvider(ExecutorServiceProvider.class).in(Singleton.class);
@@ -94,7 +98,27 @@ public class FastQueueModule extends AbstractModule {
     @Provides
     @Singleton
     public JettyHttpServer provideJettyHttpServer(QueueConfig config, MessageService messageService, 
-                                                 ObjectMapperService objectMapperService) {
-        return new JettyHttpServer(config, messageService, objectMapperService);
+                                                 ObjectMapperService objectMapperService, HealthService healthService,
+                                                 AutoSwaggerServlet swaggerServlet, WebUIServlet webUIServlet) {
+        return new JettyHttpServer(config, messageService, objectMapperService, healthService, swaggerServlet, webUIServlet);
+    }
+    
+    /**
+     * Provides AutoSwaggerServlet with all dependencies injected.
+     */
+    @Provides
+    @Singleton
+    public AutoSwaggerServlet provideAutoSwaggerServlet(QueueConfig config, ObjectMapperService objectMapperService) {
+        return new AutoSwaggerServlet(config, objectMapperService.getObjectMapper());
+    }
+    
+    /**
+     * Provides WebUIServlet with all dependencies injected.
+     */
+    @Provides
+    @Singleton
+    public WebUIServlet provideWebUIServlet(MessageService messageService, HealthService healthService,
+                                           ObjectMapperService objectMapperService) {
+        return new WebUIServlet(messageService, healthService, objectMapperService.getObjectMapper());
     }
 }

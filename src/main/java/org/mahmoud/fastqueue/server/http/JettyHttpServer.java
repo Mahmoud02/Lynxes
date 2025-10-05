@@ -2,7 +2,10 @@ package org.mahmoud.fastqueue.server.http;
 
 import org.mahmoud.fastqueue.service.MessageService;
 import org.mahmoud.fastqueue.service.ObjectMapperService;
+import org.mahmoud.fastqueue.service.HealthService;
 import org.mahmoud.fastqueue.config.QueueConfig;
+import org.mahmoud.fastqueue.server.swagger.AutoSwaggerServlet;
+import org.mahmoud.fastqueue.server.ui.WebUIServlet;
 import com.google.inject.Inject;
 import org.mahmoud.fastqueue.core.Record;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +36,9 @@ public class JettyHttpServer {
     private final QueueConfig config;
     private final MessageService messageService;
     private final ObjectMapper objectMapper;
+    private final HealthService healthService;
+    private final AutoSwaggerServlet swaggerServlet;
+    private final WebUIServlet webUIServlet;
     private Server server;
     private volatile boolean running;
 
@@ -42,12 +48,19 @@ public class JettyHttpServer {
      * @param config The queue configuration
      * @param messageService The message service for handling operations
      * @param objectMapperService The object mapper service
+     * @param healthService The health service
+     * @param swaggerServlet The automatic Swagger documentation servlet
+     * @param webUIServlet The Web UI servlet
      */
     @Inject
-    public JettyHttpServer(QueueConfig config, MessageService messageService, ObjectMapperService objectMapperService) {
+    public JettyHttpServer(QueueConfig config, MessageService messageService, ObjectMapperService objectMapperService,
+                         HealthService healthService, AutoSwaggerServlet swaggerServlet, WebUIServlet webUIServlet) {
         this.config = config;
         this.messageService = messageService;
         this.objectMapper = objectMapperService.getObjectMapper();
+        this.healthService = healthService;
+        this.swaggerServlet = swaggerServlet;
+        this.webUIServlet = webUIServlet;
         this.running = false;
     }
 
@@ -68,11 +81,16 @@ public class JettyHttpServer {
         ServletContextHandler context = new ServletContextHandler();
         context.setContextPath("/");
         
-        // Add servlets
-        context.addServlet(new ServletHolder(new HealthServlet()), "/health");
-        context.addServlet(new ServletHolder(new TopicsServlet()), "/topics");
-        context.addServlet(new ServletHolder(new MessageServlet()), "/topics/*");
-        context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
+        // Add servlets with Swagger annotations
+        context.addServlet(new ServletHolder(new HealthServlet(healthService, objectMapper)), "/health");
+        context.addServlet(new ServletHolder(new TopicsServlet(objectMapper)), "/topics");
+        context.addServlet(new ServletHolder(new MessageServlet(messageService, objectMapper)), "/topics/*");
+        context.addServlet(new ServletHolder(new MetricsServlet(messageService, objectMapper)), "/metrics");
+        
+        // Add new servlets for Web UI and API documentation
+        context.addServlet(new ServletHolder(swaggerServlet), "/swagger/*");
+        context.addServlet(new ServletHolder(swaggerServlet), "/swagger-ui/*");
+        context.addServlet(new ServletHolder(webUIServlet), "/ui/*");
         
         // Set the servlet context
         server.setHandler(context);
@@ -116,277 +134,6 @@ public class JettyHttpServer {
         return config.getServerPort();
     }
 
-    /**
-     * Health check servlet.
-     */
-    private class HealthServlet extends HttpServlet {
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-                throws ServletException, IOException {
-            logger.debug("Health check requested from {}", request.getRemoteAddr());
-            
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            
-            HealthResponse healthResponse = new HealthResponse("ok", "FastQueue2 is running");
-            String json = objectMapper.writeValueAsString(healthResponse);
-            
-            try (PrintWriter out = response.getWriter()) {
-                out.print(json);
-            }
-            
-            logger.debug("Health check completed successfully");
-        }
-    }
 
-    /**
-     * Topics management servlet.
-     */
-    private class TopicsServlet extends HttpServlet {
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-                throws ServletException, IOException {
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            
-            TopicsResponse topicsResponse = new TopicsResponse(new String[0]); // TODO: Implement topic listing
-            String json = objectMapper.writeValueAsString(topicsResponse);
-            
-            try (PrintWriter out = response.getWriter()) {
-                out.print(json);
-            }
-        }
-        
-        @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-                throws ServletException, IOException {
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            
-            MessageResponse messageResponse = new MessageResponse("Topic will be created on first use");
-            String json = objectMapper.writeValueAsString(messageResponse);
-            
-            try (PrintWriter out = response.getWriter()) {
-                out.print(json);
-            }
-        }
-    }
 
-    /**
-     * Message handling servlet for specific topics.
-     */
-    private class MessageServlet extends HttpServlet {
-        @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-                throws ServletException, IOException {
-            String topicName = null;
-            try {
-                String path = request.getPathInfo();
-                if (path == null || path.length() < 2) {
-                    sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
-                    return;
-                }
-                
-                topicName = path.substring(1); // Remove leading slash
-                
-                // Read request body
-                String requestBody = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-                
-                // Parse JSON request
-                PublishRequest publishRequest = objectMapper.readValue(requestBody, PublishRequest.class);
-                
-                // Publish message
-                logger.info("Publishing message to topic: {}", topicName);
-                Record record = messageService.publishMessage(topicName, publishRequest.message.getBytes(StandardCharsets.UTF_8));
-                
-                // Send response
-                response.setContentType("application/json");
-                response.setStatus(HttpServletResponse.SC_OK);
-                
-                PublishResponse publishResponse = new PublishResponse(record.getOffset(), record.getTimestamp());
-                String json = objectMapper.writeValueAsString(publishResponse);
-                
-                try (PrintWriter out = response.getWriter()) {
-                    out.print(json);
-                }
-                
-                logger.info("Message published successfully to topic: {} with offset: {}", topicName, record.getOffset());
-                
-            } catch (Exception e) {
-                logger.error("Error processing publish request for topic: {}", topicName, e);
-                sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid request: " + e.getMessage());
-            }
-        }
-        
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-                throws ServletException, IOException {
-            String topicName = null;
-            long offset = 0;
-            try {
-                String path = request.getPathInfo();
-                if (path == null || path.length() < 2) {
-                    sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
-                    return;
-                }
-                
-                topicName = path.substring(1); // Remove leading slash
-                
-                // Get offset parameter
-                String offsetParam = request.getParameter("offset");
-                
-                if (offsetParam != null) {
-                    offset = Long.parseLong(offsetParam);
-                }
-                
-                // Consume message
-                logger.debug("Consuming message from topic: {} at offset: {}", topicName, offset);
-                Record record = messageService.consumeMessage(topicName, offset);
-                
-                if (record == null) {
-                    logger.debug("No message found at offset {} for topic: {}", offset, topicName);
-                    sendError(response, HttpServletResponse.SC_NOT_FOUND, "No message found at offset " + offset);
-                    return;
-                }
-                
-                // Send response
-                response.setContentType("application/json");
-                response.setStatus(HttpServletResponse.SC_OK);
-                
-                ConsumeResponse consumeResponse = new ConsumeResponse(
-                    record.getOffset(),
-                    record.getTimestamp(),
-                    new String(record.getData(), StandardCharsets.UTF_8)
-                );
-                String json = objectMapper.writeValueAsString(consumeResponse);
-                
-                try (PrintWriter out = response.getWriter()) {
-                    out.print(json);
-                }
-                
-                logger.debug("Message consumed successfully from topic: {} at offset: {}", topicName, record.getOffset());
-                
-            } catch (Exception e) {
-                logger.error("Error processing consume request for topic: {} at offset: {}", topicName, offset, e);
-                sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid request: " + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Metrics servlet.
-     */
-    private class MetricsServlet extends HttpServlet {
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-                throws ServletException, IOException {
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            
-            MetricsResponse metricsResponse = new MetricsResponse(
-                0, // TODO: Implement topic count
-                messageService.getProducerMessageCount(),
-                0, // TODO: Implement consumer topic count
-                messageService.getConsumerMessageCount()
-            );
-            String json = objectMapper.writeValueAsString(metricsResponse);
-            
-            try (PrintWriter out = response.getWriter()) {
-                out.print(json);
-            }
-        }
-    }
-
-    /**
-     * Sends an error response.
-     */
-    private void sendError(HttpServletResponse response, int statusCode, String message) 
-            throws IOException {
-        response.setContentType("application/json");
-        response.setStatus(statusCode);
-        
-        ErrorResponse errorResponse = new ErrorResponse(statusCode, message);
-        String json = objectMapper.writeValueAsString(errorResponse);
-        
-        try (PrintWriter out = response.getWriter()) {
-            out.print(json);
-        }
-    }
-
-    // Response classes
-    public static class HealthResponse {
-        public String status;
-        public String message;
-        
-        public HealthResponse(String status, String message) {
-            this.status = status;
-            this.message = message;
-        }
-    }
-
-    public static class TopicsResponse {
-        public String[] topics;
-        
-        public TopicsResponse(String[] topics) {
-            this.topics = topics;
-        }
-    }
-
-    public static class MessageResponse {
-        public String message;
-        
-        public MessageResponse(String message) {
-            this.message = message;
-        }
-    }
-
-    public static class PublishRequest {
-        public String message;
-    }
-
-    public static class PublishResponse {
-        public long offset;
-        public long timestamp;
-        
-        public PublishResponse(long offset, long timestamp) {
-            this.offset = offset;
-            this.timestamp = timestamp;
-        }
-    }
-
-    public static class ConsumeResponse {
-        public long offset;
-        public long timestamp;
-        public String message;
-        
-        public ConsumeResponse(long offset, long timestamp, String message) {
-            this.offset = offset;
-            this.timestamp = timestamp;
-            this.message = message;
-        }
-    }
-
-    public static class MetricsResponse {
-        public int producerTopics;
-        public long producerMessages;
-        public int consumerTopics;
-        public long consumerMessages;
-        
-        public MetricsResponse(int producerTopics, long producerMessages, int consumerTopics, long consumerMessages) {
-            this.producerTopics = producerTopics;
-            this.producerMessages = producerMessages;
-            this.consumerTopics = consumerTopics;
-            this.consumerMessages = consumerMessages;
-        }
-    }
-
-    public static class ErrorResponse {
-        public int code;
-        public String message;
-        
-        public ErrorResponse(int code, String message) {
-            this.code = code;
-            this.message = message;
-        }
-    }
 }
