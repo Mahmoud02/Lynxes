@@ -1,7 +1,7 @@
 package org.mahmoud.fastqueue;
 
 import org.mahmoud.fastqueue.config.QueueConfig;
-import org.mahmoud.fastqueue.config.ConfigLoader;
+import org.mahmoud.fastqueue.di.ServiceContainer;
 import org.mahmoud.fastqueue.server.async.AsyncHttpServer;
 import org.mahmoud.fastqueue.server.http.JettyHttpServer;
 import org.slf4j.Logger;
@@ -46,23 +46,23 @@ public class Fastqueue2 {
     }
     
     /**
-     * Starts the HTTP server with Typesafe Config configuration.
+     * Starts the HTTP server with dependency injection.
      */
     private static void startHttpServer(String environment) throws Exception {
-        // Load configuration using Typesafe Config
-        QueueConfig config = ConfigLoader.loadConfig(environment);
+        // Initialize dependency injection container
+        ServiceContainer container = ServiceContainer.getInstance(environment);
         
         // Choose server type based on configuration or command line
         String serverType = getServerType(environment);
         
         if ("async".equalsIgnoreCase(serverType)) {
-            // Create and start async HTTP server (uses Jetty internally)
-            AsyncHttpServer httpServer = new AsyncHttpServer(config);
+            // Create async HTTP server manually
+            AsyncHttpServer httpServer = new AsyncHttpServer(container.getService(QueueConfig.class));
             httpServer.start();
             startServerLoop(httpServer, "AsyncHttpServer");
         } else {
-            // Create and start synchronous Jetty HTTP server
-            JettyHttpServer httpServer = new JettyHttpServer(config);
+            // Create synchronous Jetty HTTP server manually
+            JettyHttpServer httpServer = new JettyHttpServer(container.getService(QueueConfig.class));
             httpServer.start();
             startServerLoop(httpServer, "JettyHttpServer");
         }

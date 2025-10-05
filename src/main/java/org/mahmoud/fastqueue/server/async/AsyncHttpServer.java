@@ -1,6 +1,7 @@
 package org.mahmoud.fastqueue.server.async;
 
 import org.mahmoud.fastqueue.config.QueueConfig;
+import org.mahmoud.fastqueue.di.ServiceContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +34,14 @@ public class AsyncHttpServer {
     
     public AsyncHttpServer(QueueConfig config) {
         this.config = config;
-        this.requestChannel = new RequestChannel(1000); // Max 1000 queued requests
+        
+        // Get dependencies from DI container
+        ServiceContainer container = ServiceContainer.getInstance();
+        this.requestChannel = container.getService(RequestChannel.class);
+        
+        // Create AsyncProcessor manually to avoid circular dependency
         this.asyncProcessor = new AsyncProcessor(requestChannel, config, config.getThreadPoolSize());
+        
         this.server = new Server(config.getServerPort());
         this.requestIdCounter = new AtomicLong(0);
         this.running = false;
