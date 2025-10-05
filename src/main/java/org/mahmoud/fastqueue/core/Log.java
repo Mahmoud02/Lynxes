@@ -85,6 +85,17 @@ public class Log implements AutoCloseable {
                 System.err.println("Failed to recover segment " + segmentId + ": " + e.getMessage());
             }
         }
+        
+        // After recovering all segments, update their nextOffset values
+        for (Segment segment : segments.values()) {
+            if (!segment.isClosed()) {
+                long highestOffset = segment.getHighestOffset();
+                if (highestOffset >= 0) {
+                    // Update the segment's nextOffset to be highestOffset + 1
+                    segment.updateNextOffset(highestOffset + 1);
+                }
+            }
+        }
     }
 
     /**
@@ -270,6 +281,30 @@ public class Log implements AutoCloseable {
         lock.readLock().lock();
         try {
             return segments.size();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Gets the next available offset for this log.
+     * This is the highest offset + 1 across all segments.
+     * 
+     * @return Next available offset
+     */
+    public long getNextOffset() {
+        lock.readLock().lock();
+        try {
+            long maxOffset = -1;
+            for (Segment segment : segments.values()) {
+                if (!segment.isClosed()) {
+                    long highestOffset = segment.getHighestOffset();
+                    if (highestOffset > maxOffset) {
+                        maxOffset = highestOffset;
+                    }
+                }
+            }
+            return maxOffset + 1;
         } finally {
             lock.readLock().unlock();
         }

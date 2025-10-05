@@ -215,6 +215,30 @@ public class Index implements Closeable {
     }
 
     /**
+     * Gets the highest offset in the index.
+     * 
+     * @return The highest offset, or -1 if the index is empty
+     */
+    public long getHighestOffset() {
+        if (buffer == null || currentSize == 0) {
+            return -1;
+        }
+        
+        lock.readLock().lock();
+        try {
+            int entryCount = getEntryCount();
+            if (entryCount == 0) {
+                return -1;
+            }
+            
+            // Get the offset of the last entry
+            return getOffsetAt(entryCount - 1);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
      * Gets the total size of the index file.
      * 
      * @return Size in bytes

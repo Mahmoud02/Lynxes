@@ -34,7 +34,6 @@ public class Topic {
         this.name = QueueUtils.sanitizeTopicName(name);
         this.config = config;
         this.lock = new ReentrantReadWriteLock();
-        this.nextOffset = new AtomicLong(0);
         this.closed = false;
         
         // Create topic directory
@@ -43,6 +42,9 @@ public class Topic {
         
         // Initialize log for this topic
         this.log = new Log(topicDir, config.getMaxSegmentSize(), config.getRetentionPeriodMs());
+        
+        // Initialize nextOffset based on existing log data
+        this.nextOffset = new AtomicLong(this.log.getNextOffset());
     }
     
     /**
@@ -58,7 +60,8 @@ public class Topic {
         this.config = config;
         this.log = log;
         this.lock = new ReentrantReadWriteLock();
-        this.nextOffset = new AtomicLong(0);
+        // Initialize nextOffset based on existing log data
+        this.nextOffset = new AtomicLong(log.getNextOffset());
         this.closed = false;
     }
 
@@ -86,8 +89,19 @@ public class Topic {
         
         lock.writeLock().lock();
         try {
-            long offset = nextOffset.getAndIncrement();
-            return log.append(offset, data);
+            // Get the next offset but don't increment yet
+            long offset = nextOffset.get();
+            
+            // Try to append the record first
+            Record record = log.append(offset, data);
+            
+            // Force immediate flush to ensure data is persisted
+            log.flush();
+            
+            // Only increment nextOffset after successful append and flush
+            nextOffset.incrementAndGet();
+            
+            return record;
         } finally {
             lock.writeLock().unlock();
         }
