@@ -3,6 +3,9 @@ package org.mahmoud.fastqueue.server.async;
 import org.mahmoud.fastqueue.config.QueueConfig;
 import org.mahmoud.fastqueue.service.MessageService;
 import org.mahmoud.fastqueue.service.HealthService;
+import org.mahmoud.fastqueue.service.TopicService;
+import org.mahmoud.fastqueue.service.ObjectMapperService;
+import org.mahmoud.fastqueue.server.ui.DashboardServlet;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +20,11 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Async HTTP server that uses Jetty as network threads and async processing for I/O.
@@ -35,19 +40,23 @@ public class AsyncHttpServer {
     private final ResponseProcessor responseProcessor;
     private final MessageService messageService;
     private final HealthService healthService;
+    private final TopicService topicService;
+    private final ObjectMapper objectMapper;
     private final Server server;
     private final AtomicLong requestIdCounter;
     private volatile boolean running;
     
     @Inject
     public AsyncHttpServer(QueueConfig config, RequestChannel requestChannel, ResponseChannel responseChannel,
-                          MessageService messageService, HealthService healthService,
-                          ExecutorService executorService) {
+                          MessageService messageService, HealthService healthService, TopicService topicService,
+                          ObjectMapperService objectMapperService, ExecutorService executorService) {
         this.config = config;
         this.requestChannel = requestChannel;
         this.responseChannel = responseChannel;
         this.messageService = messageService;
         this.healthService = healthService;
+        this.topicService = topicService;
+        this.objectMapper = objectMapperService.getObjectMapper();
         
         // Create processors with injected dependencies
         this.asyncProcessor = new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, executorService);
@@ -73,6 +82,9 @@ public class AsyncHttpServer {
         context.addServlet(new ServletHolder(new TopicsServlet()), "/topics");
         context.addServlet(new ServletHolder(new TopicServlet()), "/topics/*");
         context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
+        
+        // Add dashboard servlet
+        context.addServlet(new ServletHolder(new DashboardServlet()), "/ui/*");
         
         server.setHandler(context);
     }
@@ -207,11 +219,35 @@ public class AsyncHttpServer {
     /**
      * Topics list servlet.
      */
-    private class TopicsServlet extends BaseAsyncServlet {
+    private class TopicsServlet extends HttpServlet {
         @Override
-        protected void handleRequest(HttpServletRequest request, HttpServletResponse response, 
-                                   AsyncRequest.RequestType defaultType) throws ServletException, IOException {
-            processAsyncRequest(request, response, AsyncRequest.RequestType.TOPICS, null, null, null);
+        protected void doGet(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_OK);
+
+            try {
+                java.util.List<TopicService.TopicInfo> topics = topicService.listTopics();
+                String[] topicNames = topics.stream()
+                    .map(TopicService.TopicInfo::getName)
+                    .toArray(String[]::new);
+
+                TopicsResponse topicsResponse = new TopicsResponse(topicNames);
+                String json = objectMapper.writeValueAsString(topicsResponse);
+
+                try (PrintWriter out = response.getWriter()) {
+                    out.print(json);
+                }
+                logger.debug("Listed {} topics", topics.size());
+            } catch (Exception e) {
+                logger.error("Error listing topics", e);
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                MessageResponse errorResponse = new MessageResponse("Error listing topics: " + e.getMessage());
+                String json = objectMapper.writeValueAsString(errorResponse);
+                try (PrintWriter out = response.getWriter()) {
+                    out.print(json);
+                }
+            }
         }
     }
     
@@ -251,6 +287,9 @@ public class AsyncHttpServer {
                 // Publish request
                 String message = new String(request.getInputStream().readAllBytes());
                 processAsyncRequest(request, response, AsyncRequest.RequestType.PUBLISH, topicName, null, message);
+            } else if ("DELETE".equals(method)) {
+                // Delete topic request
+                processAsyncRequest(request, response, AsyncRequest.RequestType.DELETE_TOPIC, topicName, null, null);
             } else {
                 sendErrorResponse(response, 405, "Method not allowed: " + method);
             }
@@ -265,6 +304,23 @@ public class AsyncHttpServer {
         protected void handleRequest(HttpServletRequest request, HttpServletResponse response, 
                                    AsyncRequest.RequestType defaultType) throws ServletException, IOException {
             processAsyncRequest(request, response, AsyncRequest.RequestType.METRICS, null, null, null);
+        }
+    }
+    
+    // Response classes
+    public static class TopicsResponse {
+        public String[] topics;
+        
+        public TopicsResponse(String[] topics) {
+            this.topics = topics;
+        }
+    }
+    
+    public static class MessageResponse {
+        public String message;
+        
+        public MessageResponse(String message) {
+            this.message = message;
         }
     }
 }

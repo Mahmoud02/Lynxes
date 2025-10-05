@@ -15,7 +15,8 @@ public class AsyncRequest {
         CONSUME,
         HEALTH,
         TOPICS,
-        METRICS
+        METRICS,
+        DELETE_TOPIC
     }
     
     private final String requestId;
