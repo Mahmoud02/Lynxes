@@ -2,6 +2,7 @@ package org.mahmoud.fastqueue;
 
 import org.mahmoud.fastqueue.config.QueueConfig;
 import org.mahmoud.fastqueue.config.ConfigLoader;
+import org.mahmoud.fastqueue.server.async.AsyncHttpServer;
 import org.mahmoud.fastqueue.server.http.JettyHttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,22 +52,60 @@ public class Fastqueue2 {
         // Load configuration using Typesafe Config
         QueueConfig config = ConfigLoader.loadConfig(environment);
         
-        // Create and start HTTP server
-        JettyHttpServer httpServer = new JettyHttpServer(config);
-        httpServer.start();
+        // Choose server type based on configuration or command line
+        String serverType = getServerType(environment);
         
+        if ("async".equalsIgnoreCase(serverType)) {
+            // Create and start async HTTP server (uses Jetty internally)
+            AsyncHttpServer httpServer = new AsyncHttpServer(config);
+            httpServer.start();
+            startServerLoop(httpServer, "AsyncHttpServer");
+        } else {
+            // Create and start synchronous Jetty HTTP server
+            JettyHttpServer httpServer = new JettyHttpServer(config);
+            httpServer.start();
+            startServerLoop(httpServer, "JettyHttpServer");
+        }
+    }
+    
+    /**
+     * Gets the server type to use (async or sync).
+     */
+    private static String getServerType(String environment) {
+        // For now, default to async for dev/prod, sync for default
+        if ("dev".equalsIgnoreCase(environment) || "prod".equalsIgnoreCase(environment)) {
+            return "async";
+        }
+        return "sync"; // Default to synchronous for backward compatibility
+    }
+    
+    /**
+     * Starts the server loop and handles shutdown.
+     */
+    private static void startServerLoop(Object httpServer, String serverType) throws Exception {
         // Add shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Shutting down FastQueue2 Server...");
             try {
-                httpServer.stop();
+                if (httpServer instanceof AsyncHttpServer) {
+                    ((AsyncHttpServer) httpServer).stop();
+                } else if (httpServer instanceof JettyHttpServer) {
+                    ((JettyHttpServer) httpServer).stop();
+                }
                 logger.info("FastQueue2 Server shutdown completed");
             } catch (Exception e) {
                 logger.error("Error during shutdown", e);
             }
         }));
         
-        logger.info("FastQueue2 HTTP Server started on port {}", httpServer.getPort());
+        int port = 0;
+        if (httpServer instanceof AsyncHttpServer) {
+            port = ((AsyncHttpServer) httpServer).getPort();
+        } else if (httpServer instanceof JettyHttpServer) {
+            port = ((JettyHttpServer) httpServer).getPort();
+        }
+        
+        logger.info("FastQueue2 {} started on port {}", serverType, port);
         logger.info("API Endpoints:");
         logger.info("  GET  /health - Health check");
         logger.info("  GET  /topics - List topics");
@@ -77,8 +116,21 @@ public class Fastqueue2 {
         logger.info("Press Ctrl+C to stop the server");
         
         // Keep server running
-        while (httpServer.isRunning()) {
+        boolean isRunning = false;
+        if (httpServer instanceof AsyncHttpServer) {
+            isRunning = ((AsyncHttpServer) httpServer).isRunning();
+        } else if (httpServer instanceof JettyHttpServer) {
+            isRunning = ((JettyHttpServer) httpServer).isRunning();
+        }
+        
+        while (isRunning) {
             Thread.sleep(1000);
+            // Check if still running
+            if (httpServer instanceof AsyncHttpServer) {
+                isRunning = ((AsyncHttpServer) httpServer).isRunning();
+            } else if (httpServer instanceof JettyHttpServer) {
+                isRunning = ((JettyHttpServer) httpServer).isRunning();
+            }
         }
     }
     
