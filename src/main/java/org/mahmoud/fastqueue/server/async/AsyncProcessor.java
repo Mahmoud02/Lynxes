@@ -22,6 +22,7 @@ public class AsyncProcessor {
     private static final Logger logger = LoggerFactory.getLogger(AsyncProcessor.class);
     
     private final RequestChannel requestChannel;
+    private final ResponseChannel responseChannel;
     private final ExecutorService ioThreadPool;
     private final MessageService messageService;
     private final HealthService healthService;
@@ -30,9 +31,11 @@ public class AsyncProcessor {
     private final AtomicLong errorCount;
     
     @Inject
-    public AsyncProcessor(RequestChannel requestChannel, MessageService messageService, 
-                         HealthService healthService, ExecutorService executorService) {
+    public AsyncProcessor(RequestChannel requestChannel, ResponseChannel responseChannel,
+                         MessageService messageService, HealthService healthService, 
+                         ExecutorService executorService) {
         this.requestChannel = requestChannel;
+        this.responseChannel = responseChannel;
         this.messageService = messageService;
         this.healthService = healthService;
         this.ioThreadPool = executorService;
@@ -153,9 +156,9 @@ public class AsyncProcessor {
         Record record = messageService.publishMessage(topicName, message.getBytes(StandardCharsets.UTF_8));
         
         // Send success response
-        String response = String.format("{\"offset\":%d,\"timestamp\":%d,\"message\":\"Message published successfully\"}", 
+        String responseBody = String.format("{\"offset\":%d,\"timestamp\":%d,\"message\":\"Message published successfully\"}", 
                                       record.getOffset(), record.getTimestamp());
-        sendResponse(request, 200, "application/json", response);
+        sendResponse(request, 200, "application/json", responseBody);
     }
     
     /**
@@ -180,9 +183,9 @@ public class AsyncProcessor {
         
         // Send success response
         String message = new String(record.getData(), StandardCharsets.UTF_8);
-        String response = String.format("{\"offset\":%d,\"timestamp\":%d,\"message\":\"%s\"}", 
+        String responseBody = String.format("{\"offset\":%d,\"timestamp\":%d,\"message\":\"%s\"}", 
                                       record.getOffset(), record.getTimestamp(), message);
-        sendResponse(request, 200, "application/json", response);
+        sendResponse(request, 200, "application/json", responseBody);
     }
     
     /**
@@ -190,9 +193,9 @@ public class AsyncProcessor {
      */
     private void handleHealthRequest(AsyncRequest request) throws IOException {
         HealthService.HealthStatus health = healthService.checkHealth();
-        String response = String.format("{\"status\":\"%s\",\"message\":\"%s\"}", 
+        String responseBody = String.format("{\"status\":\"%s\",\"message\":\"%s\"}", 
                                       health.getStatus(), health.getMessage());
-        sendResponse(request, 200, "application/json", response);
+        sendResponse(request, 200, "application/json", responseBody);
     }
     
     /**
@@ -201,45 +204,64 @@ public class AsyncProcessor {
     private void handleTopicsRequest(AsyncRequest request) throws IOException {
         // For now, return empty topics list
         // TODO: Implement actual topics listing
-        String response = "{\"topics\":[]}";
-        sendResponse(request, 200, "application/json", response);
+        String responseBody = "{\"topics\":[]}";
+        sendResponse(request, 200, "application/json", responseBody);
     }
     
     /**
      * Handles metrics requests.
      */
     private void handleMetricsRequest(AsyncRequest request) throws IOException {
-        String response = String.format("{\"producerMessages\":%d,\"consumerMessages\":%d,\"processedRequests\":%d,\"errorCount\":%d}",
+        String responseBody = String.format("{\"producerMessages\":%d,\"consumerMessages\":%d,\"processedRequests\":%d,\"errorCount\":%d}",
                                       messageService.getProducerMessageCount(),
                                       messageService.getConsumerMessageCount(),
                                       processedCount.get(), errorCount.get());
-        sendResponse(request, 200, "application/json", response);
+        sendResponse(request, 200, "application/json", responseBody);
     }
     
     /**
-     * Sends a successful response.
+     * Sends a successful response via ResponseChannel.
      */
     private void sendResponse(AsyncRequest request, int statusCode, String contentType, String body) {
+        AsyncResponse response = new AsyncResponse(request.getRequestId(), request.getResponse(), 
+                                                 statusCode, contentType, body);
+        if (responseChannel.addResponse(response)) {
+            logger.debug("Response queued for request: {}", request.getRequestId());
+        } else {
+            logger.warn("Response queue full, dropping response for request: {}", request.getRequestId());
+            // Fallback: send directly if queue is full
+            sendResponseDirectly(request, statusCode, contentType, body);
+        }
+    }
+    
+    /**
+     * Sends an error response via ResponseChannel.
+     */
+    private void sendErrorResponse(AsyncRequest request, int statusCode, String message) {
+        String errorBody = String.format("{\"error\":\"%s\",\"code\":%d}", message, statusCode);
+        AsyncResponse response = new AsyncResponse(request.getRequestId(), request.getResponse(), 
+                                                 statusCode, "application/json", errorBody);
+        if (responseChannel.addResponse(response)) {
+            logger.debug("Error response queued for request: {}", request.getRequestId());
+        } else {
+            logger.warn("Response queue full, dropping error response for request: {}", request.getRequestId());
+            // Fallback: send directly if queue is full
+            sendResponseDirectly(request, statusCode, "application/json", errorBody);
+        }
+    }
+
+    /**
+     * Fallback method to send response directly when ResponseChannel is full.
+     */
+    private void sendResponseDirectly(AsyncRequest request, int statusCode, String contentType, String body) {
         try {
             request.getResponse().setStatus(statusCode);
             request.getResponse().setContentType(contentType);
             request.getResponse().getWriter().print(body);
             request.getAsyncContext().complete();
-            logger.debug("Response sent for request: {}", request.getRequestId());
+            logger.debug("Response sent directly for request: {}", request.getRequestId());
         } catch (Exception e) {
-            logger.error("Error sending response for request: {}", request.getRequestId(), e);
-        }
-    }
-    
-    /**
-     * Sends an error response.
-     */
-    private void sendErrorResponse(AsyncRequest request, int statusCode, String message) {
-        try {
-            String errorBody = String.format("{\"error\":\"%s\",\"code\":%d}", message, statusCode);
-            sendResponse(request, statusCode, "application/json", errorBody);
-        } catch (Exception e) {
-            logger.error("Error sending error response for request: {}", request.getRequestId(), e);
+            logger.error("Error sending response directly for request: {}", request.getRequestId(), e);
         }
     }
     

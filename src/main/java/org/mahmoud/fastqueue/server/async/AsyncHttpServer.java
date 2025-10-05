@@ -30,7 +30,9 @@ public class AsyncHttpServer {
     
     private final QueueConfig config;
     private final RequestChannel requestChannel;
+    private final ResponseChannel responseChannel;
     private final AsyncProcessor asyncProcessor;
+    private final ResponseProcessor responseProcessor;
     private final MessageService messageService;
     private final HealthService healthService;
     private final Server server;
@@ -38,16 +40,18 @@ public class AsyncHttpServer {
     private volatile boolean running;
     
     @Inject
-    public AsyncHttpServer(QueueConfig config, RequestChannel requestChannel, 
+    public AsyncHttpServer(QueueConfig config, RequestChannel requestChannel, ResponseChannel responseChannel,
                           MessageService messageService, HealthService healthService,
                           ExecutorService executorService) {
         this.config = config;
         this.requestChannel = requestChannel;
+        this.responseChannel = responseChannel;
         this.messageService = messageService;
         this.healthService = healthService;
         
-        // Create AsyncProcessor with injected dependencies
-        this.asyncProcessor = new AsyncProcessor(requestChannel, messageService, healthService, executorService);
+        // Create processors with injected dependencies
+        this.asyncProcessor = new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, executorService);
+        this.responseProcessor = new ResponseProcessor(responseChannel, executorService);
         
         this.server = new Server(config.getServerPort());
         this.requestIdCounter = new AtomicLong(0);
@@ -80,15 +84,17 @@ public class AsyncHttpServer {
         if (!running) {
             logger.info("Starting AsyncHttpServer...");
             
-            // Start async processor first
+            // Start processors first
             asyncProcessor.start();
+            responseProcessor.start();
             
             // Start Jetty server
             server.start();
             running = true;
             
             logger.info("AsyncHttpServer started successfully on port {}", config.getServerPort());
-            logger.info("RequestChannel metrics: {}", requestChannel.getMetrics());
+            logger.info("RequestChannel metrics: {}", requestChannel.toString());
+            logger.info("ResponseChannel metrics: {}", responseChannel.toString());
         } else {
             logger.warn("AsyncHttpServer is already running");
         }
@@ -104,8 +110,9 @@ public class AsyncHttpServer {
             // Stop Jetty server
             server.stop();
             
-            // Stop async processor
+            // Stop processors
             asyncProcessor.shutdown();
+            responseProcessor.stop();
             
             running = false;
             logger.info("AsyncHttpServer stopped successfully");

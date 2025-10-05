@@ -16,7 +16,10 @@
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/AsyncHttpServer.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/AsyncProcessor.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/AsyncRequest.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/AsyncResponse.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/RequestChannel.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/ResponseChannel.java
+/Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/async/ResponseProcessor.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/server/http/JettyHttpServer.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/service/ExecutorServiceProvider.java
 /Users/mahmoudreda/projects/fastqueue2/src/main/java/org/mahmoud/fastqueue/service/HealthService.java

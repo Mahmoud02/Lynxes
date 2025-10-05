@@ -13,7 +13,9 @@ import org.mahmoud.fastqueue.service.HealthService;
 import org.mahmoud.fastqueue.service.ObjectMapperService;
 import org.mahmoud.fastqueue.service.ExecutorServiceProvider;
 import org.mahmoud.fastqueue.server.async.RequestChannel;
+import org.mahmoud.fastqueue.server.async.ResponseChannel;
 import org.mahmoud.fastqueue.server.async.AsyncProcessor;
+import org.mahmoud.fastqueue.server.async.ResponseProcessor;
 import org.mahmoud.fastqueue.server.async.AsyncHttpServer;
 import org.mahmoud.fastqueue.server.http.JettyHttpServer;
 
@@ -45,7 +47,7 @@ public class FastQueueModule extends AbstractModule {
         
         // HTTP servers are provided by @Provides methods below
         
-        // RequestChannel is provided by @Provides method below
+        // RequestChannel and ResponseChannel are provided by @Provides methods below
     }
     
     /**
@@ -67,14 +69,23 @@ public class FastQueueModule extends AbstractModule {
     }
     
     /**
+     * Provides a configured ResponseChannel.
+     */
+    @Provides
+    @Singleton
+    public ResponseChannel provideResponseChannel(QueueConfig config) {
+        return new ResponseChannel(1000); // Max 1000 queued responses
+    }
+    
+    /**
      * Provides AsyncHttpServer with all dependencies injected.
      */
     @Provides
     @Singleton
     public AsyncHttpServer provideAsyncHttpServer(QueueConfig config, RequestChannel requestChannel, 
-                                                 MessageService messageService, HealthService healthService,
-                                                 ExecutorService executorService) {
-        return new AsyncHttpServer(config, requestChannel, messageService, healthService, executorService);
+                                                 ResponseChannel responseChannel, MessageService messageService, 
+                                                 HealthService healthService, ExecutorService executorService) {
+        return new AsyncHttpServer(config, requestChannel, responseChannel, messageService, healthService, executorService);
     }
     
     /**
