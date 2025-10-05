@@ -150,16 +150,16 @@
                     <small class="text-white-50">High-Performance Message Queue</small>
                 </div>
                 <nav class="nav flex-column">
-                    <a class="nav-link" href="#dashboard" onclick="showSection('dashboard')">
+                    <a class="nav-link" href="#dashboard" onclick="showSection('dashboard', this)">
                         <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="#topics" onclick="showSection('topics')">
+                    <a class="nav-link" href="#topics" onclick="showSection('topics', this)">
                         <i class="fas fa-list me-2"></i> Topics
                     </a>
-                    <a class="nav-link" href="#messages" onclick="showSection('messages')">
+                    <a class="nav-link" href="#messages" onclick="showSection('messages', this)">
                         <i class="fas fa-envelope me-2"></i> Messages
                     </a>
-                    <a class="nav-link" href="#health" onclick="showSection('health')">
+                    <a class="nav-link" href="#health" onclick="showSection('health', this)">
                         <i class="fas fa-heartbeat me-2"></i> Health
                     </a>
                 </nav>
@@ -350,16 +350,21 @@
         let topics = [];
         let consumedMessages = [];
         
-        function showSection(sectionName) {
+        function showSection(sectionName, clickedElement) {
             // Update active nav link
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            event.target.classList.add('active');
+            if (clickedElement) {
+                clickedElement.classList.add('active');
+            }
             
             // Hide all sections
             document.querySelectorAll('.section').forEach(section => section.style.display = 'none');
             
             // Show selected section
-            document.getElementById(sectionName + '-section').style.display = 'block';
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
             
             // Load section data
             switch(sectionName) {
@@ -539,11 +544,31 @@
             
             try {
                 const response = await fetch(`/topics/${topic}?offset=${offset}`);
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                console.log('Response ok:', response.ok);
+                
                 if (response.ok) {
-                    const data = await response.json();
-                    displayConsumedMessage(data);
-                    document.getElementById('consume-offset').value = '';
+                    const responseText = await response.text();
+                    console.log('Raw response text:', responseText);
+                    console.log('Response text length:', responseText.length);
+                    console.log('Response text bytes:', Array.from(responseText).map(c => c.charCodeAt(0)));
+                    
+                    try {
+                        const data = JSON.parse(responseText);
+                        console.log('Parsed JSON data:', data);
+                        displayConsumedMessage(data);
+                        document.getElementById('consume-offset').value = '';
+                    } catch (parseError) {
+                        console.error('JSON parse error:', parseError);
+                        console.error('Response text:', responseText);
+                        console.error('Character at position 51:', responseText.charAt(51));
+                        console.error('Character code at position 51:', responseText.charCodeAt(51));
+                        showAlert('Error parsing server response', 'danger');
+                    }
                 } else {
+                    const errorText = await response.text();
+                    console.log('Error response text:', errorText);
                     showAlert('No message found at that offset', 'warning');
                 }
             } catch (error) {
@@ -554,14 +579,24 @@
         
         function displayConsumedMessage(message) {
             const messagesContainer = document.getElementById('consumed-messages');
+            if (!messagesContainer) {
+                console.error('Messages container not found');
+                return;
+            }
+            
+            if (!message || typeof message !== 'object') {
+                console.error('Invalid message data:', message);
+                return;
+            }
+            
             const messageCard = document.createElement('div');
             messageCard.className = 'col-md-6 col-lg-4 mb-3';
             messageCard.innerHTML = `
                 <div class="card message-card h-100">
                     <div class="card-body">
-                        <h6 class="card-title"><i class="fas fa-hashtag me-1"></i>Offset: ${message.offset}</h6>
-                        <p class="card-text">${message.message}</p>
-                        <small class="text-muted"><i class="fas fa-clock me-1"></i>${new Date(message.timestamp).toLocaleString()}</small>
+                        <h6 class="card-title"><i class="fas fa-hashtag me-1"></i>Offset: ${message.offset || 'N/A'}</h6>
+                        <p class="card-text">${message.message || 'No message content'}</p>
+                        <small class="text-muted"><i class="fas fa-clock me-1"></i>${message.timestamp ? new Date(message.timestamp).toLocaleString() : 'Unknown time'}</small>
                     </div>
                 </div>
             `;
@@ -593,15 +628,35 @@
         async function viewTopicMessages(topicName) {
             try {
                 showAlert(`Viewing messages for topic: ${topicName}`, 'info');
-                showSection('messages');
+                showSection('messages', document.querySelector('a[href="#messages"]'));
                 document.getElementById('consume-topic').value = topicName;
                 
                 const response = await fetch(`/topics/${topicName}?offset=0`);
+                console.log('ViewTopicMessages - Response status:', response.status);
+                console.log('ViewTopicMessages - Response headers:', response.headers);
+                console.log('ViewTopicMessages - Response ok:', response.ok);
+                
                 if (response.ok) {
-                    const data = await response.json();
-                    displayConsumedMessage(data);
-                    showAlert(`Found message at offset 0 for topic: ${topicName}`, 'success');
+                    const responseText = await response.text();
+                    console.log('ViewTopicMessages - Raw response text:', responseText);
+                    console.log('ViewTopicMessages - Response text length:', responseText.length);
+                    console.log('ViewTopicMessages - Response text bytes:', Array.from(responseText).map(c => c.charCodeAt(0)));
+                    
+                    try {
+                        const data = JSON.parse(responseText);
+                        console.log('ViewTopicMessages - Parsed JSON data:', data);
+                        displayConsumedMessage(data);
+                        showAlert(`Found message at offset 0 for topic: ${topicName}`, 'success');
+                    } catch (parseError) {
+                        console.error('ViewTopicMessages - JSON parse error:', parseError);
+                        console.error('ViewTopicMessages - Response text:', responseText);
+                        console.error('ViewTopicMessages - Character at position 51:', responseText.charAt(51));
+                        console.error('ViewTopicMessages - Character code at position 51:', responseText.charCodeAt(51));
+                        showAlert('Error parsing server response', 'danger');
+                    }
                 } else {
+                    const errorText = await response.text();
+                    console.log('ViewTopicMessages - Error response text:', errorText);
                     showAlert(`No messages found in topic: ${topicName}`, 'warning');
                 }
             } catch (error) {

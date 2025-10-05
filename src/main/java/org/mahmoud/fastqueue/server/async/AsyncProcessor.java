@@ -2,10 +2,12 @@ package org.mahmoud.fastqueue.server.async;
 
 import org.mahmoud.fastqueue.service.MessageService;
 import org.mahmoud.fastqueue.service.HealthService;
+import org.mahmoud.fastqueue.service.ObjectMapperService;
 import org.mahmoud.fastqueue.core.Record;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -13,6 +15,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Async processor that handles message operations in a separate thread pool.
@@ -26,6 +30,7 @@ public class AsyncProcessor {
     private final ExecutorService ioThreadPool;
     private final MessageService messageService;
     private final HealthService healthService;
+    private final ObjectMapper objectMapper;
     private final AtomicBoolean running;
     private final AtomicLong processedCount;
     private final AtomicLong errorCount;
@@ -33,11 +38,12 @@ public class AsyncProcessor {
     @Inject
     public AsyncProcessor(RequestChannel requestChannel, ResponseChannel responseChannel,
                          MessageService messageService, HealthService healthService, 
-                         ExecutorService executorService) {
+                         ObjectMapperService objectMapperService, ExecutorService executorService) {
         this.requestChannel = requestChannel;
         this.responseChannel = responseChannel;
         this.messageService = messageService;
         this.healthService = healthService;
+        this.objectMapper = objectMapperService.getObjectMapper();
         this.ioThreadPool = executorService;
         
         this.running = new AtomicBoolean(false);
@@ -184,10 +190,17 @@ public class AsyncProcessor {
             return;
         }
         
-        // Send success response
+        // Send success response using ObjectMapper for proper JSON serialization
         String message = new String(record.getData(), StandardCharsets.UTF_8);
-        String responseBody = String.format("{\"offset\":%d,\"timestamp\":%d,\"message\":\"%s\"}", 
-                                      record.getOffset(), record.getTimestamp(), message);
+        
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("offset", record.getOffset());
+        responseData.put("timestamp", record.getTimestamp());
+        responseData.put("message", message);
+        
+        String responseBody = objectMapper.writeValueAsString(responseData);
+        
+        logger.debug("Sending consume response: {}", responseBody);
         sendResponse(request, 200, "application/json", responseBody);
     }
     
@@ -260,7 +273,9 @@ public class AsyncProcessor {
         try {
             request.getResponse().setStatus(statusCode);
             request.getResponse().setContentType(contentType);
+            request.getResponse().setContentLength(body.getBytes(java.nio.charset.StandardCharsets.UTF_8).length);
             request.getResponse().getWriter().print(body);
+            request.getResponse().getWriter().flush();
             request.getAsyncContext().complete();
             logger.debug("Response sent directly for request: {}", request.getRequestId());
         } catch (Exception e) {
