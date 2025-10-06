@@ -67,7 +67,8 @@ public class Log implements AutoCloseable {
             }
         }
         
-        // Load each segment
+        // Load each segment and track the highest segment ID
+        long maxSegmentId = 0;
         for (String segmentId : segmentIds) {
             try {
                 Segment segment = new Segment(basePath, segmentId, maxSegmentSize, 0);
@@ -75,7 +76,7 @@ public class Log implements AutoCloseable {
                 
                 // Find the highest segment ID
                 long segmentNum = Long.parseLong(segmentId.substring("segment-".length()));
-                nextSegmentId = Math.max(nextSegmentId, segmentNum + 1);
+                maxSegmentId = Math.max(maxSegmentId, segmentNum);
                 
                 // Set as active if it's not full
                 if (activeSegment == null && !segment.isFull()) {
@@ -85,6 +86,9 @@ public class Log implements AutoCloseable {
                 System.err.println("Failed to recover segment " + segmentId + ": " + e.getMessage());
             }
         }
+        
+        // Set nextSegmentId to the next available ID
+        nextSegmentId = maxSegmentId + 1;
         
         // After recovering all segments, update their nextOffset values
         for (Segment segment : segments.values()) {
@@ -105,7 +109,12 @@ public class Log implements AutoCloseable {
      */
     private void createNewSegment() throws IOException {
         String segmentId = "segment-" + nextSegmentId++;
-        Segment segment = new Segment(basePath, segmentId, maxSegmentSize, 0);
+        
+        // Get the next available offset from the current log state
+        // This ensures offset continuity across segment rotations
+        long startOffset = getNextOffset();
+        
+        Segment segment = new Segment(basePath, segmentId, maxSegmentSize, startOffset);
         segments.put(segmentId, segment);
         activeSegment = segment;
     }
