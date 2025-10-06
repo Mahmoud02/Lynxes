@@ -60,8 +60,8 @@ public class SparseIndex {
         // Recover existing index entries
         recoverIndex();
         
-        logger.info("SparseIndex: Created for {}, entryCount={}, lastIndexedOffset={}", 
-                   indexPath, entryCount, lastIndexedOffset);
+        logger.debug("SparseIndex: Created for {}, entryCount={}, lastIndexedOffset={}", 
+                    indexPath, entryCount, lastIndexedOffset);
     }
     
     /**
@@ -116,8 +116,8 @@ public class SparseIndex {
         try {
             // Only index if this offset should be indexed based on sparse interval
             if (shouldIndex(offset)) {
-                    logger.info("SparseIndex.addEntry: Indexing offset={}, position={}, length={}, checksum={} (sparse interval={})", 
-                               offset, position, length, checksum, SPARSE_INTERVAL);
+                    logger.debug("SparseIndex.addEntry: Indexing offset={}, position={}, length={}, checksum={} (sparse interval={})", 
+                                 offset, position, length, checksum, SPARSE_INTERVAL);
                 
                 // Write entry to end of file
                 ByteBuffer buffer = ByteBuffer.allocate(INDEX_ENTRY_SIZE);
@@ -136,8 +136,8 @@ public class SparseIndex {
                 entryCount++;
                 lastIndexedOffset = offset;
                 
-                    logger.info("SparseIndex.addEntry: Added entry {}, currentSize={}, lastIndexedOffset={}", 
-                               entryCount, currentSize, lastIndexedOffset);
+                    logger.debug("SparseIndex.addEntry: Added entry {}, currentSize={}, lastIndexedOffset={}", 
+                                 entryCount, currentSize, lastIndexedOffset);
             } else {
                 logger.debug("SparseIndex.addEntry: Skipping offset={} (not a sparse interval, lastIndexed={})", 
                             offset, lastIndexedOffset);
@@ -175,8 +175,8 @@ public class SparseIndex {
                 return null;
             }
             
-        logger.info("SparseIndex.findClosestIndex: Looking for targetOffset={}, entryCount={}", 
-                   targetOffset, entryCount);
+        logger.debug("SparseIndex.findClosestIndex: Looking for targetOffset={}, entryCount={}", 
+                    targetOffset, entryCount);
             
             // Binary search for the closest index entry
             int left = 0;
@@ -195,8 +195,8 @@ public class SparseIndex {
                 }
             }
             
-            logger.info("SparseIndex.findClosestIndex: Found closest entry={}", 
-                       result != null ? result.getOffset() : "null");
+            logger.debug("SparseIndex.findClosestIndex: Found closest entry={}", 
+                        result != null ? result.getOffset() : "null");
             
             return result;
         } finally {
