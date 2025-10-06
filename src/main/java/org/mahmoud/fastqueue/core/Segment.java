@@ -182,12 +182,12 @@ public class Segment implements AutoCloseable {
      * @throws IOException if the operation fails
      */
     private Record scanForwardFromOffset(IndexEntry startEntry, long targetOffset) throws IOException {
-        logger.info("Segment.scanForwardFromOffset: Scanning from offset {} to find {}", 
-                   startEntry.getOffset(), targetOffset);
+        logger.debug("Segment.scanForwardFromOffset: Scanning from offset {} to find {}", 
+                    startEntry.getOffset(), targetOffset);
         
         // If the start entry is exactly the target offset, return it directly
         if (startEntry.getOffset() == targetOffset) {
-            logger.info("Segment.scanForwardFromOffset: Start entry matches target offset");
+            logger.debug("Segment.scanForwardFromOffset: Start entry matches target offset");
             return store.read(startEntry.getPosition(), targetOffset);
         }
         
@@ -196,8 +196,8 @@ public class Segment implements AutoCloseable {
         long currentPosition = startEntry.getPosition() + 16 + startEntry.getLength();
         long currentOffset = startEntry.getOffset() + 1;
         
-        logger.info("Segment.scanForwardFromOffset: Starting scan from position {}, expected offset {}, target offset {}", 
-                   currentPosition, currentOffset, targetOffset);
+        logger.debug("Segment.scanForwardFromOffset: Starting scan from position {}, expected offset {}, target offset {}", 
+                    currentPosition, currentOffset, targetOffset);
         
         // Scan forward until we find the target offset or go past it
         while (currentOffset <= targetOffset) {
@@ -205,21 +205,21 @@ public class Segment implements AutoCloseable {
                 // Read the next record
                 Record record = store.read(currentPosition, currentOffset);
                 if (record == null) {
-                    logger.info("Segment.scanForwardFromOffset: No more records, target not found");
+                    logger.debug("Segment.scanForwardFromOffset: No more records, target not found");
                     return null;
                 }
                 
-                logger.info("Segment.scanForwardFromOffset: Read record with offset {} at position {}", 
-                           record.getOffset(), currentPosition);
+                logger.debug("Segment.scanForwardFromOffset: Read record with offset {} at position {}", 
+                            record.getOffset(), currentPosition);
                 
                 if (record.getOffset() == targetOffset) {
-                    logger.info("Segment.scanForwardFromOffset: Found target offset {}", targetOffset);
+                    logger.debug("Segment.scanForwardFromOffset: Found target offset {}", targetOffset);
                     return record;
                 }
                 
                 // If we've gone past the target offset, it doesn't exist
                 if (record.getOffset() > targetOffset) {
-                    logger.info("Segment.scanForwardFromOffset: Past target offset {}, not found", targetOffset);
+                    logger.debug("Segment.scanForwardFromOffset: Past target offset {}, not found", targetOffset);
                     return null;
                 }
                 
