@@ -39,6 +39,9 @@ public class ConfigLoader {
             QueueConfig queueConfig = new QueueConfig();
             populateConfigFromTypesafe(queueConfig, finalConfig);
             
+            // Set system properties for Logback configuration
+            setLoggingSystemProperties(queueConfig);
+            
             logger.info("Configuration loaded: {}", queueConfig);
             return queueConfig;
             
@@ -110,6 +113,26 @@ public class ConfigLoader {
                 return convertValue(defaultValue, type);
             }
             return null;
+        }
+    }
+    
+    /**
+     * Sets system properties for Logback configuration based on QueueConfig.
+     * This allows Logback to read configuration from application.conf.
+     */
+    private static void setLoggingSystemProperties(QueueConfig config) {
+        try {
+            // Set logging level property for Logback
+            System.setProperty("fastqueue.logging.level", config.getLogLevel());
+            
+            // Set logging file property for Logback
+            System.setProperty("fastqueue.logging.file", config.getLogFile());
+            
+            logger.info("Set logging system properties - level: {}, file: {}", 
+                       config.getLogLevel(), config.getLogFile());
+                       
+        } catch (Exception e) {
+            logger.warn("Failed to set logging system properties: {}", e.getMessage());
         }
     }
     
