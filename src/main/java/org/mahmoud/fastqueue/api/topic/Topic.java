@@ -44,7 +44,10 @@ public class Topic {
         this.log = new Log(topicDir, config.getMaxSegmentSize(), config.getRetentionPeriodMs());
         
         // Initialize nextOffset based on existing log data
-        this.nextOffset = new AtomicLong(this.log.getNextOffset());
+        long logNextOffset = this.log.getNextOffset();
+        System.out.println("Topic constructor: Topic '" + this.name + "' - Log.getNextOffset() returned: " + logNextOffset);
+        this.nextOffset = new AtomicLong(logNextOffset);
+        System.out.println("Topic constructor: Topic '" + this.name + "' - Initialized nextOffset to: " + this.nextOffset.get());
     }
     
     /**
@@ -89,14 +92,15 @@ public class Topic {
         
         lock.writeLock().lock();
         try {
-            // Get the next offset but don't increment yet
-            long offset = nextOffset.get();
+            // Always get the next offset from the log to ensure consistency
+            long offset = log.getNextOffset();
+            System.out.println("Topic.publish: Topic '" + name + "' - Log.getNextOffset(): " + offset);
             
             // Try to append the record first
             Record record = log.append(offset, data);
             
-            // Only increment nextOffset after successful append
-            nextOffset.incrementAndGet();
+            System.out.println("Topic.publish: Topic '" + name + "' - Published message with offset: " + 
+                             record.getOffset());
             
             // Note: We don't force immediate flush here - let the flush strategy handle it
             // This maintains page cache benefits while ensuring data consistency
@@ -163,14 +167,11 @@ public class Topic {
         
         lock.writeLock().lock();
         try {
-            // Get the next offset but don't increment yet
-            long offset = nextOffset.get();
+            // Always get the next offset from the log to ensure consistency
+            long offset = log.getNextOffset();
             
             // Try to append the record first
             Record record = log.append(offset, data);
-            
-            // Only increment nextOffset after successful append
-            nextOffset.incrementAndGet();
             
             // Apply durability requirements
             if (requireDurability) {

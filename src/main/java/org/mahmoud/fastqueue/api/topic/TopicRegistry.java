@@ -28,8 +28,11 @@ public class TopicRegistry {
     public static synchronized Topic getOrCreateTopic(String name, QueueConfig config) throws IOException {
         String sanitizedName = QueueUtils.sanitizeTopicName(name);
         
+        System.out.println("TopicRegistry.getOrCreateTopic: Requesting topic '" + sanitizedName + "'");
+        
         return topics.computeIfAbsent(sanitizedName, topicName -> {
             try {
+                System.out.println("TopicRegistry.getOrCreateTopic: Creating NEW topic '" + topicName + "'");
                 return new Topic(topicName, config, getOrCreateLog(topicName, config));
             } catch (IOException e) {
                 throw new RuntimeException("Failed to create topic: " + topicName, e);
@@ -46,8 +49,11 @@ public class TopicRegistry {
      * @throws IOException if the log cannot be created
      */
     private static synchronized Log getOrCreateLog(String topicName, QueueConfig config) throws IOException {
+        System.out.println("TopicRegistry.getOrCreateLog: Requesting log for topic '" + topicName + "'");
+        
         return logs.computeIfAbsent(topicName, name -> {
             try {
+                System.out.println("TopicRegistry.getOrCreateLog: Creating NEW log for topic '" + name + "'");
                 // Create topic directory
                 Path topicDir = config.getDataDirectory().resolve("topics").resolve(name);
                 QueueUtils.createDirectoryIfNotExists(topicDir);

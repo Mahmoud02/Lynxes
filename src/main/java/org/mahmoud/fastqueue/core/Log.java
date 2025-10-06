@@ -31,6 +31,7 @@ public class Log implements AutoCloseable {
      * @throws IOException if the log cannot be initialized
      */
     public Log(Path basePath, long maxSegmentSize, long retentionPeriodMs) throws IOException {
+        System.out.println("Log constructor: Creating new Log for path: " + basePath);
         this.basePath = basePath;
         this.maxSegmentSize = maxSegmentSize;
         this.retentionPeriodMs = retentionPeriodMs;
@@ -48,17 +49,28 @@ public class Log implements AutoCloseable {
         if (activeSegment == null) {
             createNewSegment();
         }
+        System.out.println("Log constructor: Log created with " + segments.size() + " segments, nextOffset: " + getNextOffset());
     }
 
     /**
      * Recovers existing segments from disk.
+     * Handles both old segment-N format and new offset-based format.
      * 
      * @throws IOException if recovery fails
      */
     private void recoverSegments() throws IOException {
         Set<String> segmentIds = new HashSet<>();
         
-        // Find all segment files
+        // Find all segment files (both .store and .log for compatibility)
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(basePath, "*.log")) {
+            for (Path logFile : stream) {
+                String fileName = logFile.getFileName().toString();
+                String segmentId = fileName.substring(0, fileName.lastIndexOf('.'));
+                segmentIds.add(segmentId);
+            }
+        }
+        
+        // Also check for .store files (old format for backward compatibility)
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(basePath, "*.store")) {
             for (Path storeFile : stream) {
                 String fileName = storeFile.getFileName().toString();
@@ -67,56 +79,102 @@ public class Log implements AutoCloseable {
             }
         }
         
-        // Load each segment and track the highest segment ID
-        long maxSegmentId = 0;
-        for (String segmentId : segmentIds) {
+        // Sort segments by their starting offset for proper recovery order
+        List<String> sortedSegmentIds = new ArrayList<>(segmentIds);
+        sortedSegmentIds.sort((a, b) -> {
             try {
-                Segment segment = new Segment(basePath, segmentId, maxSegmentSize, 0);
+                // Try to parse as offset-based naming first
+                long offsetA = Long.parseLong(a);
+                long offsetB = Long.parseLong(b);
+                return Long.compare(offsetA, offsetB);
+            } catch (NumberFormatException e) {
+                // Fall back to old segment-N format
+                if (a.startsWith("segment-") && b.startsWith("segment-")) {
+                    try {
+                        long numA = Long.parseLong(a.substring("segment-".length()));
+                        long numB = Long.parseLong(b.substring("segment-".length()));
+                        return Long.compare(numA, numB);
+                    } catch (NumberFormatException ex) {
+                        return a.compareTo(b);
+                    }
+                }
+                return a.compareTo(b);
+            }
+        });
+        
+        // Load each segment in order
+        for (String segmentId : sortedSegmentIds) {
+            try {
+                // Determine the starting offset for this segment
+                long startOffset = 0;
+                try {
+                    // Try to parse as offset-based naming
+                    startOffset = Long.parseLong(segmentId);
+                } catch (NumberFormatException e) {
+                    // Fall back to old segment-N format - calculate offset from previous segments
+                    startOffset = getNextOffset();
+                }
+                
+                // Create segment with the determined start offset
+                Segment segment = new Segment(basePath, segmentId, maxSegmentSize, startOffset);
+                
+                // Get the actual offset range for this segment
+                long lowestOffset = segment.getLowestOffset();
+                long highestOffset = segment.getHighestOffset();
+                
+                System.out.println("Log.recoverSegments: Recovered segment '" + segmentId + 
+                                 "' with offset range [" + lowestOffset + ", " + highestOffset + "]");
+                
+                if (lowestOffset >= 0 && highestOffset >= 0) {
+                    // Update the segment's nextOffset to be highestOffset + 1
+                    segment.updateNextOffset(highestOffset + 1);
+                } else if (highestOffset >= 0) {
+                    // If we can't get lowest offset, just use highest + 1
+                    segment.updateNextOffset(highestOffset + 1);
+                }
+                
                 segments.put(segmentId, segment);
                 
-                // Find the highest segment ID
-                long segmentNum = Long.parseLong(segmentId.substring("segment-".length()));
-                maxSegmentId = Math.max(maxSegmentId, segmentNum);
-                
-                // Set as active if it's not full
+                // Set as active if it's not full and we don't have an active segment yet
                 if (activeSegment == null && !segment.isFull()) {
                     activeSegment = segment;
+                    System.out.println("Log.recoverSegments: Set segment '" + segmentId + "' as active");
                 }
             } catch (Exception e) {
                 System.err.println("Failed to recover segment " + segmentId + ": " + e.getMessage());
+                e.printStackTrace();
             }
         }
         
-        // Set nextSegmentId to the next available ID
-        nextSegmentId = maxSegmentId + 1;
-        
-        // After recovering all segments, update their nextOffset values
-        for (Segment segment : segments.values()) {
-            if (!segment.isClosed()) {
-                long highestOffset = segment.getHighestOffset();
-                if (highestOffset >= 0) {
-                    // Update the segment's nextOffset to be highestOffset + 1
-                    segment.updateNextOffset(highestOffset + 1);
-                }
+        // If all recovered segments are full, we need to create a new active segment
+        if (activeSegment == null) {
+            try {
+                createNewSegment();
+            } catch (IOException e) {
+                System.err.println("Failed to create new active segment during recovery: " + e.getMessage());
             }
         }
     }
 
     /**
      * Creates a new segment and makes it active.
+     * Uses Kafka-style offset-based naming: {offset:020d}
      * 
      * @throws IOException if the segment cannot be created
      */
     private void createNewSegment() throws IOException {
-        String segmentId = "segment-" + nextSegmentId++;
-        
         // Get the next available offset from the current log state
         // This ensures offset continuity across segment rotations
         long startOffset = getNextOffset();
         
+        // Use Kafka-style naming: 20-digit zero-padded offset
+        String segmentId = String.format("%020d", startOffset);
+        
         Segment segment = new Segment(basePath, segmentId, maxSegmentSize, startOffset);
         segments.put(segmentId, segment);
         activeSegment = segment;
+        
+        System.out.println("Log.createNewSegment: Created new segment '" + segmentId + "' starting at offset " + startOffset);
     }
 
     /**
@@ -163,16 +221,24 @@ public class Log implements AutoCloseable {
         
         lock.writeLock().lock();
         try {
+            System.out.println("Log.append: Requested offset: " + offset + 
+                             ", Active segment: " + (activeSegment != null ? activeSegment.getSegmentId() : "null") +
+                             ", Active segment nextOffset: " + (activeSegment != null ? activeSegment.getNextOffset() : "N/A"));
+            
             // Check if active segment is full
             if (activeSegment.isFull()) {
+                System.out.println("Log.append: Active segment is full, creating new segment");
                 // Close current active segment
                 activeSegment.close();
                 
                 // Create new active segment
                 createNewSegment();
+                System.out.println("Log.append: Created new active segment: " + activeSegment.getSegmentId());
             }
             
-            return activeSegment.append(offset, data);
+            Record result = activeSegment.append(offset, data);
+            System.out.println("Log.append: Successfully appended record with offset: " + result.getOffset());
+            return result;
         } finally {
             lock.writeLock().unlock();
         }
@@ -305,15 +371,52 @@ public class Log implements AutoCloseable {
         lock.readLock().lock();
         try {
             long maxOffset = -1;
-            for (Segment segment : segments.values()) {
-                if (!segment.isClosed()) {
-                    long highestOffset = segment.getHighestOffset();
-                    if (highestOffset > maxOffset) {
-                        maxOffset = highestOffset;
+            System.out.println("Log.getNextOffset: Checking " + segments.size() + " segments");
+            
+            // Sort segments by their starting offset to ensure proper order
+            List<Segment> sortedSegments = new ArrayList<>(segments.values());
+            sortedSegments.sort((a, b) -> {
+                try {
+                    // Try to parse as offset-based naming first
+                    long offsetA = Long.parseLong(a.getSegmentId());
+                    long offsetB = Long.parseLong(b.getSegmentId());
+                    return Long.compare(offsetA, offsetB);
+                } catch (NumberFormatException e) {
+                    // Fall back to old segment-N format
+                    if (a.getSegmentId().startsWith("segment-") && b.getSegmentId().startsWith("segment-")) {
+                        try {
+                            long numA = Long.parseLong(a.getSegmentId().substring("segment-".length()));
+                            long numB = Long.parseLong(b.getSegmentId().substring("segment-".length()));
+                            return Long.compare(numA, numB);
+                        } catch (NumberFormatException ex) {
+                            return a.getSegmentId().compareTo(b.getSegmentId());
+                        }
                     }
+                    return a.getSegmentId().compareTo(b.getSegmentId());
+                }
+            });
+            
+            for (Segment segment : sortedSegments) {
+                // Include all segments, not just non-closed ones
+                // During recovery, we need to consider all segments to get the correct next offset
+                long highestOffset = segment.getHighestOffset();
+                long nextOffset = segment.getNextOffset();
+                
+                System.out.println("Log.getNextOffset: Segment '" + segment.getSegmentId() + 
+                                 "' highestOffset: " + highestOffset + ", nextOffset: " + nextOffset + 
+                                 ", closed: " + segment.isClosed());
+                
+                // Use the higher of highestOffset or (nextOffset - 1)
+                // nextOffset represents the next available offset, so (nextOffset - 1) is the last used offset
+                long segmentMaxOffset = Math.max(highestOffset, nextOffset - 1);
+                if (segmentMaxOffset > maxOffset) {
+                    maxOffset = segmentMaxOffset;
                 }
             }
-            return maxOffset + 1;
+            
+            long result = maxOffset + 1;
+            System.out.println("Log.getNextOffset: Max offset found: " + maxOffset + ", returning: " + result);
+            return result;
         } finally {
             lock.readLock().unlock();
         }

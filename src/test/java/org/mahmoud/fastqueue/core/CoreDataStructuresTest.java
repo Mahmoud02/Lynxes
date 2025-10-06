@@ -72,33 +72,38 @@ public class CoreDataStructuresTest {
     }
 
     @Test
-    public void testIndex() throws IOException {
+    public void testSparseIndex() throws IOException {
         Path indexPath = tempDir.resolve("test.index");
-        Index index = new Index(indexPath);
+        SparseIndex index = new SparseIndex(indexPath);
         
         try {
-            // Test adding entries
-            index.addEntry(1, 100, 50, 123);
-            index.addEntry(2, 200, 75, 456);
-            index.addEntry(3, 300, 100, 789);
+            // Test adding entries (only sparse intervals will be indexed)
+            index.addEntry(0, 0, 50, 123);    // Will be indexed (offset 0)
+            index.addEntry(1, 100, 50, 123);  // Will be skipped
+            index.addEntry(2, 200, 75, 456);  // Will be skipped
+            index.addEntry(1000, 300, 100, 789); // Will be indexed (offset 1000)
             
             // Test finding entries
-            Index.IndexEntry entry1 = index.findEntry(1);
-            Index.IndexEntry entry2 = index.findEntry(2);
-            Index.IndexEntry entry3 = index.findEntry(3);
-            Index.IndexEntry notFound = index.findEntry(999);
+            IndexEntry entry0 = index.findClosestIndex(0);
+            IndexEntry entry1 = index.findClosestIndex(1);
+            IndexEntry entry2 = index.findClosestIndex(2);
+            IndexEntry entry1000 = index.findClosestIndex(1000);
+            IndexEntry notFound = index.findClosestIndex(999);
             
+            assertNotNull(entry0);
+            assertEquals(0, entry0.getOffset());
+            assertEquals(0, entry0.getPosition());
+            
+            // For non-indexed offsets, should find the closest indexed entry
             assertNotNull(entry1);
-            assertEquals(1, entry1.getOffset());
-            assertEquals(100, entry1.getPosition());
+            assertEquals(0, entry1.getOffset()); // Should find offset 0
             
             assertNotNull(entry2);
-            assertEquals(2, entry2.getOffset());
-            assertEquals(200, entry2.getPosition());
+            assertEquals(0, entry2.getOffset()); // Should find offset 0
             
-            assertNotNull(entry3);
-            assertEquals(3, entry3.getOffset());
-            assertEquals(300, entry3.getPosition());
+            assertNotNull(entry1000);
+            assertEquals(1000, entry1000.getOffset());
+            assertEquals(300, entry1000.getPosition());
             
             assertNull(notFound);
             
