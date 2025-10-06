@@ -13,15 +13,21 @@ import java.nio.file.Path;
  * @author mahmoudreda
  */
 public class Fastqueue2 {
-    private static final Logger logger = LoggerFactory.getLogger(Fastqueue2.class);
+    private static Logger logger;
 
     public static void main(String[] args) {
-        logger.info("FastQueue2 - High-Performance Message Queue Server");
-        logger.info("==================================================");
-        
         try {
             // Parse command line arguments
             String environment = parseEnvironment(args);
+            
+            // Load configuration and configure Logback BEFORE any logging
+            loadConfigurationAndConfigureLogback(environment);
+            
+            // Initialize logger AFTER configuration is loaded
+            logger = LoggerFactory.getLogger(Fastqueue2.class);
+            
+            logger.info("FastQueue2 - High-Performance Message Queue Server");
+            logger.info("==================================================");
             
             // Start the HTTP server with configuration
             startHttpServer(environment);
@@ -29,6 +35,110 @@ public class Fastqueue2 {
         } catch (Exception e) {
             logger.error("Failed to start FastQueue2 server", e);
             System.exit(1);
+        }
+    }
+    
+    /**
+     * Loads configuration and configures Logback programmatically BEFORE any logging occurs.
+     */
+    private static void loadConfigurationAndConfigureLogback(String environment) {
+        try {
+            // Load configuration using Typesafe Config directly
+            com.typesafe.config.Config config = com.typesafe.config.ConfigFactory.load("application");
+            
+            // Get logging configuration
+            String logLevel = config.getString("fastqueue.logging.level");
+            String logFile = config.getString("fastqueue.logging.file");
+            
+            // Configure Logback programmatically
+            configureLogbackProgrammatically(logLevel, logFile);
+            
+            // Debug output
+            System.out.println("DEBUG: Configured Logback programmatically:");
+            System.out.println("  Log Level = " + logLevel);
+            System.out.println("  Log File = " + logFile);
+            
+        } catch (Exception e) {
+            // If configuration loading fails, use defaults
+            configureLogbackProgrammatically("INFO", "logs/fastqueue2.log");
+        }
+    }
+    
+    /**
+     * Configures Logback programmatically with the specified log level and file.
+     */
+    private static void configureLogbackProgrammatically(String logLevel, String logFile) {
+        try {
+            // Get the LoggerContext
+            ch.qos.logback.classic.LoggerContext context = 
+                (ch.qos.logback.classic.LoggerContext) LoggerFactory.getILoggerFactory();
+            
+            // Reset the context to clear any existing configuration
+            context.reset();
+            
+            // Create console appender
+            ch.qos.logback.core.ConsoleAppender consoleAppender = new ch.qos.logback.core.ConsoleAppender();
+            consoleAppender.setContext(context);
+            consoleAppender.setName("CONSOLE");
+            
+            ch.qos.logback.classic.encoder.PatternLayoutEncoder consoleEncoder = new ch.qos.logback.classic.encoder.PatternLayoutEncoder();
+            consoleEncoder.setContext(context);
+            consoleEncoder.setPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n");
+            consoleEncoder.start();
+            
+            consoleAppender.setEncoder(consoleEncoder);
+            consoleAppender.start();
+            
+            // Create file appender
+            ch.qos.logback.core.rolling.RollingFileAppender fileAppender = new ch.qos.logback.core.rolling.RollingFileAppender();
+            fileAppender.setContext(context);
+            fileAppender.setName("FILE");
+            fileAppender.setFile(logFile);
+            
+            // Configure rolling policy
+            ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy rollingPolicy = new ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy();
+            rollingPolicy.setContext(context);
+            rollingPolicy.setParent(fileAppender);
+            rollingPolicy.setFileNamePattern(logFile + ".%d{yyyy-MM-dd}.%i.log");
+            rollingPolicy.setMaxFileSize(ch.qos.logback.core.util.FileSize.valueOf("100MB"));
+            rollingPolicy.setMaxHistory(30);
+            rollingPolicy.setTotalSizeCap(ch.qos.logback.core.util.FileSize.valueOf("1GB"));
+            rollingPolicy.start();
+            
+            fileAppender.setRollingPolicy(rollingPolicy);
+            
+            // Configure file encoder
+            ch.qos.logback.classic.encoder.PatternLayoutEncoder fileEncoder = new ch.qos.logback.classic.encoder.PatternLayoutEncoder();
+            fileEncoder.setContext(context);
+            fileEncoder.setPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n");
+            fileEncoder.start();
+            
+            fileAppender.setEncoder(fileEncoder);
+            fileAppender.start();
+            
+            // Configure root logger
+            ch.qos.logback.classic.Logger rootLogger = context.getLogger("ROOT");
+            rootLogger.setLevel(ch.qos.logback.classic.Level.WARN);
+            rootLogger.addAppender(consoleAppender);
+            rootLogger.addAppender(fileAppender);
+            
+            // Configure FastQueue2 logger
+            ch.qos.logback.classic.Logger fastQueueLogger = context.getLogger("org.mahmoud.fastqueue");
+            fastQueueLogger.setLevel(ch.qos.logback.classic.Level.toLevel(logLevel));
+            fastQueueLogger.setAdditive(false);
+            fastQueueLogger.addAppender(consoleAppender);
+            fastQueueLogger.addAppender(fileAppender);
+            
+            // Configure Jetty loggers to reduce noise
+            ch.qos.logback.classic.Logger jettyLogger = context.getLogger("org.eclipse.jetty");
+            jettyLogger.setLevel(ch.qos.logback.classic.Level.WARN);
+            jettyLogger.setAdditive(false);
+            jettyLogger.addAppender(consoleAppender);
+            jettyLogger.addAppender(fileAppender);
+            
+        } catch (Exception e) {
+            System.err.println("Failed to configure Logback programmatically: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
