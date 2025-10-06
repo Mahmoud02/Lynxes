@@ -3,14 +3,18 @@ package org.mahmoud.fastqueue.core;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicLong;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A segment combines a store file and an index file.
  * Manages the coordination between storing records and indexing them.
  */
 public class Segment implements AutoCloseable {
+    private static final Logger logger = LoggerFactory.getLogger(Segment.class);
+    
     private final Store store;
-    private final Index index;
+    private final SparseIndex index;
     private final long maxSize;
     private final AtomicLong nextOffset;
     private final Path basePath;
@@ -33,12 +37,12 @@ public class Segment implements AutoCloseable {
         this.nextOffset = new AtomicLong(startOffset);
         this.closed = false;
         
-        // Create store and index files
-        Path storePath = basePath.resolve(segmentId + ".store");
+        // Create store and index files (using Kafka-style .log extension)
+        Path storePath = basePath.resolve(segmentId + ".log");
         Path indexPath = basePath.resolve(segmentId + ".index");
         
         this.store = new Store(storePath);
-        this.index = new Index(indexPath);
+        this.index = new SparseIndex(indexPath);
     }
 
     /**
@@ -65,7 +69,7 @@ public class Segment implements AutoCloseable {
         long position = store.append(record);
         
         // Add to index
-        index.addEntry(record, position);
+        index.addEntry(record.getOffset(), position, record.getData().length, record.getChecksum());
         
         return record;
     }
@@ -88,16 +92,25 @@ public class Segment implements AutoCloseable {
             throw new IllegalStateException("Segment is full");
         }
         
+        logger.debug("Segment.append: Segment '{}' - Requested offset: {}, Current nextOffset: {}", 
+                    segmentId, offset, nextOffset.get());
+        
         Record record = new Record(offset, data);
         
         // Write to store
         long position = store.append(record);
+        logger.debug("Segment.append: Segment '{}' - Written to store at position: {}", 
+                    segmentId, position);
         
         // Add to index
-        index.addEntry(record, position);
+        index.addEntry(record.getOffset(), position, record.getData().length, record.getChecksum());
+        logger.debug("Segment.append: Segment '{}' - Added to index", segmentId);
         
         // Update next offset if necessary
+        long oldNextOffset = nextOffset.get();
         nextOffset.updateAndGet(current -> Math.max(current, offset + 1));
+        logger.debug("Segment.append: Segment '{}' - Updated nextOffset from {} to {}", 
+                    segmentId, oldNextOffset, nextOffset.get());
         
         return record;
     }
@@ -114,12 +127,20 @@ public class Segment implements AutoCloseable {
             throw new IllegalStateException("Segment is closed");
         }
         
-        Index.IndexEntry entry = index.findEntry(offset);
-        if (entry == null) {
+        // Use sparse index to find the closest indexed entry
+        IndexEntry closestEntry = index.findClosestIndex(offset);
+        if (closestEntry == null) {
             return null;
         }
         
-        return store.read(entry.getPosition(), offset);
+        // If we found the exact offset, return it directly
+        if (closestEntry.getOffset() == offset) {
+            return store.read(closestEntry.getPosition(), offset);
+        }
+        
+        // Otherwise, we need to scan forward from the closest entry
+        // This is the "linear scan" part of sparse indexing
+        return scanForwardFromOffset(closestEntry, offset);
     }
 
     /**
@@ -134,12 +155,87 @@ public class Segment implements AutoCloseable {
             throw new IllegalStateException("Segment is closed");
         }
         
-        Index.IndexEntry entry = index.findEntry(offset);
-        if (entry == null) {
+        // Use sparse index to find the closest indexed entry
+        IndexEntry closestEntry = index.findClosestIndex(offset);
+        if (closestEntry == null) {
             return null;
         }
         
-        return store.readRaw(entry.getPosition());
+        // If we found the exact offset, return it directly
+        if (closestEntry.getOffset() == offset) {
+            return store.readRaw(closestEntry.getPosition());
+        }
+        
+        // Otherwise, we need to scan forward from the closest entry
+        // This is the "linear scan" part of sparse indexing
+        Record record = scanForwardFromOffset(closestEntry, offset);
+        return record != null ? record.getData() : null;
+    }
+
+    /**
+     * Scans forward from a given index entry to find a specific offset.
+     * This implements the "linear scan" part of sparse indexing.
+     * 
+     * @param startEntry The index entry to start scanning from
+     * @param targetOffset The offset to find
+     * @return The record with the target offset, or null if not found
+     * @throws IOException if the operation fails
+     */
+    private Record scanForwardFromOffset(IndexEntry startEntry, long targetOffset) throws IOException {
+        logger.info("Segment.scanForwardFromOffset: Scanning from offset {} to find {}", 
+                   startEntry.getOffset(), targetOffset);
+        
+        // If the start entry is exactly the target offset, return it directly
+        if (startEntry.getOffset() == targetOffset) {
+            logger.info("Segment.scanForwardFromOffset: Start entry matches target offset");
+            return store.read(startEntry.getPosition(), targetOffset);
+        }
+        
+        // Start scanning from the position after the indexed entry
+        // Total record size = 4 (length) + 8 (timestamp) + 4 (checksum) + data_length = 16 + data_length
+        long currentPosition = startEntry.getPosition() + 16 + startEntry.getLength();
+        long currentOffset = startEntry.getOffset() + 1;
+        
+        logger.info("Segment.scanForwardFromOffset: Starting scan from position {}, expected offset {}, target offset {}", 
+                   currentPosition, currentOffset, targetOffset);
+        
+        // Scan forward until we find the target offset or go past it
+        while (currentOffset <= targetOffset) {
+            try {
+                // Read the next record
+                Record record = store.read(currentPosition, currentOffset);
+                if (record == null) {
+                    logger.info("Segment.scanForwardFromOffset: No more records, target not found");
+                    return null;
+                }
+                
+                logger.info("Segment.scanForwardFromOffset: Read record with offset {} at position {}", 
+                           record.getOffset(), currentPosition);
+                
+                if (record.getOffset() == targetOffset) {
+                    logger.info("Segment.scanForwardFromOffset: Found target offset {}", targetOffset);
+                    return record;
+                }
+                
+                // If we've gone past the target offset, it doesn't exist
+                if (record.getOffset() > targetOffset) {
+                    logger.info("Segment.scanForwardFromOffset: Past target offset {}, not found", targetOffset);
+                    return null;
+                }
+                
+                // Move to the next position
+                // Total record size = 4 (length) + 8 (timestamp) + 4 (checksum) + data_length = 16 + data_length
+                currentPosition += 16 + record.getData().length;
+                currentOffset = record.getOffset() + 1;
+                
+            } catch (Exception e) {
+                logger.error("Segment.scanForwardFromOffset: Error scanning at position {}: {}", 
+                           currentPosition, e.getMessage(), e);
+                return null;
+            }
+        }
+        
+        return null;
     }
 
     /**
@@ -174,8 +270,9 @@ public class Segment implements AutoCloseable {
 
     /**
      * Gets the number of records in this segment.
+     * Note: This returns the number of indexed records (sparse), not total records.
      * 
-     * @return Number of records
+     * @return Number of indexed records
      */
     public int getRecordCount() {
         return index.getEntryCount();
@@ -192,11 +289,23 @@ public class Segment implements AutoCloseable {
 
     /**
      * Gets the highest offset in this segment.
+     * Note: This returns the highest indexed offset (sparse), not necessarily the highest record offset.
      * 
-     * @return The highest offset, or -1 if the segment is empty
+     * @return The highest indexed offset, or -1 if the segment is empty
      */
     public long getHighestOffset() {
         return index.getHighestOffset();
+    }
+
+    /**
+     * Gets the lowest offset in this segment.
+     * Note: This returns the lowest indexed offset (sparse), not necessarily the lowest record offset.
+     * 
+     * @return The lowest indexed offset, or -1 if the segment is empty
+     */
+    public long getLowestOffset() {
+        // For sparse index, the lowest offset is always 0 (first indexed entry)
+        return index.getEntryCount() > 0 ? 0 : -1;
     }
 
     /**
@@ -242,7 +351,7 @@ public class Segment implements AutoCloseable {
      * @return Index file path
      */
     public Path getIndexPath() {
-        return index.getFilePath();
+        return basePath.resolve(segmentId + ".index");
     }
 
     /**
@@ -256,7 +365,8 @@ public class Segment implements AutoCloseable {
         }
         
         store.flush();
-        index.flush();
+        // SparseIndex handles its own flushing in addEntry()
+        // No need to call index.flush() as it's not needed
     }
 
     /**
