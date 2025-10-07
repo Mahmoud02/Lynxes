@@ -5,6 +5,8 @@ import org.mahmoud.fastqueue.service.MessageService;
 import org.mahmoud.fastqueue.service.HealthService;
 import org.mahmoud.fastqueue.service.TopicService;
 import org.mahmoud.fastqueue.service.ObjectMapperService;
+import org.mahmoud.fastqueue.service.ConsumerGroupService;
+import org.mahmoud.fastqueue.service.SimpleConsumerService;
 import org.mahmoud.fastqueue.server.ui.DashboardServlet;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
@@ -41,6 +43,8 @@ public class AsyncHttpServer {
     private final MessageService messageService;
     private final HealthService healthService;
     private final TopicService topicService;
+    private final ConsumerGroupService consumerGroupService;
+    private final SimpleConsumerService simpleConsumerService;
     private final ObjectMapper objectMapper;
     private final Server server;
     private final AtomicLong requestIdCounter;
@@ -49,14 +53,16 @@ public class AsyncHttpServer {
     @Inject
     public AsyncHttpServer(QueueConfig config, RequestChannel requestChannel, ResponseChannel responseChannel,
                           MessageService messageService, HealthService healthService, TopicService topicService,
-                          ObjectMapperService objectMapperService, AsyncProcessor asyncProcessor, 
-                          ResponseProcessor responseProcessor, ExecutorService executorService) {
+                          ConsumerGroupService consumerGroupService, SimpleConsumerService simpleConsumerService, 
+                          ObjectMapperService objectMapperService, AsyncProcessor asyncProcessor, ResponseProcessor responseProcessor, ExecutorService executorService) {
         this.config = config;
         this.requestChannel = requestChannel;
         this.responseChannel = responseChannel;
         this.messageService = messageService;
         this.healthService = healthService;
         this.topicService = topicService;
+        this.consumerGroupService = consumerGroupService;
+        this.simpleConsumerService = simpleConsumerService;
         this.objectMapper = objectMapperService.getObjectMapper();
         
         // Use injected processors
@@ -83,6 +89,8 @@ public class AsyncHttpServer {
         context.addServlet(new ServletHolder(new TopicsServlet()), "/topics");
         context.addServlet(new ServletHolder(new TopicServlet()), "/topics/*");
         context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
+        context.addServlet(new ServletHolder(new ConsumerGroupServlet(consumerGroupService, objectMapper)), "/consumer-groups/*");
+        context.addServlet(new ServletHolder(new SimpleConsumerServlet(simpleConsumerService, objectMapper)), "/consumers/*");
         
         // Add dashboard servlet
         context.addServlet(new ServletHolder(new DashboardServlet()), "/ui/*");
