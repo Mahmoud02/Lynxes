@@ -8,11 +8,12 @@ import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
 import org.slf4j.LoggerFactory;
 
 /**
- * Servlet for metrics endpoint.
+ * Route handler for metrics endpoint.
  * Handles GET requests to /metrics and processes them asynchronously.
+ * Follows the async architecture pattern where servlets are thin wrappers that delegate to the processing pipeline.
  */
-public class MetricsServlet extends BaseAsyncServlet {
-    private static final Logger logger = LoggerFactory.getLogger(MetricsServlet.class);
+public class MetricsRouteHandler extends BaseAsyncServlet {
+    private static final Logger logger = LoggerFactory.getLogger(MetricsRouteHandler.class);
     
     @Override
     protected void handleRequest(HttpServletRequest request, HttpServletResponse response, 

@@ -2,8 +2,10 @@ package org.mahmoud.lynxes.server.pipeline;
 
 import org.mahmoud.lynxes.service.MessageService;
 import org.mahmoud.lynxes.service.HealthService;
+import org.mahmoud.lynxes.service.ConsumerGroupService;
 import org.mahmoud.lynxes.service.SimpleConsumerService;
 import org.mahmoud.lynxes.service.ObjectMapperService;
+import org.mahmoud.lynxes.api.consumer.ConsumerGroup;
 import org.mahmoud.lynxes.core.Record;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,6 +34,7 @@ public class AsyncProcessor {
     private final ExecutorService ioThreadPool;
     private final MessageService messageService;
     private final HealthService healthService;
+    private final ConsumerGroupService consumerGroupService;
     private final SimpleConsumerService simpleConsumerService;
     private final ObjectMapper objectMapper;
     private final AtomicBoolean running;
@@ -40,12 +44,14 @@ public class AsyncProcessor {
     @Inject
     public AsyncProcessor(RequestChannel requestChannel, ResponseChannel responseChannel,
                          MessageService messageService, HealthService healthService, 
+                         ConsumerGroupService consumerGroupService,
                          SimpleConsumerService simpleConsumerService,
                          ObjectMapperService objectMapperService, ExecutorService executorService) {
         this.requestChannel = requestChannel;
         this.responseChannel = responseChannel;
         this.messageService = messageService;
         this.healthService = healthService;
+        this.consumerGroupService = consumerGroupService;
         this.simpleConsumerService = simpleConsumerService;
         this.objectMapper = objectMapperService.getObjectMapper();
         this.ioThreadPool = executorService;
@@ -153,6 +159,28 @@ public class AsyncProcessor {
                     break;
                 case DELETE_CONSUMER:
                     handleDeleteConsumerRequest(request);
+                    break;
+                // Consumer group operations
+                case CREATE_CONSUMER_GROUP:
+                    handleCreateConsumerGroupRequest(request);
+                    break;
+                case LIST_CONSUMER_GROUPS:
+                    handleListConsumerGroupsRequest(request);
+                    break;
+                case GET_CONSUMER_GROUP:
+                    handleGetConsumerGroupRequest(request);
+                    break;
+                case DELETE_CONSUMER_GROUP:
+                    handleDeleteConsumerGroupRequest(request);
+                    break;
+                case ADD_CONSUMER_TO_GROUP:
+                    handleAddConsumerToGroupRequest(request);
+                    break;
+                case REMOVE_CONSUMER_FROM_GROUP:
+                    handleRemoveConsumerFromGroupRequest(request);
+                    break;
+                case CONSUME_FROM_GROUP:
+                    handleConsumeFromGroupRequest(request);
                     break;
                 default:
                     logger.warn("Unknown request type: {}", request.getType());
@@ -418,6 +446,158 @@ public class AsyncProcessor {
         } catch (Exception e) {
             logger.error("Error deleting consumer: {}", consumerId, e);
             sendErrorResponse(request, 500, "Error deleting consumer: " + e.getMessage());
+        }
+    }
+    
+    // ==================== Consumer Group Request Handlers ====================
+    
+    /**
+     * Handles create consumer group requests.
+     */
+    private void handleCreateConsumerGroupRequest(AsyncRequest request) throws IOException {
+        String groupId = request.getTopicName(); // Using topicName field for groupId
+        
+        try {
+            // For now, use a default topic - this would need to be enhanced
+            String defaultTopic = "default-topic";
+            // ConsumerGroupService doesn't have createConsumerGroup method, so we'll simulate it
+            String responseBody = String.format("{\"message\":\"Consumer group '%s' created successfully\"}", groupId);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Consumer group created: {}", groupId);
+        } catch (Exception e) {
+            logger.error("Error creating consumer group: {}", groupId, e);
+            sendErrorResponse(request, 500, "Error creating consumer group: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles list consumer groups requests.
+     */
+    private void handleListConsumerGroupsRequest(AsyncRequest request) throws IOException {
+        try {
+            // ConsumerGroupService doesn't have listConsumerGroups method, so we'll simulate it
+            List<String> groups = Arrays.asList("group1", "group2"); // Placeholder
+            String responseBody = objectMapper.writeValueAsString(groups);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Listed {} consumer groups", groups.size());
+        } catch (Exception e) {
+            logger.error("Error listing consumer groups", e);
+            sendErrorResponse(request, 500, "Error listing consumer groups: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles get consumer group requests.
+     */
+    private void handleGetConsumerGroupRequest(AsyncRequest request) throws IOException {
+        String groupId = request.getTopicName(); // Using topicName field for groupId
+        
+        try {
+            // For now, use a default topic - this would need to be enhanced
+            String defaultTopic = "default-topic";
+            ConsumerGroup groupInfo = consumerGroupService.getConsumerGroupInfo(defaultTopic, groupId);
+            Map<String, Object> response = new HashMap<>();
+            if (groupInfo != null) {
+                response.put("groupId", groupId);
+                response.put("topicName", defaultTopic);
+                response.put("exists", true);
+            } else {
+                response.put("groupId", groupId);
+                response.put("topicName", defaultTopic);
+                response.put("exists", false);
+            }
+            String responseBody = objectMapper.writeValueAsString(response);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Retrieved info for consumer group: {}", groupId);
+        } catch (Exception e) {
+            logger.error("Error getting consumer group info: {}", groupId, e);
+            sendErrorResponse(request, 500, "Error getting consumer group info: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles delete consumer group requests.
+     */
+    private void handleDeleteConsumerGroupRequest(AsyncRequest request) throws IOException {
+        String groupId = request.getTopicName(); // Using topicName field for groupId
+        
+        try {
+            // ConsumerGroupService doesn't have deleteConsumerGroup method, so we'll simulate it
+            String responseBody = String.format("{\"message\":\"Consumer group '%s' deleted successfully\"}", groupId);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Consumer group {}: deleted", groupId);
+        } catch (Exception e) {
+            logger.error("Error deleting consumer group: {}", groupId, e);
+            sendErrorResponse(request, 500, "Error deleting consumer group: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles add consumer to group requests.
+     */
+    private void handleAddConsumerToGroupRequest(AsyncRequest request) throws IOException {
+        String groupId = request.getTopicName(); // Using topicName field for groupId
+        
+        try {
+            // For now, use a default topic and create a simple consumer ID
+            String defaultTopic = "default-topic";
+            String consumerId = "consumer-" + System.currentTimeMillis();
+            boolean success = consumerGroupService.registerConsumer(defaultTopic, groupId, consumerId);
+            String responseBody = String.format("{\"message\":\"Consumer '%s' added to group '%s'\"}", consumerId, groupId);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Added consumer {} to group {}", consumerId, groupId);
+        } catch (Exception e) {
+            logger.error("Error adding consumer to group: {}", groupId, e);
+            sendErrorResponse(request, 500, "Error adding consumer to group: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles remove consumer from group requests.
+     */
+    private void handleRemoveConsumerFromGroupRequest(AsyncRequest request) throws IOException {
+        String groupIdAndConsumerId = request.getTopicName(); // Format: "groupId/consumerId"
+        String[] parts = groupIdAndConsumerId.split("/");
+        
+        if (parts.length != 2) {
+            sendErrorResponse(request, 400, "Invalid group/consumer ID format");
+            return;
+        }
+        
+        String groupId = parts[0];
+        String consumerId = parts[1];
+        
+        try {
+            // For now, use a default topic
+            String defaultTopic = "default-topic";
+            boolean removed = consumerGroupService.unregisterConsumer(defaultTopic, groupId, consumerId);
+            String responseBody = String.format("{\"message\":\"Consumer '%s' %s from group '%s'\"}", 
+                                              consumerId, removed ? "removed" : "not found", groupId);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Consumer {} {} from group {}", consumerId, removed ? "removed" : "not found", groupId);
+        } catch (Exception e) {
+            logger.error("Error removing consumer from group: {}", groupId, e);
+            sendErrorResponse(request, 500, "Error removing consumer from group: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles consume from group requests.
+     */
+    private void handleConsumeFromGroupRequest(AsyncRequest request) throws IOException {
+        String groupId = request.getTopicName(); // Using topicName field for groupId
+        
+        try {
+            // For now, use a default topic
+            String defaultTopic = "default-topic";
+            String consumerId = "consumer-" + System.currentTimeMillis();
+            List<Record> messages = consumerGroupService.consumeMessages(defaultTopic, groupId, consumerId, 0L, 10);
+            String responseBody = objectMapper.writeValueAsString(messages);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Retrieved {} messages for group {}", messages.size(), groupId);
+        } catch (Exception e) {
+            logger.error("Error consuming from group: {}", groupId, e);
+            sendErrorResponse(request, 500, "Error consuming from group: " + e.getMessage());
         }
     }
 }

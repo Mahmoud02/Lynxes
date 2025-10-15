@@ -9,23 +9,24 @@ import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
 import org.slf4j.LoggerFactory;
 
 /**
- * Servlet for individual topic operations.
+ * Route handler for individual topic operations.
  * Handles GET, POST, and DELETE requests to /topics/{name}.
  * GET: Consume messages (with offset parameter)
  * POST: Publish messages
  * DELETE: Delete topic
+ * Follows the async architecture pattern where servlets are thin wrappers that delegate to the processing pipeline.
  */
-public class TopicServlet extends BaseAsyncServlet {
-    private static final Logger logger = LoggerFactory.getLogger(TopicServlet.class);
+public class TopicRouteHandler extends BaseAsyncServlet {
+    private static final Logger logger = LoggerFactory.getLogger(TopicRouteHandler.class);
     
     private final ObjectMapper objectMapper;
     
     /**
-     * Constructs a TopicServlet with the required services.
+     * Constructs a TopicRouteHandler with the required services.
      * 
      * @param objectMapper The JSON object mapper
      */
-    public TopicServlet(ObjectMapper objectMapper) {
+    public TopicRouteHandler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
     

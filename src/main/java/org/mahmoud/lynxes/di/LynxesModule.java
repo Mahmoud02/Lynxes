@@ -20,11 +20,11 @@ import org.mahmoud.lynxes.server.pipeline.RequestChannel;
 import org.mahmoud.lynxes.server.pipeline.ResponseChannel;
 import org.mahmoud.lynxes.server.pipeline.AsyncProcessor;
 import org.mahmoud.lynxes.server.pipeline.ResponseProcessor;
-import org.mahmoud.lynxes.server.api.HealthServlet;
-import org.mahmoud.lynxes.server.api.TopicsServlet;
-import org.mahmoud.lynxes.server.api.TopicServlet;
-import org.mahmoud.lynxes.server.api.MetricsServlet;
-import org.mahmoud.lynxes.server.api.ConsumerGroupServlet;
+import org.mahmoud.lynxes.server.api.HealthRouteHandler;
+import org.mahmoud.lynxes.server.api.TopicsRouteHandler;
+import org.mahmoud.lynxes.server.api.TopicRouteHandler;
+import org.mahmoud.lynxes.server.api.MetricsRouteHandler;
+import org.mahmoud.lynxes.server.api.ConsumerGroupRouteHandler;
 import org.mahmoud.lynxes.server.api.ConsumerRouteHandler;
 import org.mahmoud.lynxes.server.ServletRouteMapper;
 import org.mahmoud.lynxes.server.HttpServerConfigurator;
@@ -60,11 +60,11 @@ public class LynxesModule extends AbstractModule {
         bind(ExecutorService.class).toProvider(ExecutorServiceProvider.class);
         
         // Bind servlets
-        bind(HealthServlet.class).in(Singleton.class);
-        bind(TopicsServlet.class).in(Singleton.class);
-        bind(TopicServlet.class).in(Singleton.class);
-        bind(MetricsServlet.class).in(Singleton.class);
-        bind(ConsumerGroupServlet.class).in(Singleton.class);
+        bind(HealthRouteHandler.class).in(Singleton.class);
+        bind(TopicsRouteHandler.class).in(Singleton.class);
+        bind(TopicRouteHandler.class).in(Singleton.class);
+        bind(MetricsRouteHandler.class).in(Singleton.class);
+        bind(ConsumerGroupRouteHandler.class).in(Singleton.class);
         bind(ConsumerRouteHandler.class).in(Singleton.class);
         
         // Bind server components
@@ -111,9 +111,10 @@ public class LynxesModule extends AbstractModule {
     @Singleton
     public AsyncProcessor provideAsyncProcessor(RequestChannel requestChannel, ResponseChannel responseChannel,
                                                MessageService messageService, HealthService healthService,
+                                               ConsumerGroupService consumerGroupService,
                                                SimpleConsumerService simpleConsumerService,
                                                ObjectMapperService objectMapperService, ExecutorService executorService) {
-        return new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, simpleConsumerService, objectMapperService, executorService);
+        return new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, consumerGroupService, simpleConsumerService, objectMapperService, executorService);
     }
     
     /**

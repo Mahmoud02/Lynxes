@@ -22,7 +22,15 @@ public class AsyncRequest {
         LIST_CONSUMERS,
         CONSUMER_STATUS,
         CONSUMER_MESSAGES,
-        DELETE_CONSUMER
+        DELETE_CONSUMER,
+        // Consumer group operations
+        CREATE_CONSUMER_GROUP,
+        LIST_CONSUMER_GROUPS,
+        GET_CONSUMER_GROUP,
+        DELETE_CONSUMER_GROUP,
+        ADD_CONSUMER_TO_GROUP,
+        REMOVE_CONSUMER_FROM_GROUP,
+        CONSUME_FROM_GROUP
     }
     
     private final String requestId;

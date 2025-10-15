@@ -8,11 +8,12 @@ import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
 import org.slf4j.LoggerFactory;
 
 /**
- * Servlet for health check endpoint.
+ * Route handler for health check endpoint.
  * Handles GET requests to /health and processes them asynchronously.
+ * Follows the async architecture pattern where servlets are thin wrappers that delegate to the processing pipeline.
  */
-public class HealthServlet extends BaseAsyncServlet {
-    private static final Logger logger = LoggerFactory.getLogger(HealthServlet.class);
+public class HealthRouteHandler extends BaseAsyncServlet {
+    private static final Logger logger = LoggerFactory.getLogger(HealthRouteHandler.class);
     
     @Override
     protected void handleRequest(HttpServletRequest request, HttpServletResponse response, 
