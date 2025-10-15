@@ -1,14 +1,14 @@
-# FastQueue2 - High-Performance Message Queue Server
+# Lynxes - High-Performance Message Queue Server
 
 ## Overview
 
-FastQueue2 is a high-performance, persistent message queue server built using a log-based architecture. It's designed to provide reliable message delivery, high throughput, and durability while maintaining simplicity and efficiency.
+Lynxes is a high-performance, persistent message queue server built using a log-based architecture. It's designed to provide reliable message delivery, high throughput, and durability while maintaining simplicity and efficiency.
 
 ## Architecture
 
 ### Core Design Principles
 
-FastQueue2 is built on the fundamental concept of **logs as a data structure**. This approach is used by many successful systems including:
+Lynxes is built on the fundamental concept of **logs as a data structure**. This approach is used by many successful systems including:
 - **Filesystems**: ext's journal for crash recovery
 - **Databases**: PostgreSQL's Write-Ahead Log (WAL)
 - **Distributed Systems**: Raft consensus algorithm
@@ -172,7 +172,7 @@ mvn clean compile
 
 ### Running
 ```bash
-mvn exec:java -Dexec.mainClass="org.mahmoud.fastqueue.Fastqueue2"
+mvn exec:java -Dexec.mainClass="org.mahmoud.lynxes.Lynxes"
 ```
 
 ## Design Decisions
