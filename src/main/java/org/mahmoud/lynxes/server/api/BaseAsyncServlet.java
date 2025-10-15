@@ -99,7 +99,7 @@ public abstract class BaseAsyncServlet extends HttpServlet {
      * 
      * @return The RequestChannel instance
      */
-    private RequestChannel getRequestChannel() {
+    protected RequestChannel getRequestChannel() {
         return (RequestChannel) getServletContext().getAttribute("requestChannel");
     }
     
@@ -125,7 +125,7 @@ public abstract class BaseAsyncServlet extends HttpServlet {
      * 
      * @return A unique request ID
      */
-    private String generateRequestId() {
+    protected String generateRequestId() {
         return "req-" + requestIdCounter.incrementAndGet() + "-" + UUID.randomUUID().toString().substring(0, 8);
     }
 }

@@ -16,7 +16,13 @@ public class AsyncRequest {
         HEALTH,
         TOPICS,
         METRICS,
-        DELETE_TOPIC
+        DELETE_TOPIC,
+        // Consumer operations
+        REGISTER_CONSUMER,
+        LIST_CONSUMERS,
+        CONSUMER_STATUS,
+        CONSUMER_MESSAGES,
+        DELETE_CONSUMER
     }
     
     private final String requestId;

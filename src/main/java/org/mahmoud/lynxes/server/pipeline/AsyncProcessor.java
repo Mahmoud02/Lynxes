@@ -2,6 +2,7 @@ package org.mahmoud.lynxes.server.pipeline;
 
 import org.mahmoud.lynxes.service.MessageService;
 import org.mahmoud.lynxes.service.HealthService;
+import org.mahmoud.lynxes.service.SimpleConsumerService;
 import org.mahmoud.lynxes.service.ObjectMapperService;
 import org.mahmoud.lynxes.core.Record;
 import com.google.inject.Inject;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 /**
  * Async processor that handles message operations in a separate thread pool.
@@ -29,6 +31,7 @@ public class AsyncProcessor {
     private final ExecutorService ioThreadPool;
     private final MessageService messageService;
     private final HealthService healthService;
+    private final SimpleConsumerService simpleConsumerService;
     private final ObjectMapper objectMapper;
     private final AtomicBoolean running;
     private final AtomicLong processedCount;
@@ -37,11 +40,13 @@ public class AsyncProcessor {
     @Inject
     public AsyncProcessor(RequestChannel requestChannel, ResponseChannel responseChannel,
                          MessageService messageService, HealthService healthService, 
+                         SimpleConsumerService simpleConsumerService,
                          ObjectMapperService objectMapperService, ExecutorService executorService) {
         this.requestChannel = requestChannel;
         this.responseChannel = responseChannel;
         this.messageService = messageService;
         this.healthService = healthService;
+        this.simpleConsumerService = simpleConsumerService;
         this.objectMapper = objectMapperService.getObjectMapper();
         this.ioThreadPool = executorService;
         
@@ -132,6 +137,22 @@ public class AsyncProcessor {
                     break;
                 case DELETE_TOPIC:
                     handleDeleteTopicRequest(request);
+                    break;
+                // Consumer operations
+                case REGISTER_CONSUMER:
+                    handleRegisterConsumerRequest(request);
+                    break;
+                case LIST_CONSUMERS:
+                    handleListConsumersRequest(request);
+                    break;
+                case CONSUMER_STATUS:
+                    handleConsumerStatusRequest(request);
+                    break;
+                case CONSUMER_MESSAGES:
+                    handleConsumerMessagesRequest(request);
+                    break;
+                case DELETE_CONSUMER:
+                    handleDeleteConsumerRequest(request);
                     break;
                 default:
                     logger.warn("Unknown request type: {}", request.getType());
@@ -311,5 +332,92 @@ public class AsyncProcessor {
     
     public boolean isRunning() {
         return running.get();
+    }
+    
+    // ==================== Consumer Request Handlers ====================
+    
+    /**
+     * Handles register consumer requests.
+     */
+    private void handleRegisterConsumerRequest(AsyncRequest request) throws IOException {
+        String consumerId = request.getTopicName(); // Using topicName field for consumerId
+        
+        try {
+            simpleConsumerService.registerConsumer(consumerId);
+            String responseBody = String.format("{\"message\":\"Consumer '%s' registered successfully\"}", consumerId);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Consumer registered: {}", consumerId);
+        } catch (Exception e) {
+            logger.error("Error registering consumer: {}", consumerId, e);
+            sendErrorResponse(request, 500, "Error registering consumer: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles list consumers requests.
+     */
+    private void handleListConsumersRequest(AsyncRequest request) throws IOException {
+        try {
+            List<String> consumers = simpleConsumerService.listConsumers();
+            String responseBody = objectMapper.writeValueAsString(consumers);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Listed {} consumers", consumers.size());
+        } catch (Exception e) {
+            logger.error("Error listing consumers", e);
+            sendErrorResponse(request, 500, "Error listing consumers: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles consumer status requests.
+     */
+    private void handleConsumerStatusRequest(AsyncRequest request) throws IOException {
+        String consumerId = request.getTopicName(); // Using topicName field for consumerId
+        
+        try {
+            SimpleConsumerService.ConsumerInfo info = simpleConsumerService.getConsumerInfo(consumerId);
+            String responseBody = objectMapper.writeValueAsString(info);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Retrieved status for consumer: {}", consumerId);
+        } catch (Exception e) {
+            logger.error("Error getting consumer status: {}", consumerId, e);
+            sendErrorResponse(request, 500, "Error getting consumer status: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles consumer messages requests.
+     */
+    private void handleConsumerMessagesRequest(AsyncRequest request) throws IOException {
+        String consumerId = request.getTopicName(); // Using topicName field for consumerId
+        
+        try {
+            // For now, get messages from a default topic - this would need to be enhanced
+            List<Record> messages = simpleConsumerService.consumeMessages(consumerId, "default-topic", 0L, 10);
+            String responseBody = objectMapper.writeValueAsString(messages);
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Retrieved {} messages for consumer: {}", messages.size(), consumerId);
+        } catch (Exception e) {
+            logger.error("Error getting consumer messages: {}", consumerId, e);
+            sendErrorResponse(request, 500, "Error getting consumer messages: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles delete consumer requests.
+     */
+    private void handleDeleteConsumerRequest(AsyncRequest request) throws IOException {
+        String consumerId = request.getTopicName(); // Using topicName field for consumerId
+        
+        try {
+            boolean deleted = simpleConsumerService.unregisterConsumer(consumerId);
+            String responseBody = String.format("{\"message\":\"Consumer '%s' %s\"}", 
+                                              consumerId, deleted ? "deleted successfully" : "not found");
+            sendResponse(request, 200, "application/json", responseBody);
+            logger.info("Consumer {}: {}", consumerId, deleted ? "deleted" : "not found");
+        } catch (Exception e) {
+            logger.error("Error deleting consumer: {}", consumerId, e);
+            sendErrorResponse(request, 500, "Error deleting consumer: " + e.getMessage());
+        }
     }
 }

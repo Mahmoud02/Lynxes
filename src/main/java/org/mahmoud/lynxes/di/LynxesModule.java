@@ -25,7 +25,7 @@ import org.mahmoud.lynxes.server.api.TopicsServlet;
 import org.mahmoud.lynxes.server.api.TopicServlet;
 import org.mahmoud.lynxes.server.api.MetricsServlet;
 import org.mahmoud.lynxes.server.api.ConsumerGroupServlet;
-import org.mahmoud.lynxes.server.api.SimpleConsumerServlet;
+import org.mahmoud.lynxes.server.api.ConsumerRouteHandler;
 import org.mahmoud.lynxes.server.ServletRouteMapper;
 import org.mahmoud.lynxes.server.HttpServerConfigurator;
 import org.mahmoud.lynxes.server.AsyncHttpServer;
@@ -65,7 +65,7 @@ public class LynxesModule extends AbstractModule {
         bind(TopicServlet.class).in(Singleton.class);
         bind(MetricsServlet.class).in(Singleton.class);
         bind(ConsumerGroupServlet.class).in(Singleton.class);
-        bind(SimpleConsumerServlet.class).in(Singleton.class);
+        bind(ConsumerRouteHandler.class).in(Singleton.class);
         
         // Bind server components
         bind(ServletRouteMapper.class).in(Singleton.class);
@@ -111,8 +111,9 @@ public class LynxesModule extends AbstractModule {
     @Singleton
     public AsyncProcessor provideAsyncProcessor(RequestChannel requestChannel, ResponseChannel responseChannel,
                                                MessageService messageService, HealthService healthService,
+                                               SimpleConsumerService simpleConsumerService,
                                                ObjectMapperService objectMapperService, ExecutorService executorService) {
-        return new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, objectMapperService, executorService);
+        return new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, simpleConsumerService, objectMapperService, executorService);
     }
     
     /**

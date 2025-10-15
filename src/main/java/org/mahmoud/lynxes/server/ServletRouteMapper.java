@@ -1,10 +1,6 @@
 package org.mahmoud.lynxes.server;
 
-import org.mahmoud.lynxes.service.ConsumerGroupService;
-import org.mahmoud.lynxes.service.SimpleConsumerService;
-import org.mahmoud.lynxes.service.TopicService;
 import org.mahmoud.lynxes.server.ui.DashboardServlet;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
@@ -14,7 +10,7 @@ import org.mahmoud.lynxes.server.api.TopicsServlet;
 import org.mahmoud.lynxes.server.api.TopicServlet;
 import org.mahmoud.lynxes.server.api.MetricsServlet;
 import org.mahmoud.lynxes.server.api.ConsumerGroupServlet;
-import org.mahmoud.lynxes.server.api.SimpleConsumerServlet;
+import org.mahmoud.lynxes.server.api.ConsumerRouteHandler;
 import com.google.inject.Inject;
 
 /**
@@ -29,7 +25,7 @@ public class ServletRouteMapper {
     private final TopicServlet topicServlet;
     private final MetricsServlet metricsServlet;
     private final ConsumerGroupServlet consumerGroupServlet;
-    private final SimpleConsumerServlet simpleConsumerServlet;
+    private final ConsumerRouteHandler consumerRouteHandler;
     
     // Route path constants
     private static final String HEALTH_PATH = "/health";
@@ -48,7 +44,7 @@ public class ServletRouteMapper {
      * @param topicServlet The individual topic servlet
      * @param metricsServlet The metrics servlet
      * @param consumerGroupServlet The consumer group servlet
-     * @param simpleConsumerServlet The simple consumer servlet
+     * @param consumerRouteHandler The consumer route handler
      */
     @Inject
     public ServletRouteMapper(HealthServlet healthServlet,
@@ -56,13 +52,13 @@ public class ServletRouteMapper {
                           TopicServlet topicServlet,
                           MetricsServlet metricsServlet,
                           ConsumerGroupServlet consumerGroupServlet,
-                          SimpleConsumerServlet simpleConsumerServlet) {
+                          ConsumerRouteHandler consumerRouteHandler) {
         this.healthServlet = healthServlet;
         this.topicsServlet = topicsServlet;
         this.topicServlet = topicServlet;
         this.metricsServlet = metricsServlet;
         this.consumerGroupServlet = consumerGroupServlet;
-        this.simpleConsumerServlet = simpleConsumerServlet;
+        this.consumerRouteHandler = consumerRouteHandler;
     }
     
     /**
@@ -81,7 +77,7 @@ public class ServletRouteMapper {
         
         // Map consumer-related routes
         mapConsumerGroupRoute(context);
-        mapSimpleConsumerRoute(context);
+        mapConsumerRoute(context);
         
         // Map UI route
         mapDashboardRoute(context);
@@ -132,9 +128,9 @@ public class ServletRouteMapper {
     /**
      * Maps the simple consumer route to its servlet.
      */
-    private void mapSimpleConsumerRoute(ServletContextHandler context) {
-        context.addServlet(new ServletHolder(simpleConsumerServlet), CONSUMERS_PATH);
-        logger.debug("Mapped simple consumer route {} to SimpleConsumerServlet", CONSUMERS_PATH);
+    private void mapConsumerRoute(ServletContextHandler context) {
+        context.addServlet(new ServletHolder(consumerRouteHandler), CONSUMERS_PATH);
+        logger.debug("Mapped consumer route {} to ConsumerRouteHandler", CONSUMERS_PATH);
     }
     
     /**
