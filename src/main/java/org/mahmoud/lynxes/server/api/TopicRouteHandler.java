@@ -1,6 +1,5 @@
 package org.mahmoud.lynxes.server.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,15 +18,12 @@ import org.slf4j.LoggerFactory;
 public class TopicRouteHandler extends BaseAsyncServlet {
     private static final Logger logger = LoggerFactory.getLogger(TopicRouteHandler.class);
     
-    private final ObjectMapper objectMapper;
-    
     /**
-     * Constructs a TopicRouteHandler with the required services.
-     * 
-     * @param objectMapper The JSON object mapper
+     * Constructs a TopicRouteHandler.
+     * No dependencies needed since this only handles routing.
      */
-    public TopicRouteHandler(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public TopicRouteHandler() {
+        // No dependencies - this servlet only parses URLs and queues requests
     }
     
     @Override
@@ -79,23 +75,12 @@ public class TopicRouteHandler extends BaseAsyncServlet {
     
     /**
      * Handles POST requests for publishing messages.
+     * Note: JSON parsing is now handled by AsyncProcessor to maintain separation of concerns.
      */
     private void handlePublishRequest(HttpServletRequest request, HttpServletResponse response, String topicName) {
-        try {
-            String requestBody = new String(request.getInputStream().readAllBytes());
-            com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(requestBody);
-            String message = jsonNode.get("message").asText();
-            
-            if (message == null || message.trim().isEmpty()) {
-                sendErrorResponse(response, 400, "Message content required");
-                return;
-            }
-            
-            processAsyncRequest(request, response, AsyncRequest.RequestType.PUBLISH, topicName, null, message);
-        } catch (Exception e) {
-            logger.error("Error parsing publish request for topic: {}", topicName, e);
-            sendErrorResponse(response, 400, "Invalid JSON request body");
-        }
+        // Pass the raw request to AsyncProcessor for JSON parsing
+        // This maintains separation of concerns - route handler only handles routing
+        processAsyncRequest(request, response, AsyncRequest.RequestType.PUBLISH, topicName, null, null);
     }
     
     /**

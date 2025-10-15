@@ -202,10 +202,26 @@ public class AsyncProcessor {
      */
     private void handlePublishRequest(AsyncRequest request) throws IOException {
         String topicName = request.getTopicName();
-        String message = request.getMessage();
         
-        if (topicName == null || message == null) {
-            sendErrorResponse(request, 400, "Missing topic name or message");
+        if (topicName == null) {
+            sendErrorResponse(request, 400, "Missing topic name");
+            return;
+        }
+        
+        // Parse JSON from request body
+        String message;
+        try {
+            String requestBody = new String(request.getRequest().getInputStream().readAllBytes());
+            com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(requestBody);
+            message = jsonNode.get("message").asText();
+            
+            if (message == null || message.trim().isEmpty()) {
+                sendErrorResponse(request, 400, "Message content required");
+                return;
+            }
+        } catch (Exception e) {
+            logger.error("Error parsing publish request for topic: {}", topicName, e);
+            sendErrorResponse(request, 400, "Invalid JSON request body");
             return;
         }
         

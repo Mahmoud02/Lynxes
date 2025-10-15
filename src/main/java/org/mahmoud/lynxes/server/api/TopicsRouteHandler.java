@@ -1,7 +1,5 @@
 package org.mahmoud.lynxes.server.api;
 
-import org.mahmoud.lynxes.service.TopicService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,18 +15,12 @@ import org.slf4j.LoggerFactory;
 public class TopicsRouteHandler extends BaseAsyncServlet {
     private static final Logger logger = LoggerFactory.getLogger(TopicsRouteHandler.class);
     
-    private final TopicService topicService;
-    private final ObjectMapper objectMapper;
-    
     /**
-     * Constructs a TopicsRouteHandler with the required services.
-     * 
-     * @param topicService The topic service for listing topics
-     * @param objectMapper The JSON object mapper
+     * Constructs a TopicsRouteHandler.
+     * No dependencies needed since this only handles routing.
      */
-    public TopicsRouteHandler(TopicService topicService, ObjectMapper objectMapper) {
-        this.topicService = topicService;
-        this.objectMapper = objectMapper;
+    public TopicsRouteHandler() {
+        // No dependencies - this servlet only parses URLs and queues requests
     }
     
     @Override

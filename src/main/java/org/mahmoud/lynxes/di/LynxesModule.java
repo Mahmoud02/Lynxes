@@ -59,7 +59,7 @@ public class LynxesModule extends AbstractModule {
         // Bind infrastructure services
         bind(ExecutorService.class).toProvider(ExecutorServiceProvider.class);
         
-        // Bind servlets
+        // Bind route handlers (no service dependencies)
         bind(HealthRouteHandler.class).in(Singleton.class);
         bind(TopicsRouteHandler.class).in(Singleton.class);
         bind(TopicRouteHandler.class).in(Singleton.class);
