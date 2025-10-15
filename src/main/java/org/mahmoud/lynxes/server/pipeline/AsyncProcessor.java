@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.List;
 
 /**
@@ -201,12 +202,14 @@ public class AsyncProcessor {
      * Handles publish requests.
      */
     private void handlePublishRequest(AsyncRequest request) throws IOException {
-        String topicName = request.getTopicName();
+        Optional<String> topicNameOpt = request.getString(AsyncRequestKeys.TOPIC_NAME);
         
-        if (topicName == null) {
+        if (topicNameOpt.isEmpty()) {
             sendErrorResponse(request, 400, "Missing topic name");
             return;
         }
+        
+        String topicName = topicNameOpt.get();
         
         // Parse JSON from request body
         String message;
@@ -238,13 +241,16 @@ public class AsyncProcessor {
      * Handles consume requests.
      */
     private void handleConsumeRequest(AsyncRequest request) throws IOException {
-        String topicName = request.getTopicName();
-        Long offset = request.getOffset();
+        Optional<String> topicNameOpt = request.getString(AsyncRequestKeys.TOPIC_NAME);
+        Optional<Long> offsetOpt = request.getLong(AsyncRequestKeys.OFFSET);
         
-        if (topicName == null || offset == null) {
-            sendErrorResponse(request, 400, "Missing topic name or offset");
+        if (topicNameOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing topic name");
             return;
         }
+        
+        String topicName = topicNameOpt.get();
+        Long offset = offsetOpt.orElse(0L);
         
         logger.debug("Consuming message from topic: {} at offset: {}", topicName, offset);
         Record record = messageService.consumeMessage(topicName, offset);
@@ -351,7 +357,14 @@ public class AsyncProcessor {
      * Handles delete topic requests.
      */
     private void handleDeleteTopicRequest(AsyncRequest request) throws IOException {
-        String topicName = request.getTopicName();
+        Optional<String> topicNameOpt = request.getString(AsyncRequestKeys.TOPIC_NAME);
+        
+        if (topicNameOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing topic name");
+            return;
+        }
+        
+        String topicName = topicNameOpt.get();
         
         try {
             // Note: TopicService is not injected in AsyncProcessor, so we'll use a simple response
@@ -384,7 +397,14 @@ public class AsyncProcessor {
      * Handles register consumer requests.
      */
     private void handleRegisterConsumerRequest(AsyncRequest request) throws IOException {
-        String consumerId = request.getTopicName(); // Using topicName field for consumerId
+        Optional<String> consumerIdOpt = request.getString(AsyncRequestKeys.CONSUMER_ID);
+        
+        if (consumerIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing consumer ID");
+            return;
+        }
+        
+        String consumerId = consumerIdOpt.get();
         
         try {
             simpleConsumerService.registerConsumer(consumerId);
@@ -416,7 +436,14 @@ public class AsyncProcessor {
      * Handles consumer status requests.
      */
     private void handleConsumerStatusRequest(AsyncRequest request) throws IOException {
-        String consumerId = request.getTopicName(); // Using topicName field for consumerId
+        Optional<String> consumerIdOpt = request.getString(AsyncRequestKeys.CONSUMER_ID);
+        
+        if (consumerIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing consumer ID");
+            return;
+        }
+        
+        String consumerId = consumerIdOpt.get();
         
         try {
             SimpleConsumerService.ConsumerInfo info = simpleConsumerService.getConsumerInfo(consumerId);
@@ -433,7 +460,14 @@ public class AsyncProcessor {
      * Handles consumer messages requests.
      */
     private void handleConsumerMessagesRequest(AsyncRequest request) throws IOException {
-        String consumerId = request.getTopicName(); // Using topicName field for consumerId
+        Optional<String> consumerIdOpt = request.getString(AsyncRequestKeys.CONSUMER_ID);
+        
+        if (consumerIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing consumer ID");
+            return;
+        }
+        
+        String consumerId = consumerIdOpt.get();
         
         try {
             // For now, get messages from a default topic - this would need to be enhanced
@@ -451,7 +485,14 @@ public class AsyncProcessor {
      * Handles delete consumer requests.
      */
     private void handleDeleteConsumerRequest(AsyncRequest request) throws IOException {
-        String consumerId = request.getTopicName(); // Using topicName field for consumerId
+        Optional<String> consumerIdOpt = request.getString(AsyncRequestKeys.CONSUMER_ID);
+        
+        if (consumerIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing consumer ID");
+            return;
+        }
+        
+        String consumerId = consumerIdOpt.get();
         
         try {
             boolean deleted = simpleConsumerService.unregisterConsumer(consumerId);
@@ -471,7 +512,14 @@ public class AsyncProcessor {
      * Handles create consumer group requests.
      */
     private void handleCreateConsumerGroupRequest(AsyncRequest request) throws IOException {
-        String groupId = request.getTopicName(); // Using topicName field for groupId
+        Optional<String> groupIdOpt = request.getString(AsyncRequestKeys.GROUP_ID);
+        
+        if (groupIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing group ID");
+            return;
+        }
+        
+        String groupId = groupIdOpt.get();
         
         try {
             // For now, use a default topic - this would need to be enhanced
@@ -506,7 +554,14 @@ public class AsyncProcessor {
      * Handles get consumer group requests.
      */
     private void handleGetConsumerGroupRequest(AsyncRequest request) throws IOException {
-        String groupId = request.getTopicName(); // Using topicName field for groupId
+        Optional<String> groupIdOpt = request.getString(AsyncRequestKeys.GROUP_ID);
+        
+        if (groupIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing group ID");
+            return;
+        }
+        
+        String groupId = groupIdOpt.get();
         
         try {
             // For now, use a default topic - this would need to be enhanced
@@ -535,7 +590,14 @@ public class AsyncProcessor {
      * Handles delete consumer group requests.
      */
     private void handleDeleteConsumerGroupRequest(AsyncRequest request) throws IOException {
-        String groupId = request.getTopicName(); // Using topicName field for groupId
+        Optional<String> groupIdOpt = request.getString(AsyncRequestKeys.GROUP_ID);
+        
+        if (groupIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing group ID");
+            return;
+        }
+        
+        String groupId = groupIdOpt.get();
         
         try {
             // ConsumerGroupService doesn't have deleteConsumerGroup method, so we'll simulate it
@@ -552,7 +614,14 @@ public class AsyncProcessor {
      * Handles add consumer to group requests.
      */
     private void handleAddConsumerToGroupRequest(AsyncRequest request) throws IOException {
-        String groupId = request.getTopicName(); // Using topicName field for groupId
+        Optional<String> groupIdOpt = request.getString(AsyncRequestKeys.GROUP_ID);
+        
+        if (groupIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing group ID");
+            return;
+        }
+        
+        String groupId = groupIdOpt.get();
         
         try {
             // For now, use a default topic and create a simple consumer ID
@@ -572,7 +641,14 @@ public class AsyncProcessor {
      * Handles remove consumer from group requests.
      */
     private void handleRemoveConsumerFromGroupRequest(AsyncRequest request) throws IOException {
-        String groupIdAndConsumerId = request.getTopicName(); // Format: "groupId/consumerId"
+        Optional<String> groupIdAndConsumerIdOpt = request.getString(AsyncRequestKeys.GROUP_ID);
+        
+        if (groupIdAndConsumerIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing group ID");
+            return;
+        }
+        
+        String groupIdAndConsumerId = groupIdAndConsumerIdOpt.get();
         String[] parts = groupIdAndConsumerId.split("/");
         
         if (parts.length != 2) {
@@ -601,7 +677,14 @@ public class AsyncProcessor {
      * Handles consume from group requests.
      */
     private void handleConsumeFromGroupRequest(AsyncRequest request) throws IOException {
-        String groupId = request.getTopicName(); // Using topicName field for groupId
+        Optional<String> groupIdOpt = request.getString(AsyncRequestKeys.GROUP_ID);
+        
+        if (groupIdOpt.isEmpty()) {
+            sendErrorResponse(request, 400, "Missing group ID");
+            return;
+        }
+        
+        String groupId = groupIdOpt.get();
         
         try {
             // For now, use a default topic

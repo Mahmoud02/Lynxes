@@ -11,8 +11,12 @@ import java.io.IOException;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import org.mahmoud.lynxes.server.pipeline.RequestChannel;
 import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.AsyncRequestKeys;
 
 /**
  * Base servlet class for async operations.
@@ -70,10 +74,22 @@ public abstract class BaseAsyncServlet extends HttpServlet {
         AsyncContext asyncContext = request.startAsync();
         asyncContext.setTimeout(ASYNC_TIMEOUT_MS);
         
+        // Create parameters map
+        Map<String, Object> parameters = new HashMap<>();
+        if (topicName != null) {
+            parameters.put(AsyncRequestKeys.TOPIC_NAME, topicName);
+        }
+        if (offset != null) {
+            parameters.put(AsyncRequestKeys.OFFSET, offset);
+        }
+        if (message != null) {
+            parameters.put(AsyncRequestKeys.MESSAGE, message);
+        }
+        
         // Create async request
         String requestId = generateRequestId();
         AsyncRequest asyncRequest = new AsyncRequest(requestId, request, response, asyncContext, 
-                                                   type, topicName, offset, message);
+                                                   type, Optional.of(parameters));
         
         // Get request channel from servlet context
         RequestChannel requestChannel = getRequestChannel();

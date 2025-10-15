@@ -6,11 +6,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.AsyncRequestKeys;
 
 import java.io.IOException;
 import jakarta.servlet.AsyncContext;
 import org.mahmoud.lynxes.server.pipeline.RequestChannel;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Route handler for consumer operations.
@@ -146,10 +150,16 @@ public class ConsumerRouteHandler extends BaseAsyncServlet {
         // Generate request ID
         String requestId = generateRequestId();
         
-        // Create AsyncRequest - pass consumerId as topicName for now (we can extend AsyncRequest later)
+        // Create parameters map
+        Map<String, Object> parameters = new HashMap<>();
+        if (consumerId != null) {
+            parameters.put(AsyncRequestKeys.CONSUMER_ID, consumerId);
+        }
+        
+        // Create AsyncRequest with proper parameters
         AsyncRequest asyncRequest = new AsyncRequest(
             requestId, request, response, asyncContext, 
-            requestType, consumerId, null, null
+            requestType, Optional.of(parameters)
         );
         
         // Add to request channel for async processing
