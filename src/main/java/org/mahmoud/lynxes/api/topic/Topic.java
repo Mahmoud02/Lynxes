@@ -3,7 +3,9 @@ package org.mahmoud.lynxes.api.topic;
 import org.mahmoud.lynxes.core.Log;
 import org.mahmoud.lynxes.core.Record;
 import org.mahmoud.lynxes.config.QueueConfig;
-import org.mahmoud.lynxes.util.QueueUtils;
+import org.mahmoud.lynxes.util.TopicValidator;
+import org.mahmoud.lynxes.util.FileUtils;
+import org.mahmoud.lynxes.util.FormatUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -31,14 +33,14 @@ public class Topic {
      * @throws IOException if the topic cannot be created
      */
     public Topic(String name, QueueConfig config) throws IOException {
-        this.name = QueueUtils.sanitizeTopicName(name);
+        this.name = TopicValidator.sanitizeTopicName(name);
         this.config = config;
         this.lock = new ReentrantReadWriteLock();
         this.closed = false;
         
         // Create topic directory
         Path topicDir = config.getDataDirectory().resolve("topics").resolve(this.name);
-        QueueUtils.createDirectoryIfNotExists(topicDir);
+        FileUtils.createDirectoryIfNotExists(topicDir);
         
         // Initialize log for this topic
         this.log = new Log(topicDir, config.getMaxSegmentSize(), config.getRetentionPeriodMs());
@@ -366,7 +368,7 @@ public class Topic {
     public String toString() {
         try {
             return String.format("Topic{name='%s', messageCount=%d, size=%s, segments=%d, closed=%s}", 
-                               name, getMessageCount(), QueueUtils.formatBytes(getSize()), 
+                               name, getMessageCount(), FormatUtils.formatBytes(getSize()), 
                                getSegmentCount(), closed);
         } catch (IOException e) {
             return String.format("Topic{name='%s', messageCount=%d, size=?, segments=%d, closed=%s}", 

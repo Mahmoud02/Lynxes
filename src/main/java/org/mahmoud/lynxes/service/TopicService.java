@@ -4,7 +4,8 @@ import org.mahmoud.lynxes.api.topic.Topic;
 import org.mahmoud.lynxes.api.topic.TopicRegistry;
 import org.mahmoud.lynxes.config.QueueConfig;
 import org.mahmoud.lynxes.core.Record;
-import org.mahmoud.lynxes.util.QueueUtils;
+import org.mahmoud.lynxes.util.TopicValidator;
+import org.mahmoud.lynxes.util.FileUtils;
 import com.google.inject.Inject;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class TopicService {
             throw new IllegalArgumentException("Topic name cannot be null or empty");
         }
         
-        String sanitizedName = QueueUtils.sanitizeTopicName(topicName.trim());
+        String sanitizedName = TopicValidator.sanitizeTopicName(topicName.trim());
         if (sanitizedName.isEmpty()) {
             throw new IllegalArgumentException("Invalid topic name: " + topicName);
         }
@@ -109,7 +110,7 @@ public class TopicService {
             return null;
         }
         
-        String sanitizedName = QueueUtils.sanitizeTopicName(topicName.trim());
+        String sanitizedName = TopicValidator.sanitizeTopicName(topicName.trim());
         if (!topicExists(sanitizedName)) {
             return null;
         }
@@ -147,7 +148,7 @@ public class TopicService {
             return false;
         }
         
-        String sanitizedName = QueueUtils.sanitizeTopicName(topicName.trim());
+        String sanitizedName = TopicValidator.sanitizeTopicName(topicName.trim());
         if (!topicExists(sanitizedName)) {
             return false;
         }
@@ -158,7 +159,7 @@ public class TopicService {
         // Delete the directory
         Path topicDir = config.getDataDirectory().resolve("topics").resolve(sanitizedName);
         if (Files.exists(topicDir)) {
-            QueueUtils.deleteDirectory(topicDir);
+            FileUtils.deleteDirectory(topicDir);
         }
         
         return true;
@@ -175,7 +176,7 @@ public class TopicService {
             return false;
         }
         
-        String sanitizedName = QueueUtils.sanitizeTopicName(topicName.trim());
+        String sanitizedName = TopicValidator.sanitizeTopicName(topicName.trim());
         Path topicDir = config.getDataDirectory().resolve("topics").resolve(sanitizedName);
         return Files.exists(topicDir);
     }

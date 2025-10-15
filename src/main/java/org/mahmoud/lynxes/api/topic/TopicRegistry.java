@@ -2,7 +2,8 @@ package org.mahmoud.lynxes.api.topic;
 
 import org.mahmoud.lynxes.config.QueueConfig;
 import org.mahmoud.lynxes.core.Log;
-import org.mahmoud.lynxes.util.QueueUtils;
+import org.mahmoud.lynxes.util.TopicValidator;
+import org.mahmoud.lynxes.util.FileUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,7 +27,7 @@ public class TopicRegistry {
      * @throws IOException if the topic cannot be created
      */
     public static synchronized Topic getOrCreateTopic(String name, QueueConfig config) throws IOException {
-        String sanitizedName = QueueUtils.sanitizeTopicName(name);
+        String sanitizedName = TopicValidator.sanitizeTopicName(name);
         
         System.out.println("TopicRegistry.getOrCreateTopic: Requesting topic '" + sanitizedName + "'");
         
@@ -56,7 +57,7 @@ public class TopicRegistry {
                 System.out.println("TopicRegistry.getOrCreateLog: Creating NEW log for topic '" + name + "'");
                 // Create topic directory
                 Path topicDir = config.getDataDirectory().resolve("topics").resolve(name);
-                QueueUtils.createDirectoryIfNotExists(topicDir);
+                FileUtils.createDirectoryIfNotExists(topicDir);
                 
                 // Create and return log for this topic
                 return new Log(topicDir, config.getMaxSegmentSize(), config.getRetentionPeriodMs());
