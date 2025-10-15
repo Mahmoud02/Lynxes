@@ -1,7 +1,7 @@
 package org.mahmoud.lynxes;
 
 import org.mahmoud.lynxes.di.ServiceContainer;
-import org.mahmoud.lynxes.server.async.AsyncHttpServer;
+import org.mahmoud.lynxes.server.AsyncHttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

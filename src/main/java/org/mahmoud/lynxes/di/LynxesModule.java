@@ -16,11 +16,19 @@ import org.mahmoud.lynxes.service.ConsumerGroupService;
 import org.mahmoud.lynxes.service.SimpleConsumerService;
 import org.mahmoud.lynxes.api.consumer.ConsumerGroupManager;
 import org.mahmoud.lynxes.service.ExecutorServiceProvider;
-import org.mahmoud.lynxes.server.async.RequestChannel;
-import org.mahmoud.lynxes.server.async.ResponseChannel;
-import org.mahmoud.lynxes.server.async.AsyncProcessor;
-import org.mahmoud.lynxes.server.async.ResponseProcessor;
-import org.mahmoud.lynxes.server.async.AsyncHttpServer;
+import org.mahmoud.lynxes.server.pipeline.RequestChannel;
+import org.mahmoud.lynxes.server.pipeline.ResponseChannel;
+import org.mahmoud.lynxes.server.pipeline.AsyncProcessor;
+import org.mahmoud.lynxes.server.pipeline.ResponseProcessor;
+import org.mahmoud.lynxes.server.api.HealthServlet;
+import org.mahmoud.lynxes.server.api.TopicsServlet;
+import org.mahmoud.lynxes.server.api.TopicServlet;
+import org.mahmoud.lynxes.server.api.MetricsServlet;
+import org.mahmoud.lynxes.server.api.ConsumerGroupServlet;
+import org.mahmoud.lynxes.server.api.SimpleConsumerServlet;
+import org.mahmoud.lynxes.server.ServletRouteMapper;
+import org.mahmoud.lynxes.server.HttpServerConfigurator;
+import org.mahmoud.lynxes.server.AsyncHttpServer;
 
 /**
  * Guice module for Lynxes dependency injection configuration.
@@ -50,6 +58,19 @@ public class LynxesModule extends AbstractModule {
         
         // Bind infrastructure services
         bind(ExecutorService.class).toProvider(ExecutorServiceProvider.class);
+        
+        // Bind servlets
+        bind(HealthServlet.class).in(Singleton.class);
+        bind(TopicsServlet.class).in(Singleton.class);
+        bind(TopicServlet.class).in(Singleton.class);
+        bind(MetricsServlet.class).in(Singleton.class);
+        bind(ConsumerGroupServlet.class).in(Singleton.class);
+        bind(SimpleConsumerServlet.class).in(Singleton.class);
+        
+        // Bind server components
+        bind(ServletRouteMapper.class).in(Singleton.class);
+        bind(HttpServerConfigurator.class).in(Singleton.class);
+        bind(AsyncHttpServer.class).in(Singleton.class);
         
         // HTTP servers are provided by @Provides methods below
         
@@ -127,11 +148,10 @@ public class LynxesModule extends AbstractModule {
     @Provides
     @Singleton
     public AsyncHttpServer provideAsyncHttpServer(QueueConfig config, RequestChannel requestChannel, 
-                                                 ResponseChannel responseChannel, MessageService messageService, 
-                                                 HealthService healthService, TopicService topicService,
-                                                 ConsumerGroupService consumerGroupService, SimpleConsumerService simpleConsumerService, 
-                                                 ObjectMapperService objectMapperService, AsyncProcessor asyncProcessor, ResponseProcessor responseProcessor, ExecutorService executorService) {
-        return new AsyncHttpServer(config, requestChannel, responseChannel, messageService, healthService, topicService, consumerGroupService, simpleConsumerService, objectMapperService, asyncProcessor, responseProcessor, executorService);
+                                                 ResponseChannel responseChannel, AsyncProcessor asyncProcessor, 
+                                                 ResponseProcessor responseProcessor, ServletRouteMapper servletRouteMapper, 
+                                                 HttpServerConfigurator serverConfigurator) {
+        return new AsyncHttpServer(config, requestChannel, responseChannel, asyncProcessor, responseProcessor, servletRouteMapper, serverConfigurator);
     }
     
 }

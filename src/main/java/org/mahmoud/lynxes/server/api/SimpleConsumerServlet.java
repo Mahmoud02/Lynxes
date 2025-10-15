@@ -1,4 +1,4 @@
-package org.mahmoud.lynxes.server.async;
+package org.mahmoud.lynxes.server.api;
 
 import org.mahmoud.lynxes.core.Record;
 import org.mahmoud.lynxes.service.SimpleConsumerService;
