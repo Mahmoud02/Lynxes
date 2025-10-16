@@ -7,7 +7,6 @@ import org.mahmoud.lynxes.config.QueueConfig;
 import org.mahmoud.lynxes.core.Record;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 

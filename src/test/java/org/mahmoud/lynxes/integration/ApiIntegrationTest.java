@@ -7,7 +7,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 import org.mahmoud.lynxes.api.producer.Producer;
 import org.mahmoud.lynxes.api.consumer.Consumer;
-import org.mahmoud.lynxes.api.topic.TopicRegistry;
 import org.mahmoud.lynxes.core.Record;
 import org.mahmoud.lynxes.config.QueueConfig;
 

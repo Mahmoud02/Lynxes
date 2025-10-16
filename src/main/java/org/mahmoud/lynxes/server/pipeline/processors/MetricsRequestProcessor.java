@@ -1,6 +1,7 @@
 package org.mahmoud.lynxes.server.pipeline.processors;
 
 import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.core.ResponseUtils;
 import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 import org.mahmoud.lynxes.service.MessageService;
 import com.google.inject.Inject;
@@ -37,21 +38,11 @@ public class MetricsRequestProcessor implements RequestProcessor {
                                       messageService.getConsumerMessageCount(),
                                       processedCount.get(), errorCount.get());
         
-        sendResponse(request, 200, "application/json", responseBody);
+        ResponseUtils.sendSuccessResponse(request, responseBody);
     }
     
     @Override
     public boolean canProcess(AsyncRequest.RequestType type) {
         return type == AsyncRequest.RequestType.METRICS;
-    }
-    
-    /**
-     * Sends a response back to the client.
-     */
-    private void sendResponse(AsyncRequest request, int statusCode, String contentType, String body) throws IOException {
-        request.getResponse().setStatus(statusCode);
-        request.getResponse().setContentType(contentType);
-        request.getResponse().getWriter().write(body);
-        request.getAsyncContext().complete();
     }
 }

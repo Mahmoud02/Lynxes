@@ -3,6 +3,7 @@ package org.mahmoud.lynxes.server.pipeline.orchestration;
 import com.google.inject.Inject;
 import org.mahmoud.lynxes.server.pipeline.channels.RequestChannel;
 import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.core.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,12 +112,12 @@ public class AsyncRequestProcessorOrchestrator {
             errorCount.incrementAndGet();
             logger.error("Error processing request: {} of type: {}", request.getRequestId(), request.getType(), e);
             
-            // Send error response
-            try {
-                sendErrorResponse(request, 500, "Internal server error: " + e.getMessage());
-            } catch (IOException ioException) {
-                logger.error("Failed to send error response for request: {}", request.getRequestId(), ioException);
-            }
+                   // Send error response
+                   try {
+                       ResponseUtils.sendInternalServerError(request, "Internal server error: " + e.getMessage());
+                   } catch (IOException ioException) {
+                       logger.error("Failed to send error response for request: {}", request.getRequestId(), ioException);
+                   }
         }
     }
     
@@ -136,16 +137,5 @@ public class AsyncRequestProcessorOrchestrator {
      */
     public long getErrorCount() {
         return errorCount.get();
-    }
-    
-    /**
-     * Sends an error response back to the client.
-     */
-    private void sendErrorResponse(AsyncRequest request, int statusCode, String message) throws IOException {
-        String errorBody = String.format("{\"error\":\"%s\"}", message);
-        request.getResponse().setStatus(statusCode);
-        request.getResponse().setContentType("application/json");
-        request.getResponse().getWriter().write(errorBody);
-        request.getAsyncContext().complete();
     }
 }

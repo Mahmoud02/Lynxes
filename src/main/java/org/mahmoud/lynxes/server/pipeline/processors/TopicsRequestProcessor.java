@@ -1,6 +1,7 @@
 package org.mahmoud.lynxes.server.pipeline.processors;
 
 import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.core.ResponseUtils;
 import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
@@ -28,21 +29,11 @@ public class TopicsRequestProcessor implements RequestProcessor {
         // TODO: Implement actual topics listing
         String responseBody = "{\"topics\":[]}";
         
-        sendResponse(request, 200, "application/json", responseBody);
+        ResponseUtils.sendSuccessResponse(request, responseBody);
     }
     
     @Override
     public boolean canProcess(AsyncRequest.RequestType type) {
         return type == AsyncRequest.RequestType.TOPICS;
-    }
-    
-    /**
-     * Sends a response back to the client.
-     */
-    private void sendResponse(AsyncRequest request, int statusCode, String contentType, String body) throws IOException {
-        request.getResponse().setStatus(statusCode);
-        request.getResponse().setContentType(contentType);
-        request.getResponse().getWriter().write(body);
-        request.getAsyncContext().complete();
     }
 }

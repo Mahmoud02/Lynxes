@@ -19,7 +19,6 @@ public class Log implements AutoCloseable {
     private final ReadWriteLock lock;
     private final Map<String, Segment> segments;
     private volatile Segment activeSegment;
-    private volatile long nextSegmentId;
     private volatile boolean closed;
 
     /**

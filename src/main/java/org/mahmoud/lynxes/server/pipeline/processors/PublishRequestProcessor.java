@@ -2,6 +2,7 @@ package org.mahmoud.lynxes.server.pipeline.processors;
 
 import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
 import org.mahmoud.lynxes.server.pipeline.core.AsyncRequestKeys;
+import org.mahmoud.lynxes.server.pipeline.core.ResponseUtils;
 import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 import org.mahmoud.lynxes.service.MessageService;
 import org.mahmoud.lynxes.core.Record;
@@ -35,7 +36,7 @@ public class PublishRequestProcessor implements RequestProcessor {
         Optional<String> topicNameOpt = request.getString(AsyncRequestKeys.TOPIC_NAME);
         
         if (topicNameOpt.isEmpty()) {
-            sendErrorResponse(request, 400, "Missing topic name");
+            ResponseUtils.sendBadRequestError(request, "Missing topic name");
             return;
         }
         
@@ -49,12 +50,12 @@ public class PublishRequestProcessor implements RequestProcessor {
             message = jsonNode.get("message").asText();
             
             if (message == null || message.trim().isEmpty()) {
-                sendErrorResponse(request, 400, "Message content required");
+                ResponseUtils.sendBadRequestError(request, "Message content required");
                 return;
             }
         } catch (Exception e) {
             logger.error("Error parsing publish request for topic: {}", topicName, e);
-            sendErrorResponse(request, 400, "Invalid JSON request body");
+            ResponseUtils.sendBadRequestError(request, "Invalid JSON request body");
             return;
         }
         
@@ -64,29 +65,12 @@ public class PublishRequestProcessor implements RequestProcessor {
         // Send success response
         String responseBody = String.format("{\"offset\":%d,\"timestamp\":%d,\"message\":\"Message published successfully\"}", 
                                       record.getOffset(), record.getTimestamp());
-        sendResponse(request, 200, "application/json", responseBody);
+        ResponseUtils.sendSuccessResponse(request, responseBody);
+        logger.debug("Publish request {} processed successfully", request.getRequestId());
     }
     
     @Override
     public boolean canProcess(AsyncRequest.RequestType type) {
         return type == AsyncRequest.RequestType.PUBLISH;
-    }
-    
-    /**
-     * Sends a response back to the client.
-     */
-    private void sendResponse(AsyncRequest request, int statusCode, String contentType, String body) throws IOException {
-        request.getResponse().setStatus(statusCode);
-        request.getResponse().setContentType(contentType);
-        request.getResponse().getWriter().write(body);
-        request.getAsyncContext().complete();
-    }
-    
-    /**
-     * Sends an error response back to the client.
-     */
-    private void sendErrorResponse(AsyncRequest request, int statusCode, String message) throws IOException {
-        String errorBody = String.format("{\"error\":\"%s\"}", message);
-        sendResponse(request, statusCode, "application/json", errorBody);
     }
 }

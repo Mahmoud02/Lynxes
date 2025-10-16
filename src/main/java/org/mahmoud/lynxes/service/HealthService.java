@@ -1,25 +1,19 @@
 package org.mahmoud.lynxes.service;
 
-import com.google.inject.Inject;
 
 /**
  * Health check service for monitoring application status.
  */
 public class HealthService {
-    private final MessageService messageService;
     
-    @Inject
-    public HealthService(MessageService messageService) {
-        this.messageService = messageService;
-    }
-    
+   
     /**
      * Performs a health check.
      */
     public HealthStatus checkHealth() {
         try {
             // Simple health check - could be more sophisticated
-            return new HealthStatus("ok", "FastQueue2 is running");
+            return new HealthStatus("ok", "Lynxes is running");
         } catch (Exception e) {
             return new HealthStatus("error", "Health check failed: " + e.getMessage());
         }

@@ -2,6 +2,7 @@ package org.mahmoud.lynxes.server.pipeline.processors;
 
 import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
 import org.mahmoud.lynxes.server.pipeline.core.AsyncRequestKeys;
+import org.mahmoud.lynxes.server.pipeline.core.ResponseUtils;
 import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 import org.mahmoud.lynxes.service.MessageService;
 import org.mahmoud.lynxes.core.Record;
@@ -38,7 +39,7 @@ public class ConsumeRequestProcessor implements RequestProcessor {
         Optional<Long> offsetOpt = request.getLong(AsyncRequestKeys.OFFSET);
         
         if (topicNameOpt.isEmpty()) {
-            sendErrorResponse(request, 400, "Missing topic name");
+            ResponseUtils.sendBadRequestError(request, "Missing topic name");
             return;
         }
         
@@ -49,7 +50,7 @@ public class ConsumeRequestProcessor implements RequestProcessor {
         Record record = messageService.consumeMessage(topicName, offset);
         
         if (record == null) {
-            sendErrorResponse(request, 404, "No message found at offset " + offset);
+            ResponseUtils.sendNotFoundError(request, "No message found at offset " + offset);
             return;
         }
         
@@ -64,29 +65,12 @@ public class ConsumeRequestProcessor implements RequestProcessor {
         String responseBody = objectMapper.writeValueAsString(responseData);
         
         logger.debug("Sending consume response: {}", responseBody);
-        sendResponse(request, 200, "application/json", responseBody);
+        ResponseUtils.sendSuccessResponse(request, responseBody);
+        logger.debug("Consume request {} processed successfully", request.getRequestId());
     }
     
     @Override
     public boolean canProcess(AsyncRequest.RequestType type) {
         return type == AsyncRequest.RequestType.CONSUME;
-    }
-    
-    /**
-     * Sends a response back to the client.
-     */
-    private void sendResponse(AsyncRequest request, int statusCode, String contentType, String body) throws IOException {
-        request.getResponse().setStatus(statusCode);
-        request.getResponse().setContentType(contentType);
-        request.getResponse().getWriter().write(body);
-        request.getAsyncContext().complete();
-    }
-    
-    /**
-     * Sends an error response back to the client.
-     */
-    private void sendErrorResponse(AsyncRequest request, int statusCode, String message) throws IOException {
-        String errorBody = String.format("{\"error\":\"%s\"}", message);
-        sendResponse(request, statusCode, "application/json", errorBody);
     }
 }

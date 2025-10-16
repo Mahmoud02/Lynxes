@@ -23,7 +23,6 @@ public class SparseIndexBehaviorTest {
     
     private Log log;
     private static final int TOTAL_MESSAGES = 1100;
-    private static final int SPARSE_INTERVAL = 1000;
     
     @BeforeEach
     void setUp() throws IOException {
