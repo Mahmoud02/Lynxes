@@ -75,4 +75,7 @@ demo/
 application-local.conf
 application-test.conf
 
+# Documentation
+FEATURES.md
+
 .fake
