@@ -18,7 +18,7 @@ import java.util.Optional;
 
 /**
  * Route handler for consumer operations.
- * This class only parses URLs and queues requests - all business logic is handled by AsyncProcessor.
+ * This class only parses URLs and queues requests - all business logic is handled by AsyncRequestProcessorOrchestrator.
  * Follows the async architecture pattern where servlets are thin wrappers that delegate to the processing pipeline.
  */
 public class ConsumerRouteHandler extends BaseAsyncServlet {

@@ -18,8 +18,14 @@ import org.mahmoud.lynxes.api.consumer.ConsumerGroupManager;
 import org.mahmoud.lynxes.service.ExecutorServiceProvider;
 import org.mahmoud.lynxes.server.pipeline.RequestChannel;
 import org.mahmoud.lynxes.server.pipeline.ResponseChannel;
-import org.mahmoud.lynxes.server.pipeline.AsyncProcessor;
+import org.mahmoud.lynxes.server.pipeline.AsyncRequestProcessorOrchestrator;
 import org.mahmoud.lynxes.server.pipeline.ResponseProcessor;
+import org.mahmoud.lynxes.server.pipeline.processors.HealthRequestProcessor;
+import org.mahmoud.lynxes.server.pipeline.processors.TopicsRequestProcessor;
+import org.mahmoud.lynxes.server.pipeline.processors.MetricsRequestProcessor;
+import org.mahmoud.lynxes.server.pipeline.processors.PublishRequestProcessor;
+import org.mahmoud.lynxes.server.pipeline.processors.ConsumeRequestProcessor;
+import org.mahmoud.lynxes.server.pipeline.RequestProcessorFactory;
 import org.mahmoud.lynxes.server.api.HealthRouteHandler;
 import org.mahmoud.lynxes.server.api.TopicsRouteHandler;
 import org.mahmoud.lynxes.server.api.TopicRouteHandler;
@@ -67,6 +73,19 @@ public class LynxesModule extends AbstractModule {
         bind(ConsumerGroupRouteHandler.class).in(Singleton.class);
         bind(ConsumerRouteHandler.class).in(Singleton.class);
         
+        // Bind request processors
+        bind(HealthRequestProcessor.class).in(Singleton.class);
+        bind(TopicsRequestProcessor.class).in(Singleton.class);
+        bind(MetricsRequestProcessor.class).in(Singleton.class);
+        bind(PublishRequestProcessor.class).in(Singleton.class);
+        bind(ConsumeRequestProcessor.class).in(Singleton.class);
+        
+        // Bind request processor factory
+        bind(RequestProcessorFactory.class).in(Singleton.class);
+        
+        // Bind orchestrator
+        bind(AsyncRequestProcessorOrchestrator.class).in(Singleton.class);
+        
         // Bind server components
         bind(ServletRouteMapper.class).in(Singleton.class);
         bind(HttpServerConfigurator.class).in(Singleton.class);
@@ -105,19 +124,6 @@ public class LynxesModule extends AbstractModule {
     }
     
     /**
-     * Provides AsyncProcessor with all dependencies injected.
-     */
-    @Provides
-    @Singleton
-    public AsyncProcessor provideAsyncProcessor(RequestChannel requestChannel, ResponseChannel responseChannel,
-                                               MessageService messageService, HealthService healthService,
-                                               ConsumerGroupService consumerGroupService,
-                                               SimpleConsumerService simpleConsumerService,
-                                               ObjectMapperService objectMapperService, ExecutorService executorService) {
-        return new AsyncProcessor(requestChannel, responseChannel, messageService, healthService, consumerGroupService, simpleConsumerService, objectMapperService, executorService);
-    }
-    
-    /**
      * Provides ResponseProcessor with all dependencies injected.
      */
     @Provides
@@ -150,10 +156,10 @@ public class LynxesModule extends AbstractModule {
     @Provides
     @Singleton
     public AsyncHttpServer provideAsyncHttpServer(QueueConfig config, RequestChannel requestChannel, 
-                                                 ResponseChannel responseChannel, AsyncProcessor asyncProcessor, 
+                                                 ResponseChannel responseChannel, AsyncRequestProcessorOrchestrator orchestrator, 
                                                  ResponseProcessor responseProcessor, ServletRouteMapper servletRouteMapper, 
                                                  HttpServerConfigurator serverConfigurator) {
-        return new AsyncHttpServer(config, requestChannel, responseChannel, asyncProcessor, responseProcessor, servletRouteMapper, serverConfigurator);
+        return new AsyncHttpServer(config, requestChannel, responseChannel, orchestrator, responseProcessor, servletRouteMapper, serverConfigurator);
     }
     
 }

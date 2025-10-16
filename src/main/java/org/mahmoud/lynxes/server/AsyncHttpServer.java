@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import org.mahmoud.lynxes.server.pipeline.RequestChannel;
 import org.mahmoud.lynxes.server.pipeline.ResponseChannel;
-import org.mahmoud.lynxes.server.pipeline.AsyncProcessor;
+import org.mahmoud.lynxes.server.pipeline.AsyncRequestProcessorOrchestrator;
 import org.mahmoud.lynxes.server.pipeline.ResponseProcessor;
 
 /**
@@ -23,7 +23,7 @@ public class AsyncHttpServer {
     private final QueueConfig config;
     private final RequestChannel requestChannel;
     private final ResponseChannel responseChannel;
-    private final AsyncProcessor asyncProcessor;
+    private final AsyncRequestProcessorOrchestrator orchestrator;
     private final ResponseProcessor responseProcessor;
     private final ServletRouteMapper servletRouteMapper;
     private final HttpServerConfigurator serverConfigurator;
@@ -31,12 +31,12 @@ public class AsyncHttpServer {
     
     @Inject
     public AsyncHttpServer(QueueConfig config, RequestChannel requestChannel, ResponseChannel responseChannel,
-                          AsyncProcessor asyncProcessor, ResponseProcessor responseProcessor, 
+                          AsyncRequestProcessorOrchestrator orchestrator, ResponseProcessor responseProcessor, 
                           ServletRouteMapper servletRouteMapper, HttpServerConfigurator serverConfigurator) {
         this.config = config;
         this.requestChannel = requestChannel;
         this.responseChannel = responseChannel;
-        this.asyncProcessor = asyncProcessor;
+        this.orchestrator = orchestrator;
         this.responseProcessor = responseProcessor;
         this.servletRouteMapper = servletRouteMapper;
         this.serverConfigurator = serverConfigurator;
@@ -68,7 +68,7 @@ public class AsyncHttpServer {
             logger.info("Starting AsyncHttpServer...");
             
             // Start processors first
-            asyncProcessor.start();
+            orchestrator.start();
             responseProcessor.start();
             
             // Start Jetty server
@@ -95,7 +95,7 @@ public class AsyncHttpServer {
             serverConfigurator.stopServer();
             
             // Stop processors
-            asyncProcessor.shutdown();
+            orchestrator.stop();
             responseProcessor.stop();
             
             running = false;

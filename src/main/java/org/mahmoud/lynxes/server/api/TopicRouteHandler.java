@@ -75,10 +75,10 @@ public class TopicRouteHandler extends BaseAsyncServlet {
     
     /**
      * Handles POST requests for publishing messages.
-     * Note: JSON parsing is now handled by AsyncProcessor to maintain separation of concerns.
+     * Note: JSON parsing is now handled by AsyncRequestProcessorOrchestrator to maintain separation of concerns.
      */
     private void handlePublishRequest(HttpServletRequest request, HttpServletResponse response, String topicName) {
-        // Pass the raw request to AsyncProcessor for JSON parsing
+        // Pass the raw request to AsyncRequestProcessorOrchestrator for JSON parsing
         // This maintains separation of concerns - route handler only handles routing
         processAsyncRequest(request, response, AsyncRequest.RequestType.PUBLISH, topicName, null, null);
     }
