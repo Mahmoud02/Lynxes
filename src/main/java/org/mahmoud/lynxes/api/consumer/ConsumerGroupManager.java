@@ -35,7 +35,7 @@ public class ConsumerGroupManager {
         lock.writeLock().lock();
         try {
             Map<String, ConsumerGroup> groups = topicGroups.computeIfAbsent(topicName, 
-                k -> new ConcurrentHashMap<>());
+                _ -> new ConcurrentHashMap<>());
             
             ConsumerGroup group = groups.get(groupId);
             if (group == null) {

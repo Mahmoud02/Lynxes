@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SimpleConsumerService {
     private static final Logger logger = LoggerFactory.getLogger(SimpleConsumerService.class);
 
-    private final TopicRegistry topicRegistry;
     private final QueueConfig config;
     
     // Map: consumerId -> Consumer instance
@@ -29,8 +28,7 @@ public class SimpleConsumerService {
     private final Map<String, Map<String, Long>> consumerOffsets;
 
     @Inject
-    public SimpleConsumerService(TopicRegistry topicRegistry, QueueConfig config) {
-        this.topicRegistry = topicRegistry;
+    public SimpleConsumerService(QueueConfig config) {
         this.config = config;
         this.consumers = new ConcurrentHashMap<>();
         this.consumerOffsets = new ConcurrentHashMap<>();
@@ -102,7 +100,7 @@ public class SimpleConsumerService {
         
         while (consumerMessages.size() < maxMessages) {
             try {
-                Record message = topicRegistry.getOrCreateTopic(topicName, config).consume(currentOffset);
+                Record message = TopicRegistry.getOrCreateTopic(topicName, config).consume(currentOffset);
                 if (message == null) {
                     break; // No more messages
                 }

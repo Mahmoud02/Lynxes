@@ -211,7 +211,7 @@ public class Consumer {
      * @return The offset tracker
      */
     private AtomicLong getOrCreateOffset(String topicName) {
-        return offsets.computeIfAbsent(topicName, __ -> new AtomicLong(0));
+        return offsets.computeIfAbsent(topicName, _ -> new AtomicLong(0));
     }
 
     /**

@@ -6,6 +6,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.slf4j.Logger;
 import org.mahmoud.lynxes.server.pipeline.channels.RequestChannel;
 import org.slf4j.LoggerFactory;
+import com.google.inject.Inject;
 
 /**
  * Configures and manages the Jetty HTTP server for Lynxes.
@@ -29,6 +30,7 @@ public class HttpServerConfigurator {
      * @param config The queue configuration
      * @param servletRouteMapper The servlet route mapper for endpoint management
      */
+    @Inject
     public HttpServerConfigurator(QueueConfig config, ServletRouteMapper servletRouteMapper) {
         this.config = config;
         this.servletRouteMapper = servletRouteMapper;
@@ -68,7 +70,10 @@ public class HttpServerConfigurator {
         ServletContextHandler context = new ServletContextHandler();
         context.setContextPath(CONTEXT_PATH);
         
-        // Configure async support
+        // Configure async support - create session handler if needed
+        if (context.getSessionHandler() == null) {
+            context.setSessionHandler(new org.eclipse.jetty.server.session.SessionHandler());
+        }
         context.getSessionHandler().setMaxInactiveInterval(DEFAULT_TIMEOUT_MS);
         
         // Make RequestChannel available to servlets

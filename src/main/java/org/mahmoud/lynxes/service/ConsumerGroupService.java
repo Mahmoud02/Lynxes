@@ -19,12 +19,10 @@ public class ConsumerGroupService {
     private static final Logger logger = LoggerFactory.getLogger(ConsumerGroupService.class);
     
     private final ConsumerGroupManager groupManager;
-    private final TopicRegistry topicRegistry;
     private final QueueConfig config;
     
-    public ConsumerGroupService(ConsumerGroupManager groupManager, TopicRegistry topicRegistry, QueueConfig config) {
+    public ConsumerGroupService(ConsumerGroupManager groupManager, QueueConfig config) {
         this.groupManager = groupManager;
-        this.topicRegistry = topicRegistry;
         this.config = config;
         logger.info("ConsumerGroupService initialized");
     }
@@ -120,7 +118,7 @@ public class ConsumerGroupService {
 
         while (messages.size() < maxMessages) {
             try {
-                Record message = topicRegistry.getOrCreateTopic(topicName, config).consume(currentOffset);
+                Record message = TopicRegistry.getOrCreateTopic(topicName, config).consume(currentOffset);
                 if (message == null) {
                     break; // No more messages
                 }

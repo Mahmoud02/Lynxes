@@ -35,6 +35,9 @@ import org.mahmoud.lynxes.server.api.ConsumerRouteHandler;
 import org.mahmoud.lynxes.server.ServletRouteMapper;
 import org.mahmoud.lynxes.server.HttpServerConfigurator;
 import org.mahmoud.lynxes.server.AsyncHttpServer;
+import java.util.List;
+import java.util.Arrays;
+import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 
 /**
  * Guice module for Lynxes dependency injection configuration.
@@ -81,7 +84,7 @@ public class LynxesModule extends AbstractModule {
         bind(ConsumeRequestProcessor.class).in(Singleton.class);
         
         // Bind request processor factory
-        bind(RequestProcessorFactory.class).in(Singleton.class);
+        bind(RequestProcessorFactory.class).toProvider(RequestProcessorFactoryProvider.class).in(Singleton.class);
         
         // Bind orchestrator
         bind(AsyncRequestProcessorOrchestrator.class).in(Singleton.class);
@@ -89,7 +92,7 @@ public class LynxesModule extends AbstractModule {
         // Bind server components
         bind(ServletRouteMapper.class).in(Singleton.class);
         bind(HttpServerConfigurator.class).in(Singleton.class);
-        bind(AsyncHttpServer.class).in(Singleton.class);
+        // AsyncHttpServer is provided by @Provides method below
         
         // HTTP servers are provided by @Provides methods below
         
@@ -140,14 +143,14 @@ public class LynxesModule extends AbstractModule {
     public ConsumerGroupService provideConsumerGroupService(ConsumerGroupManager consumerGroupManager,
                                                            org.mahmoud.lynxes.api.topic.TopicRegistry topicRegistry,
                                                            QueueConfig config) {
-        return new ConsumerGroupService(consumerGroupManager, topicRegistry, config);
+        return new ConsumerGroupService(consumerGroupManager, config);
     }
     
     @Provides
     @Singleton
     public SimpleConsumerService provideSimpleConsumerService(org.mahmoud.lynxes.api.topic.TopicRegistry topicRegistry,
                                                              QueueConfig config) {
-        return new SimpleConsumerService(topicRegistry, config);
+        return new SimpleConsumerService(config);
     }
     
     /**
@@ -160,6 +163,42 @@ public class LynxesModule extends AbstractModule {
                                                  ResponseProcessor responseProcessor, ServletRouteMapper servletRouteMapper, 
                                                  HttpServerConfigurator serverConfigurator) {
         return new AsyncHttpServer(config, requestChannel, responseChannel, orchestrator, responseProcessor, servletRouteMapper, serverConfigurator);
+    }
+    
+    /**
+     * Provider for RequestProcessorFactory.
+     */
+    public static class RequestProcessorFactoryProvider implements com.google.inject.Provider<RequestProcessorFactory> {
+        private final HealthRequestProcessor healthProcessor;
+        private final TopicsRequestProcessor topicsProcessor;
+        private final MetricsRequestProcessor metricsProcessor;
+        private final PublishRequestProcessor publishProcessor;
+        private final ConsumeRequestProcessor consumeProcessor;
+        
+        @com.google.inject.Inject
+        public RequestProcessorFactoryProvider(HealthRequestProcessor healthProcessor,
+                                             TopicsRequestProcessor topicsProcessor,
+                                             MetricsRequestProcessor metricsProcessor,
+                                             PublishRequestProcessor publishProcessor,
+                                             ConsumeRequestProcessor consumeProcessor) {
+            this.healthProcessor = healthProcessor;
+            this.topicsProcessor = topicsProcessor;
+            this.metricsProcessor = metricsProcessor;
+            this.publishProcessor = publishProcessor;
+            this.consumeProcessor = consumeProcessor;
+        }
+        
+        @Override
+        public RequestProcessorFactory get() {
+            List<RequestProcessor> processors = Arrays.asList(
+                healthProcessor,
+                topicsProcessor,
+                metricsProcessor,
+                publishProcessor,
+                consumeProcessor
+            );
+            return new RequestProcessorFactory(processors);
+        }
     }
     
 }
