@@ -1,7 +1,7 @@
 package org.mahmoud.lynxes.server.pipeline.processors;
 
-import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
-import org.mahmoud.lynxes.server.pipeline.RequestProcessor;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 import org.mahmoud.lynxes.service.HealthService;
 import com.google.inject.Inject;
 import org.slf4j.Logger;

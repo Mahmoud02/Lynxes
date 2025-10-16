@@ -1,4 +1,4 @@
-package org.mahmoud.lynxes.server.pipeline;
+package org.mahmoud.lynxes.server.pipeline.core;
 
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.http.HttpServletRequest;

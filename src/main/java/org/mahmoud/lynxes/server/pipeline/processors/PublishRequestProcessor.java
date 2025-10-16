@@ -1,8 +1,8 @@
 package org.mahmoud.lynxes.server.pipeline.processors;
 
-import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
-import org.mahmoud.lynxes.server.pipeline.AsyncRequestKeys;
-import org.mahmoud.lynxes.server.pipeline.RequestProcessor;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequestKeys;
+import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 import org.mahmoud.lynxes.service.MessageService;
 import org.mahmoud.lynxes.core.Record;
 import com.fasterxml.jackson.databind.ObjectMapper;

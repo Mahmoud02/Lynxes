@@ -4,7 +4,7 @@ import org.mahmoud.lynxes.config.QueueConfig;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.slf4j.Logger;
-import org.mahmoud.lynxes.server.pipeline.RequestChannel;
+import org.mahmoud.lynxes.server.pipeline.channels.RequestChannel;
 import org.slf4j.LoggerFactory;
 
 /**

@@ -3,7 +3,7 @@ package org.mahmoud.lynxes.server.api;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

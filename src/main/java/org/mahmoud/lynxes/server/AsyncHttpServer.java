@@ -5,10 +5,10 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.mahmoud.lynxes.server.pipeline.RequestChannel;
-import org.mahmoud.lynxes.server.pipeline.ResponseChannel;
-import org.mahmoud.lynxes.server.pipeline.AsyncRequestProcessorOrchestrator;
-import org.mahmoud.lynxes.server.pipeline.ResponseProcessor;
+import org.mahmoud.lynxes.server.pipeline.channels.RequestChannel;
+import org.mahmoud.lynxes.server.pipeline.channels.ResponseChannel;
+import org.mahmoud.lynxes.server.pipeline.orchestration.AsyncRequestProcessorOrchestrator;
+import org.mahmoud.lynxes.server.pipeline.orchestration.ResponseProcessor;
 
 /**
  * Async HTTP server that uses Jetty as network threads and async processing for I/O.

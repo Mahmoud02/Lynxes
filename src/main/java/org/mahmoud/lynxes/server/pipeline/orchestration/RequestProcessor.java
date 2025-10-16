@@ -1,6 +1,7 @@
-package org.mahmoud.lynxes.server.pipeline;
+package org.mahmoud.lynxes.server.pipeline.orchestration;
 
 import java.io.IOException;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
 
 /**
  * Interface for processing specific types of async requests.

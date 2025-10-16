@@ -1,4 +1,4 @@
-package org.mahmoud.lynxes.server.pipeline;
+package org.mahmoud.lynxes.server.pipeline.core;
 
 /**
  * Constants for AsyncRequest parameter keys to avoid typos and ensure consistency.

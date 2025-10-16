@@ -14,9 +14,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.mahmoud.lynxes.server.pipeline.RequestChannel;
-import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
-import org.mahmoud.lynxes.server.pipeline.AsyncRequestKeys;
+import org.mahmoud.lynxes.server.pipeline.channels.RequestChannel;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequestKeys;
 
 /**
  * Base servlet class for async operations.

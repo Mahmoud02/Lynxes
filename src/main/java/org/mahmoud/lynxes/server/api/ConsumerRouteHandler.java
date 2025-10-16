@@ -5,12 +5,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.mahmoud.lynxes.server.pipeline.AsyncRequest;
-import org.mahmoud.lynxes.server.pipeline.AsyncRequestKeys;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncRequestKeys;
 
 import java.io.IOException;
 import jakarta.servlet.AsyncContext;
-import org.mahmoud.lynxes.server.pipeline.RequestChannel;
+import org.mahmoud.lynxes.server.pipeline.channels.RequestChannel;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,8 @@
-package org.mahmoud.lynxes.server.pipeline;
+package org.mahmoud.lynxes.server.pipeline.channels;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncResponse;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

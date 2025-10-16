@@ -1,5 +1,7 @@
-package org.mahmoud.lynxes.server.pipeline;
+package org.mahmoud.lynxes.server.pipeline.orchestration;
 
+import org.mahmoud.lynxes.server.pipeline.channels.ResponseChannel;
+import org.mahmoud.lynxes.server.pipeline.core.AsyncResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
