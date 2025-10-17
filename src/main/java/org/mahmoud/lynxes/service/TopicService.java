@@ -116,7 +116,7 @@ public class TopicService {
         
         try {
             Topic topic = TopicRegistry.getOrCreateTopic(sanitizedName, config);
-            long messageCount = topic.getNextOffset();
+            long messageCount = topic.getMessageCount();
             long directorySize = getTopicDirectorySize(sanitizedName);
             
             // Get creation time from directory
@@ -206,6 +206,22 @@ public class TopicService {
                 .mapToLong(this::getDirectorySize)
                 .sum();
         } catch (IOException e) {
+            return 0;
+        }
+    }
+    
+    /**
+     * Gets the total number of messages across all topics.
+     * 
+     * @return Total message count
+     */
+    public long getTotalMessageCount() {
+        try {
+            List<TopicInfo> topics = listTopics();
+            return topics.stream()
+                .mapToLong(TopicInfo::getMessageCount)
+                .sum();
+        } catch (Exception e) {
             return 0;
         }
     }

@@ -4,6 +4,7 @@ import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
 import org.mahmoud.lynxes.server.pipeline.core.ResponseUtils;
 import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 import org.mahmoud.lynxes.service.MessageService;
+import org.mahmoud.lynxes.service.TopicService;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,14 @@ public class MetricsRequestProcessor implements RequestProcessor {
     private static final Logger logger = LoggerFactory.getLogger(MetricsRequestProcessor.class);
     
     private final MessageService messageService;
+    private final TopicService topicService;
     private final AtomicLong processedCount;
     private final AtomicLong errorCount;
     
     @Inject
-    public MetricsRequestProcessor(MessageService messageService, AtomicLong processedCount, AtomicLong errorCount) {
+    public MetricsRequestProcessor(MessageService messageService, TopicService topicService, AtomicLong processedCount, AtomicLong errorCount) {
         this.messageService = messageService;
+        this.topicService = topicService;
         this.processedCount = processedCount;
         this.errorCount = errorCount;
     }
@@ -33,9 +36,12 @@ public class MetricsRequestProcessor implements RequestProcessor {
     public void process(AsyncRequest request) throws IOException {
         logger.debug("Processing metrics request: {}", request.getRequestId());
         
-        String responseBody = String.format("{\"producerMessages\":%d,\"consumerMessages\":%d,\"processedRequests\":%d,\"errorCount\":%d}",
+        long totalMessageCount = topicService.getTotalMessageCount();
+        
+        String responseBody = String.format("{\"producerMessages\":%d,\"consumerMessages\":%d,\"totalMessages\":%d,\"processedRequests\":%d,\"errorCount\":%d}",
                                       messageService.getProducerMessageCount(),
                                       messageService.getConsumerMessageCount(),
+                                      totalMessageCount,
                                       processedCount.get(), errorCount.get());
         
         ResponseUtils.sendSuccessResponse(request, responseBody);

@@ -20,6 +20,7 @@ public class AsyncRequest {
         TOPICS,
         METRICS,
         DELETE_TOPIC,
+        DELETE_ALL_TOPICS,
         // Consumer operations
         REGISTER_CONSUMER,
         LIST_CONSUMERS,

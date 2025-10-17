@@ -2,7 +2,6 @@ package org.mahmoud.lynxes.server.pipeline.orchestration;
 
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -26,7 +26,19 @@ public class TopicsRouteHandler extends BaseAsyncServlet {
     @Override
     protected void handleRequest(HttpServletRequest request, HttpServletResponse response, 
                                AsyncRequest.RequestType defaultType) throws ServletException {
-        logger.debug("Processing topics list request");
-        processAsyncRequest(request, response, AsyncRequest.RequestType.TOPICS, null, null, null);
+        String method = request.getMethod();
+        
+        switch (method) {
+            case "GET":
+                logger.debug("Processing topics list request");
+                processAsyncRequest(request, response, AsyncRequest.RequestType.TOPICS, null, null, null);
+                break;
+            case "DELETE":
+                logger.debug("Processing delete all topics request");
+                processAsyncRequest(request, response, AsyncRequest.RequestType.DELETE_ALL_TOPICS, null, null, null);
+                break;
+            default:
+                sendErrorResponse(response, 405, "Method not allowed: " + method);
+        }
     }
 }
