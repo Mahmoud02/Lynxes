@@ -191,19 +191,6 @@
                         <div class="col-md-3 mb-3">
                             <div class="card metric-card h-100">
                                 <div class="card-body d-flex align-items-center">
-                                    <div class="metric-icon me-3" style="background: var(--success-gradient);">
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="mb-0" id="message-count">-</h4>
-                                        <small class="text-muted">Total Messages</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card h-100">
-                                <div class="card-body d-flex align-items-center">
                                     <div class="metric-icon me-3" style="background: var(--info-gradient);">
                                         <i class="fas fa-server"></i>
                                     </div>
@@ -427,11 +414,6 @@
                 const topicsResponse = await fetch('/topics');
                 const topicsData = await topicsResponse.json();
                 document.getElementById('topic-count').textContent = topicsData.topics ? topicsData.topics.length : 0;
-                
-                // Get metrics for total message count
-                const metricsResponse = await fetch('/metrics');
-                const metricsData = await metricsResponse.json();
-                document.getElementById('message-count').textContent = metricsData.totalMessages || 0;
                 
                 document.getElementById('uptime').textContent = '2h 15m';
             } catch (error) {

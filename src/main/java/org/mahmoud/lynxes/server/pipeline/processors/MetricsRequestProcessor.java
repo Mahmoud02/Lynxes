@@ -36,12 +36,9 @@ public class MetricsRequestProcessor implements RequestProcessor {
     public void process(AsyncRequest request) throws IOException {
         logger.debug("Processing metrics request: {}", request.getRequestId());
         
-        long totalMessageCount = topicService.getTotalMessageCount();
-        
-        String responseBody = String.format("{\"producerMessages\":%d,\"consumerMessages\":%d,\"totalMessages\":%d,\"processedRequests\":%d,\"errorCount\":%d}",
+        String responseBody = String.format("{\"producerMessages\":%d,\"consumerMessages\":%d,\"processedRequests\":%d,\"errorCount\":%d}",
                                       messageService.getProducerMessageCount(),
                                       messageService.getConsumerMessageCount(),
-                                      totalMessageCount,
                                       processedCount.get(), errorCount.get());
         
         ResponseUtils.sendSuccessResponse(request, responseBody);

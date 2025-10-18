@@ -270,12 +270,14 @@ public class Segment implements AutoCloseable {
 
     /**
      * Gets the number of records in this segment.
-     * Note: This returns the number of indexed records (sparse), not total records.
      * 
-     * @return Number of indexed records
+     * @return The number of records
      */
     public int getRecordCount() {
-        return index.getEntryCount();
+        // For a single segment, the record count is the nextOffset
+        // since offsets start from 0 and nextOffset represents the count
+        long count = nextOffset.get();
+        return (int) Math.max(0, count);
     }
 
     /**
@@ -289,9 +291,8 @@ public class Segment implements AutoCloseable {
 
     /**
      * Gets the highest offset in this segment.
-     * Note: This returns the highest indexed offset (sparse), not necessarily the highest record offset.
      * 
-     * @return The highest indexed offset, or -1 if the segment is empty
+     * @return The highest offset, or -1 if the segment is empty
      */
     public long getHighestOffset() {
         return index.getHighestOffset();

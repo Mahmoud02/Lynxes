@@ -210,21 +210,6 @@ public class TopicService {
         }
     }
     
-    /**
-     * Gets the total number of messages across all topics.
-     * 
-     * @return Total message count
-     */
-    public long getTotalMessageCount() {
-        try {
-            List<TopicInfo> topics = listTopics();
-            return topics.stream()
-                .mapToLong(TopicInfo::getMessageCount)
-                .sum();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
     
     // Helper methods
     
