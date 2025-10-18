@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Processor for topics list requests.
@@ -33,18 +32,26 @@ public class TopicsRequestProcessor implements RequestProcessor {
         try {
             List<TopicService.TopicInfo> topics = topicService.listTopics();
             
-            // Convert TopicInfo objects to simple topic names for the API response
-            List<String> topicNames = topics.stream()
-                .map(TopicService.TopicInfo::getName)
-                .collect(Collectors.toList());
+            // Convert TopicInfo objects to JSON format for the API response
+            StringBuilder responseBuilder = new StringBuilder();
+            responseBuilder.append("{\"topics\":[");
             
-            String responseBody = String.format("{\"topics\":%s}", 
-                topicNames.stream()
-                    .map(name -> "\"" + name + "\"")
-                    .collect(Collectors.joining(",", "[", "]")));
+            for (int i = 0; i < topics.size(); i++) {
+                TopicService.TopicInfo topic = topics.get(i);
+                if (i > 0) responseBuilder.append(",");
+                
+                responseBuilder.append("{");
+                responseBuilder.append("\"name\":\"").append(topic.getName()).append("\",");
+                responseBuilder.append("\"size\":").append(topic.getSizeBytes()).append(",");
+                responseBuilder.append("\"createdAt\":\"").append(topic.getCreatedAt().toString()).append("\",");
+                responseBuilder.append("\"nextOffset\":").append(topic.getNextOffset());
+                responseBuilder.append("}");
+            }
             
-            logger.debug("Found {} topics: {}", topicNames.size(), topicNames);
-            ResponseUtils.sendSuccessResponse(request, responseBody);
+            responseBuilder.append("]}");
+            
+            logger.debug("Found {} topics with full metadata", topics.size());
+            ResponseUtils.sendSuccessResponse(request, responseBuilder.toString());
             
         } catch (Exception e) {
             logger.error("Error listing topics: {}", e.getMessage(), e);
