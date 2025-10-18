@@ -1,7 +1,7 @@
-package org.mahmoud.lynxes.api.consumer;
+package org.mahmoud.lynxes.domain.consumer;
 
-import org.mahmoud.lynxes.api.topic.Topic;
-import org.mahmoud.lynxes.api.topic.TopicRegistry;
+import org.mahmoud.lynxes.domain.topic.Topic;
+import org.mahmoud.lynxes.domain.topic.TopicRegistry;
 import org.mahmoud.lynxes.core.Record;
 import org.mahmoud.lynxes.config.QueueConfig;
 import com.google.inject.Inject;

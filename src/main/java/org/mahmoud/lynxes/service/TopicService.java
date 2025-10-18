@@ -1,7 +1,7 @@
 package org.mahmoud.lynxes.service;
 
-import org.mahmoud.lynxes.api.topic.Topic;
-import org.mahmoud.lynxes.api.topic.TopicRegistry;
+import org.mahmoud.lynxes.domain.topic.Topic;
+import org.mahmoud.lynxes.domain.topic.TopicRegistry;
 import org.mahmoud.lynxes.config.QueueConfig;
 import org.mahmoud.lynxes.util.TopicValidator;
 import org.mahmoud.lynxes.util.FileUtils;

@@ -6,8 +6,8 @@ import com.google.inject.Singleton;
 import java.util.concurrent.ExecutorService;
 import org.mahmoud.lynxes.config.QueueConfig;
 import org.mahmoud.lynxes.config.ConfigLoader;
-import org.mahmoud.lynxes.api.producer.Producer;
-import org.mahmoud.lynxes.api.consumer.Consumer;
+import org.mahmoud.lynxes.domain.producer.Producer;
+import org.mahmoud.lynxes.domain.consumer.Consumer;
 import org.mahmoud.lynxes.service.MessageService;
 import org.mahmoud.lynxes.service.HealthService;
 import org.mahmoud.lynxes.service.TopicService;
@@ -15,7 +15,7 @@ import org.mahmoud.lynxes.service.ObjectMapperService;
 import org.mahmoud.lynxes.service.ConsumerGroupService;
 import org.mahmoud.lynxes.service.SimpleConsumerService;
 import org.mahmoud.lynxes.service.ServerUptimeService;
-import org.mahmoud.lynxes.api.consumer.ConsumerGroupManager;
+import org.mahmoud.lynxes.domain.consumer.ConsumerGroupManager;
 import org.mahmoud.lynxes.service.ExecutorServiceProvider;
 import org.mahmoud.lynxes.server.pipeline.channels.RequestChannel;
 import org.mahmoud.lynxes.server.pipeline.channels.ResponseChannel;
@@ -149,14 +149,14 @@ public class LynxesModule extends AbstractModule {
     @Provides
     @Singleton
     public ConsumerGroupService provideConsumerGroupService(ConsumerGroupManager consumerGroupManager,
-                                                           org.mahmoud.lynxes.api.topic.TopicRegistry topicRegistry,
+                                                           org.mahmoud.lynxes.domain.topic.TopicRegistry topicRegistry,
                                                            QueueConfig config) {
         return new ConsumerGroupService(consumerGroupManager, config);
     }
     
     @Provides
     @Singleton
-    public SimpleConsumerService provideSimpleConsumerService(org.mahmoud.lynxes.api.topic.TopicRegistry topicRegistry,
+    public SimpleConsumerService provideSimpleConsumerService(org.mahmoud.lynxes.domain.topic.TopicRegistry topicRegistry,
                                                              QueueConfig config) {
         return new SimpleConsumerService(config);
     }

@@ -1,7 +1,7 @@
 package org.mahmoud.lynxes.service;
 
-import org.mahmoud.lynxes.api.producer.Producer;
-import org.mahmoud.lynxes.api.consumer.Consumer;
+import org.mahmoud.lynxes.domain.producer.Producer;
+import org.mahmoud.lynxes.domain.consumer.Consumer;
 import org.mahmoud.lynxes.core.Record;
 import com.google.inject.Inject;
 

@@ -1,7 +1,7 @@
 package org.mahmoud.lynxes.service;
 
-import org.mahmoud.lynxes.api.consumer.Consumer;
-import org.mahmoud.lynxes.api.topic.TopicRegistry;
+import org.mahmoud.lynxes.domain.consumer.Consumer;
+import org.mahmoud.lynxes.domain.topic.TopicRegistry;
 import org.mahmoud.lynxes.core.Record;
 import org.mahmoud.lynxes.config.QueueConfig;
 import org.slf4j.Logger;

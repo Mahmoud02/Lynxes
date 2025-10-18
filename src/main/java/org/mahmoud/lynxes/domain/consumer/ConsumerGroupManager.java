@@ -1,4 +1,4 @@
-package org.mahmoud.lynxes.api.consumer;
+package org.mahmoud.lynxes.domain.consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

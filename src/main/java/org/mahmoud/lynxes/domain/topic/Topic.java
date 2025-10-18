@@ -1,4 +1,4 @@
-package org.mahmoud.lynxes.api.topic;
+package org.mahmoud.lynxes.domain.topic;
 
 import org.mahmoud.lynxes.core.Log;
 import org.mahmoud.lynxes.core.Record;

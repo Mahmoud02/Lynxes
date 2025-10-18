@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.io.TempDir;
 
-import org.mahmoud.lynxes.api.producer.Producer;
-import org.mahmoud.lynxes.api.consumer.Consumer;
+import org.mahmoud.lynxes.domain.producer.Producer;
+import org.mahmoud.lynxes.domain.consumer.Consumer;
 import org.mahmoud.lynxes.core.Record;
 import org.mahmoud.lynxes.config.QueueConfig;
 
