@@ -28,6 +28,7 @@ import org.mahmoud.lynxes.server.pipeline.processors.PublishRequestProcessor;
 import org.mahmoud.lynxes.server.pipeline.processors.ConsumeRequestProcessor;
 import org.mahmoud.lynxes.server.pipeline.processors.DeleteTopicRequestProcessor;
 import org.mahmoud.lynxes.server.pipeline.processors.DeleteAllTopicsRequestProcessor;
+import org.mahmoud.lynxes.server.pipeline.processors.CreateTopicRequestProcessor;
 import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessorFactory;
 import org.mahmoud.lynxes.server.api.HealthRouteHandler;
 import org.mahmoud.lynxes.server.api.TopicsRouteHandler;
@@ -88,6 +89,7 @@ public class LynxesModule extends AbstractModule {
         bind(ConsumeRequestProcessor.class).in(Singleton.class);
         bind(DeleteTopicRequestProcessor.class).in(Singleton.class);
         bind(DeleteAllTopicsRequestProcessor.class).in(Singleton.class);
+        bind(CreateTopicRequestProcessor.class).in(Singleton.class);
         
         // Bind request processor factory
         bind(RequestProcessorFactory.class).toProvider(RequestProcessorFactoryProvider.class).in(Singleton.class);
@@ -182,6 +184,7 @@ public class LynxesModule extends AbstractModule {
         private final ConsumeRequestProcessor consumeProcessor;
         private final DeleteTopicRequestProcessor deleteTopicProcessor;
         private final DeleteAllTopicsRequestProcessor deleteAllTopicsProcessor;
+        private final CreateTopicRequestProcessor createTopicProcessor;
         
         @com.google.inject.Inject
         public RequestProcessorFactoryProvider(HealthRequestProcessor healthProcessor,
@@ -190,7 +193,8 @@ public class LynxesModule extends AbstractModule {
                                              PublishRequestProcessor publishProcessor,
                                              ConsumeRequestProcessor consumeProcessor,
                                              DeleteTopicRequestProcessor deleteTopicProcessor,
-                                             DeleteAllTopicsRequestProcessor deleteAllTopicsProcessor) {
+                                             DeleteAllTopicsRequestProcessor deleteAllTopicsProcessor,
+                                             CreateTopicRequestProcessor createTopicProcessor) {
             this.healthProcessor = healthProcessor;
             this.topicsProcessor = topicsProcessor;
             this.metricsProcessor = metricsProcessor;
@@ -198,6 +202,7 @@ public class LynxesModule extends AbstractModule {
             this.consumeProcessor = consumeProcessor;
             this.deleteTopicProcessor = deleteTopicProcessor;
             this.deleteAllTopicsProcessor = deleteAllTopicsProcessor;
+            this.createTopicProcessor = createTopicProcessor;
         }
         
         @Override
@@ -209,7 +214,8 @@ public class LynxesModule extends AbstractModule {
                 publishProcessor,
                 consumeProcessor,
                 deleteTopicProcessor,
-                deleteAllTopicsProcessor
+                deleteAllTopicsProcessor,
+                createTopicProcessor
             );
             return new RequestProcessorFactory(processors);
         }

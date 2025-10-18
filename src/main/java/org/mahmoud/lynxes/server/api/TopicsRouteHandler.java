@@ -33,6 +33,10 @@ public class TopicsRouteHandler extends BaseAsyncServlet {
                 logger.debug("Processing topics list request");
                 processAsyncRequest(request, response, AsyncRequest.RequestType.TOPICS, null, null, null);
                 break;
+            case "POST":
+                logger.debug("Processing create topic request");
+                processAsyncRequest(request, response, AsyncRequest.RequestType.CREATE_TOPIC, null, null, null);
+                break;
             case "DELETE":
                 logger.debug("Processing delete all topics request");
                 processAsyncRequest(request, response, AsyncRequest.RequestType.DELETE_ALL_TOPICS, null, null, null);

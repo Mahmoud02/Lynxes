@@ -18,6 +18,7 @@ public class AsyncRequest {
         CONSUME,
         HEALTH,
         TOPICS,
+        CREATE_TOPIC,
         METRICS,
         DELETE_TOPIC,
         DELETE_ALL_TOPICS,
