@@ -4,6 +4,7 @@ import org.mahmoud.lynxes.server.pipeline.core.AsyncRequest;
 import org.mahmoud.lynxes.server.pipeline.core.ResponseUtils;
 import org.mahmoud.lynxes.server.pipeline.orchestration.RequestProcessor;
 import org.mahmoud.lynxes.service.HealthService;
+import org.mahmoud.lynxes.service.ServerUptimeService;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,12 @@ public class HealthRequestProcessor implements RequestProcessor {
     private static final Logger logger = LoggerFactory.getLogger(HealthRequestProcessor.class);
     
     private final HealthService healthService;
+    private final ServerUptimeService serverUptimeService;
     
     @Inject
-    public HealthRequestProcessor(HealthService healthService) {
+    public HealthRequestProcessor(HealthService healthService, ServerUptimeService serverUptimeService) {
         this.healthService = healthService;
+        this.serverUptimeService = serverUptimeService;
     }
     
     @Override
@@ -29,8 +32,10 @@ public class HealthRequestProcessor implements RequestProcessor {
         logger.debug("Processing health check request: {}", request.getRequestId());
         
         HealthService.HealthStatus health = healthService.checkHealth();
-        String responseBody = String.format("{\"status\":\"%s\",\"message\":\"%s\"}", 
-                                      health.getStatus(), health.getMessage());
+        String uptime = serverUptimeService.getFormattedUptime();
+        
+        String responseBody = String.format("{\"status\":\"%s\",\"message\":\"%s\",\"uptime\":\"%s\"}", 
+                                      health.getStatus(), health.getMessage(), uptime);
         
         ResponseUtils.sendSuccessResponse(request, responseBody);
     }

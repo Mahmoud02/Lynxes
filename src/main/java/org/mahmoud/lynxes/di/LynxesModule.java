@@ -14,6 +14,7 @@ import org.mahmoud.lynxes.service.TopicService;
 import org.mahmoud.lynxes.service.ObjectMapperService;
 import org.mahmoud.lynxes.service.ConsumerGroupService;
 import org.mahmoud.lynxes.service.SimpleConsumerService;
+import org.mahmoud.lynxes.service.ServerUptimeService;
 import org.mahmoud.lynxes.api.consumer.ConsumerGroupManager;
 import org.mahmoud.lynxes.service.ExecutorServiceProvider;
 import org.mahmoud.lynxes.server.pipeline.channels.RequestChannel;
@@ -64,6 +65,7 @@ public class LynxesModule extends AbstractModule {
         bind(HealthService.class).in(Singleton.class);
         bind(TopicService.class).in(Singleton.class);
         bind(ObjectMapperService.class).in(Singleton.class);
+        bind(ServerUptimeService.class).in(Singleton.class);
         bind(ConsumerGroupManager.class).in(Singleton.class);
         // ConsumerGroupService is provided by @Provides method below
         

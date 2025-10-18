@@ -376,6 +376,65 @@
             }
         }
 
+        // Track uptime locally to avoid frequent backend calls
+        let currentUptimeSeconds = 0;
+        let uptimeInterval = null;
+        
+        function parseUptimeToSeconds(uptimeString) {
+            if (!uptimeString || uptimeString === 'Unknown') return 0;
+            
+            // Parse formats like "2h 15m 30s", "5m 30s", "45s"
+            let totalSeconds = 0;
+            const parts = uptimeString.split(' ');
+            
+            for (const part of parts) {
+                if (part.includes('h')) {
+                    totalSeconds += parseInt(part.replace('h', '')) * 3600;
+                } else if (part.includes('m')) {
+                    totalSeconds += parseInt(part.replace('m', '')) * 60;
+                } else if (part.includes('s')) {
+                    totalSeconds += parseInt(part.replace('s', ''));
+                }
+            }
+            
+            return totalSeconds;
+        }
+        
+        function formatSecondsToUptime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m ${secs}s`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${secs}s`;
+            } else {
+                return `${secs}s`;
+            }
+        }
+        
+        function startUptimeIncrement() {
+            // Clear any existing interval
+            if (uptimeInterval) {
+                clearInterval(uptimeInterval);
+            }
+            
+            // Update uptime every 5 seconds
+            uptimeInterval = setInterval(() => {
+                currentUptimeSeconds += 5;
+                document.getElementById('uptime').textContent = formatSecondsToUptime(currentUptimeSeconds);
+            }, 5000);
+        }
+        
+        function stopUptimeIncrement() {
+            if (uptimeInterval) {
+                clearInterval(uptimeInterval);
+                uptimeInterval = null;
+            }
+        }
+
+
         // Load dashboard data
         async function loadDashboard() {
             try {
@@ -384,24 +443,39 @@
                 const healthData = await healthResponse.json();
                 const isOnline = healthData.status === 'ok';
                 
+                // Update server status
                 document.getElementById('server-status').textContent = isOnline ? 'Online' : 'Offline';
                 document.getElementById('server-status-indicator').className = 
                     `status-${isOnline ? 'online' : 'offline'}`;
+                
+                // Sync uptime from backend and start local increment
+                if (isOnline && healthData.uptime) {
+                    currentUptimeSeconds = parseUptimeToSeconds(healthData.uptime);
+                    document.getElementById('uptime').textContent = healthData.uptime;
+                    startUptimeIncrement(); // Start local increment every 5 seconds
+                } else {
+                    document.getElementById('uptime').textContent = 'Offline';
+                    stopUptimeIncrement(); // Stop local increment when offline
+                }
                 
                 // Load topics
                 const topicsResponse = await fetch('/topics');
                 const topicsData = await topicsResponse.json();
                 document.getElementById('topic-count').textContent = topicsData.topics ? topicsData.topics.length : 0;
                 
-                // Update uptime
-                document.getElementById('uptime').textContent = '2h 15m';
-                
                 // Load topics into UI
                 loadTopics(topicsData.topics || []);
                 
             } catch (error) {
                 console.error('Error loading dashboard:', error);
-                showAlert('Error loading dashboard data', 'error');
+                
+                // Set offline status when health check fails
+                document.getElementById('server-status').textContent = 'Offline';
+                document.getElementById('server-status-indicator').className = 'status-offline';
+                document.getElementById('uptime').textContent = 'Offline';
+                stopUptimeIncrement(); // Stop local increment on error
+                
+                showAlert('Failed to load dashboard data', 'error');
             }
         }
 
